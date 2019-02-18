@@ -26,8 +26,15 @@ class AccountRequest extends FormRequest
         return [
             'name'     => 'required',
             'email'    => 'required|email|unique:accounts',
-            'password' => 'required|min:8|confirmed',
+            'password' => 'required|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/',
             'address'  => 'required|min:5'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'password.regex' => 'Password must contain 1 uppercase, 1 lowercase 1 number and must be at least 8 characters long'
         ];
     }
 }

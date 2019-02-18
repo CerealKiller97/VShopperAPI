@@ -17,6 +17,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//Route::apiResource('/accounts', 'AccountsController');
+Route::group(['middleware' => ['ApiToken']], function () {
+    Route::apiResource('accounts', 'AccountsController');
+});
 
-Route::post('/register', 'AccountsController@store');
+
+

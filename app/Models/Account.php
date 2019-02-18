@@ -33,10 +33,16 @@ class Account extends Authenticatable
         'password'
     ];
 
-    // public function setPasswordAttribute($password)
-    // {
-    //     $this->attributes['password'] = bcrypt($password);
-    // }
+
+    public function scopeActive($query)
+    {
+        return $query->where('email_verified_at', '!=' ,null);
+    }
+
+    public function setPasswordAttribute($password)
+    {
+        $this->attributes['password'] = bcrypt($password);
+    }
 
     // public function setTokenAttribute()
     // {

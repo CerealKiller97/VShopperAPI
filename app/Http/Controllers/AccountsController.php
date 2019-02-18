@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountRequest;
+use App\Http\Resources\AccountResource;
 
 class AccountsController extends Controller
 {
@@ -15,7 +16,7 @@ class AccountsController extends Controller
      */
     public function index()
     {
-        return Account::all();
+      return AccountResource::collection(Account::all());
     }
 
     /**
@@ -26,13 +27,13 @@ class AccountsController extends Controller
      */
     public function store(AccountRequest $request)
     {
-        try {
-            return $request->all();
-        } catch (Exception $th) {
-            echo $th;
-        }
-        // Account::create($request);
-        // return response()->json(null, 201);
+      try {
+        Account::create($request->validated());
+        return response()->json('Successfully registered!', 201);
+      } catch (\QueryException $e) {
+        return response()->json('Server error!', 500);
+        \Log::error($e);
+      }
     }
 
     /**
@@ -41,9 +42,14 @@ class AccountsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Account $account)
     {
-        //
+      try {
+        return response()->json(new AccountResource($account), 200);
+      } catch (Exception $ex) {
+        Log::error($ex);
+        return response()->json('No user found', 404);
+      }
     }
 
     /**
@@ -64,8 +70,14 @@ class AccountsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Account $account)
     {
-        //
+      try {
+        $account->delete();
+        return response()->json('Successfully deleted', 204);
+      } catch (Exception $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server error!', 400);
+      }
     }
 }
