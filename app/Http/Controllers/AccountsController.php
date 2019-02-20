@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use Illuminate\Http\Request;
+use App\Mail\AccountVerification;
 use App\Http\Requests\AccountRequest;
 use App\Http\Resources\AccountResource;
 
@@ -28,7 +29,8 @@ class AccountsController extends Controller
     public function store(AccountRequest $request)
     {
       try {
-        Account::create($request->validated());
+        $account = Account::create($request->validated());
+        \Mail::to($account->email)->queue(new AccountVerification($account));
         return response()->json('Successfully registered!', 201);
       } catch (\QueryException $e) {
         return response()->json('Server error!', 500);

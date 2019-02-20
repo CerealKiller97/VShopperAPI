@@ -39,14 +39,22 @@ class Account extends Authenticatable
         return $query->where('email_verified_at', '!=' ,null);
     }
 
+    // public function scopeLogin($query, $email, $password)
+    // {
+    //     return (bool) ($query->where([
+    //         ['email', '=', $email],
+    //         ['password', '=', bcrypt($password)]
+    //     ])->count() === 1);
+    // }
+
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = bcrypt($password);
     }
 
-    // public function setTokenAttribute()
-    // {
-    //     $this->attributes['token'] = bin2hex(random_bytes(60));
-    // }
+    public function setTokenAttribute()
+    {
+        $this->attributes['token'] = bin2hex(random_bytes(60));
+    }
 
 }
