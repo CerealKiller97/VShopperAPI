@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAccountsTable extends Migration
+class CreateStorageImagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,20 @@ class CreateAccountsTable extends Migration
      */
     public function up()
     {
-        Schema::create('accounts', function (Blueprint $table) {
+        Schema::create('storage_images', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('address');
-            $table->string('token')->default(bin2hex(random_bytes(60)));
-            $table->timestamps();
-            $table->timestamp('email_verified_at')->nullable()->default(null);
+            $table->unsignedInteger('storage_id');
             $table->unsignedInteger('image_id');
+
+            $table->foreign('storage_id')
+                  ->references('id')
+                  ->on('storages');
 
             $table->foreign('image_id')
                   ->references('id')
                   ->on('images');
 
+            $table->timestamps();
         });
     }
 
@@ -38,6 +37,6 @@ class CreateAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('accounts');
+        Schema::dropIfExists('storage_images');
     }
 }

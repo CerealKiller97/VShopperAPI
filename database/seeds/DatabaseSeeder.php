@@ -11,6 +11,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+
         $this->call(AccountTableSeeder::class);
+        // $this->call(StorageTypeSeeder::class);
+
     }
 }

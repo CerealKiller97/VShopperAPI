@@ -34,6 +34,10 @@ class Account extends Authenticatable
         'password'
     ];
 
+    public function image()
+    {
+        return $this->hasOne(Image::class);
+    }
 
     public function scopeActive($query)
     {

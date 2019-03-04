@@ -4,12 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use Illuminate\Http\Request;
+use App\Contracts\IAccount;
 use App\Mail\AccountVerification;
 use App\Http\Requests\AccountRequest;
+use App\Http\Controllers\ApiController;
 use App\Http\Resources\AccountResource;
+use Exception;
 
-class AccountsController extends Controller
+
+class AccountsController extends ApiController
 {
+  public function __construct(IAccount $service)
+  {
+    parent::__construct($service);
+    $this->service = $service;
+  }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +27,7 @@ class AccountsController extends Controller
      */
     public function index()
     {
-      return AccountResource::collection(Account::all());
+      return response()->json($this->service->getAllAccounts(), SELF::OK);
     }
 
     /**
