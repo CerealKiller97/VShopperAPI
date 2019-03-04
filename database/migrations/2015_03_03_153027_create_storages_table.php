@@ -18,10 +18,16 @@ class CreateStoragesTable extends Migration
             $table->string('address');
             $table->integer('size');
             $table->unsignedInteger('storage_type_id');
+            $table->unsignedInteger('account_id');
+
 
             $table->foreign('storage_type_id')
                   ->references('id')
                   ->on('storage_types');
+
+            $table->foreign('account_id')
+                  ->references('id')
+                  ->on('accounts');
 
             $table->timestamps();
         });

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\StorageType;
 use Illuminate\Database\Seeder;
 
 class StorageTypeSeeder extends Seeder
@@ -12,16 +13,15 @@ class StorageTypeSeeder extends Seeder
     public function run()
     {
         $storage_types = [
-            'server',
-            'hangar'
+            ['name' => 'server'],
+            ['name' => 'hangar']
         ];
-        foreach($storage_types as $type)
+
+        foreach ($storage_types as $storageType)
         {
-            DB::table('storage_types')->insert([
-                'label' => $type,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ]);
+            StorageType::create($storageType);
         }
+        factory(App\Models\StorageType::class, 5)->create();
+
     }
 }

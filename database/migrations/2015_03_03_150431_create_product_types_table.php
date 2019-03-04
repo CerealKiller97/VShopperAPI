@@ -16,7 +16,7 @@ class CreateProductTypesTable extends Migration
         Schema::create('product_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->unsignedInteger('account_id')->unsigned();
+            $table->unsignedInteger('account_id')->unsigned()->nullable();
             $table->foreign('account_id')
                   ->references('id')
                   ->on('accounts');

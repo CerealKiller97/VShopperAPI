@@ -18,9 +18,15 @@ class CreateVendorsTable extends Migration
             $table->string('name');
             $table->string('address');
             $table->string('pib');
-            $table->string('cin');
             $table->string('phone');
             $table->string('email');
+
+            $table->unsignedInteger('account_id');
+
+            $table->foreign('account_id')
+                  ->references('id')
+                  ->on('accounts');
+
             $table->timestamps();
         });
     }

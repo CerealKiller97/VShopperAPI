@@ -39,6 +39,11 @@ class Account extends Authenticatable
         return $this->belongsTo(Image::class);
     }
 
+    public function vendors()
+    {
+      return $this->hasMany(Vendor::class);
+    }
+
     public function scopeActive($query)
     {
         return $query->where('email_verified_at', '!=' ,null);
