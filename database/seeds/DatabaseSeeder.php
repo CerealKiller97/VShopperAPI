@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
             VendorTableSeeder::class,
             StorageTypeSeeder::class,
             UnitTableSeeder::class,
-            ProductTypTableSeeder::class
+            ProductTypTableSeeder::class,
+            // CategoryTableSeeder::class,
+            // GroupTableSeeder::class
         ]);
 
 

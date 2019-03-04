@@ -21,7 +21,5 @@ class StorageTypeSeeder extends Seeder
         {
             StorageType::create($storageType);
         }
-        factory(App\Models\StorageType::class, 5)->create();
-
     }
 }
