@@ -1,4 +1,4 @@
-Images +
+Images + draw io
 Units +
 Vendors +
 ProductTypes +
@@ -8,13 +8,13 @@ Discounts +
 Accounts +
 Discounts_Account_Types +
 Account_Types +
-Categories +
+Categories + draw io
 CategoriesProducts +
-CategoryImages // videti sa Lukom
-Brands +
-BrandImages // videti sa Lukom
+// CategoryImages // videti sa Lukom
+Brands + draw io
+// BrandImages // videti sa Lukom
 Storage_Types +
 Storage +
 StorageImages +
 ProductStorage +
-Prices +
+Prices + draw io
