@@ -3,16 +3,34 @@
 namespace App\Services;
 
 use Exception;
+use App\DTO\AccountDTO;
 use App\Models\Account;
-use App\Contracts\IAccount;
+use Illuminate\Http\Request;
+use App\Contracts\AccountContract;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\AccountRequest;
+use Illuminate\Database\QueryException;
+use App\Exceptions\NotVerifiedException;
+use App\Exceptions\EntityNotFoundException;
 
-class AccountEloquentService  implements IAccount
+class AccountEloquentService implements AccountContract
 {
   public function getAllAccounts()
   {
-    return Account::all();
+    $accounts =  Account::all();
+    $accountDTO = null;
+    $data = [];
+
+    foreach ($accounts as $acc) {
+      $accountDTO = new AccountDTO();
+      $accountDTO->id = $acc->id;
+      $accountDTO->name = $acc->name;
+      $accountDTO->email = $acc->email;
+      $accountDTO->address = $acc->address;
+      $data[] = $accountDTO;
+    }
+    // if data length > 0 return array else empty [] TODO:: ask Luka
+    return $data;
   }
 
   public function getAccountByEmailAndPassword($email, $password)
@@ -23,7 +41,7 @@ class AccountEloquentService  implements IAccount
     ])->first();
 
     if (!$user) {
-      throw new Exception('No user found', 404);
+      throw new EntityNotFoundException('No Account found');
     }
     return $user;
 
@@ -31,7 +49,11 @@ class AccountEloquentService  implements IAccount
 
   public function registerAccount(AccountRequest $request)
   {
-
+    try {
+      Account::create($request->validated());
+    } catch(QueryException $e) {
+      \Log::error($e->getMessage());
+    }
   }
 
   public function deactivateAccount($id)
@@ -49,9 +71,21 @@ class AccountEloquentService  implements IAccount
 
   }
 
-  public function findAccount(int $id)
+  public function findAccount(int $id) : AccountDTO
   {
+    $account = Account::find($id);
 
+    $accountDTO = new AccountDTO();
+    $accountDTO->id = $account->id;
+    $accountDTO->name = $account->name;
+    $accountDTO->email = $account->email;
+    $accountDTO->address = $account->address;
+
+
+    if (!$account)
+      throw new EntityNotFoundException('Account not found');
+
+    return $accountDTO;
   }
 
   public function verified(string $email)
@@ -61,9 +95,25 @@ class AccountEloquentService  implements IAccount
       ['email_verified_at', '!=', null]
     ])->first();
 
-      if (!$auth)
-      {
-        throw new Exception('Your account is not verified!', 500);
-      }
+    if (!$auth)
+      throw new NotVerifiedException('Your account is not verified!');
+
+    return true;
+  }
+
+  public function profile() : AccountDTO
+  {
+    $acc = request()->user();
+    //dd($acc);
+    // Creating AccountDTO and filling it with data
+    $accountDTO = new AccountDTO();
+    $accountDTO->id = $acc->id;
+    $accountDTO->name = $acc->name;
+    $accountDTO->email = $acc->email;
+    $accountDTO->address = $acc->address;
+    // Return AccountDTO object back to front
+
+    //FIX:: The Response content must be a string or object implementing __toString(), \"object\" given
+    dd($accountDTO);
   }
 }

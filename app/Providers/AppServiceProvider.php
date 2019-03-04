@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Contracts\IAccount;
+use App\Contracts\AccountContract;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use App\Services\AccountEloquentService;
@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        $this->app->bind(IAccount::class, AccountEloquentService::class);
+        $this->app->bind(AccountContract::class, AccountEloquentService::class);
 
     }
 

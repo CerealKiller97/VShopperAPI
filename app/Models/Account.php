@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Account extends Authenticatable
 {
-    use HasApiTokens,Notifiable;
+    use HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -36,21 +36,13 @@ class Account extends Authenticatable
 
     public function image()
     {
-        return $this->hasOne(Image::class);
+        return $this->belongsTo(Image::class);
     }
 
     public function scopeActive($query)
     {
         return $query->where('email_verified_at', '!=' ,null);
     }
-
-    // public function scopeLogin($query, $email, $password)
-    // {
-    //     return (bool) ($query->where([
-    //         ['email', '=', $email],
-    //         ['password', '=', bcrypt($password)]
-    //     ])->count() === 1);
-    // }
 
     public function setPasswordAttribute($password)
     {

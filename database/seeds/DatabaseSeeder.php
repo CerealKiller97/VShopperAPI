@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-
+        $this->call(ImageTableSeeder::class);
         $this->call(AccountTableSeeder::class);
         // $this->call(StorageTypeSeeder::class);
 

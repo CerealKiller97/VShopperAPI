@@ -2,9 +2,10 @@
 
 namespace App\Contracts;
 
+use App\DTO\AccountDTO;
 use App\Http\Requests\AccountRequest;
 
-interface IAccount
+interface AccountContract
 {
   public function getAllAccounts();
   public function getAccountByEmailAndPassword(string $email,string $password);
@@ -12,7 +13,7 @@ interface IAccount
   public function deactivateAccount(int $id);
   public function deleteAccount(int $id);
   public function updateAccount(int $id, AccountRequest $request);
-  public function findAccount(int $id);
+  public function findAccount(int $id) : AccountDTO;
   public function verified(string $email);
-
+  public function profile(); // : AccountDTO;
 }

@@ -2,7 +2,7 @@
 
 namespace App\Contracts;
 
-interface IProduct
+interface ProductContract
 {
   public function addProduct();
 }

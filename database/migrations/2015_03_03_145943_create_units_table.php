@@ -17,6 +17,11 @@ class CreateUnitsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('abbr');
+            $table->unsignedInteger('account_id');
+
+            $table->foreign('account_id')
+                  ->references('id')
+                  ->on('accounts');
             $table->timestamps();
         });
     }

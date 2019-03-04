@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
-use App\Contracts\IAccount;
 use Illuminate\Http\Request;
+use App\Contracts\AccountContract;
 use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\ApiController;
+use App\Exceptions\NotVerifiedException;
 
 class AuthController extends ApiController
 {
 
-    public function __construct(IAccount $service)
+    public function __construct(AccountContract $service)
     {
         parent::__construct($service);
         $this->service = $service;
@@ -19,19 +20,21 @@ class AuthController extends ApiController
 
     public function login(LoginRequest $request)
     {
-        try {
-            $this->service->verified($request->username);
-        } catch (Exception $e) {
-            return response()->json($e->getMessage(), self::INTERNAL_SERVER_ERROR);
-        }
-        // $auth = \DB::table('accounts')->where([
-        //     ['email', '=', $request->username],
-        //     ['email_verified_at', '!=', null]
-        // ])->first();
-
-        // if (!$auth) {
-        //     return response()->json('Your account is not verified!', 500);
+        // try {
+        //     $this->service->verified($request->username);
+        // } catch (NotVerifiedException $e) {
+        //     return response()->json($e->getMessage());
         // }
+
+            $auth = \DB::table('accounts')->where([
+                ['email', '=', $request->username],
+                ['email_verified_at', '!=', null]
+            ])->first();
+
+            if (!$auth) {
+                return response()->json('Your account is not verified!', 500);
+            }
+
 
         $http = new \GuzzleHttp\Client;
         try {
@@ -65,6 +68,6 @@ class AuthController extends ApiController
         \DB::table('oauth_access_tokens')
             ->where('user_id', auth()->user()->id)
             ->delete();
-        return response()->json('Logged out successfully', 200);
+        return response()->json('Logged out successfully', SELF::OK);
     }
 }

@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Account;
 use Illuminate\Http\Request;
-use App\Contracts\IAccount;
 use App\Mail\AccountVerification;
+use App\Contracts\AccountContract;
 use App\Http\Requests\AccountRequest;
 use App\Http\Controllers\ApiController;
 use App\Http\Resources\AccountResource;
-use Exception;
+use App\Exceptions\EntityNotFoundException;
 
 
 class AccountsController extends ApiController
 {
-  public function __construct(IAccount $service)
+  public function __construct(AccountContract $service)
   {
     parent::__construct($service);
     $this->service = $service;
@@ -39,9 +40,9 @@ class AccountsController extends ApiController
     public function store(AccountRequest $request)
     {
       try {
-        $account = Account::create($request->validated());
-        \Mail::to($account->email)->queue(new AccountVerification($account));
-        return response()->json('Successfully registered!', 201);
+        $this->service->registerAccount($request);
+        // \Mail::to($request->email)->queue(new AccountVerification($account));
+        return response()->json('Successfully registered!', SELF::CREATED);
       } catch (\QueryException $e) {
         return response()->json('Server error!', 500);
         \Log::error($e);
@@ -54,13 +55,13 @@ class AccountsController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Account $account)
+    public function show(int $id)
     {
       try {
-        return response()->json(new AccountResource($account), 200);
-      } catch (Exception $ex) {
-        Log::error($ex);
-        return response()->json('No user found', 404);
+        $user = $this->service->findAccount($id);
+        return response()->json($user, SELF::OK);
+      } catch (EntityNotFoundException $e) {
+        return response()->json($e->getMessage());
       }
     }
 
@@ -91,5 +92,10 @@ class AccountsController extends ApiController
         \Log::error($e->getMessage());
         return response()->json('Server error!', 400);
       }
+    }
+
+    public function profile()
+    {
+      return $this->service->profile(request());
     }
 }

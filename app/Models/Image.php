@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Image extends Model
 {
-    protected $fillable = ['src'];
+  protected $fillable = ['src'];
 
-    public function account()
-    {
-        return $this->belongsTo(Account::class);
-    }
+  public function account()
+  {
+    return $this->belongsTo(Account::class, 'id');
+  }
+
 }
