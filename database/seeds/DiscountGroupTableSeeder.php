@@ -11,6 +11,7 @@ class DiscountGroupTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+        factory(App\Models\DiscountGroup::class, 5)->create();
+
     }
 }

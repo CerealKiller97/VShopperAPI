@@ -11,6 +11,6 @@ class StorageImageTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+        factory(\App\Models\StorageImage::class, 5)->create();
     }
 }

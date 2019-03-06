@@ -14,10 +14,12 @@ class GroupTableSeeder extends Seeder
     {
         $data = [
             [
-                'name' => 'Subscribers'
+                'name' => 'Subscribers',
+                'account_id' => 1
             ],
             [
-                'name' => 'Premium users'
+                'name' => 'Premium users',
+                'account_id' => 2
             ]
         ];
 

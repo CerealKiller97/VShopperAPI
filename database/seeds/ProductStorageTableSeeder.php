@@ -11,6 +11,6 @@ class ProductStorageTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+        factory(App\Models\ProductStorage::class, 5)->create();
     }
 }

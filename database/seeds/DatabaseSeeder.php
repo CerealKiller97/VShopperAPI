@@ -18,8 +18,18 @@ class DatabaseSeeder extends Seeder
             StorageTypeSeeder::class,
             UnitTableSeeder::class,
             ProductTypTableSeeder::class,
-            // CategoryTableSeeder::class,
-            // GroupTableSeeder::class
+            CategoryTableSeeder::class,
+            BrandTableSeeder::class,
+            StorageTableSeeder::class,
+            ProductTableSeeder::class,
+            GroupTableSeeder::class,
+            ProductImageTableSeeder::class,
+            CategoryProductTableSeeder::class,
+            ProductStorageTableSeeder::class,
+            DiscountTableSeeder::class,
+            DiscountGroupTableSeeder::class,
+            StorageImageTableSeeder::class,
+            PriceTableSeeder::class
         ]);
 
 
