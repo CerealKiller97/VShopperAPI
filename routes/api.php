@@ -17,11 +17,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Routes require passport token
 Route::group(['middleware' => ['auth:api']], function () {
-    Route::post('/logout', 'AuthController@logout');
     Route::get('/profile', 'AccountsController@profile');
     Route::apiResource('accounts', 'AccountsController');
+    Route::apiResource('products', 'ProductsController');
+
+    Route::post('/logout', 'AuthController@logout');
 });
 
+// Non auth routes
 Route::post('/login', 'AuthController@login');
 Route::post('/register', 'AccountsController@store');
