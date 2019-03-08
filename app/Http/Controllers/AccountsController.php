@@ -96,6 +96,6 @@ class AccountsController extends ApiController
 
     public function profile()
     {
-      return $this->service->profile(request());
+      return $this->service->profile();
     }
 }

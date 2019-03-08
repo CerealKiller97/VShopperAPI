@@ -16,7 +16,7 @@ class CreateUnitsTable extends Migration
         Schema::create('units', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('abbr');
+            $table->string('abbr')->nullable();
             $table->unsignedInteger('account_id')->nullable();
 
             $table->foreign('account_id')

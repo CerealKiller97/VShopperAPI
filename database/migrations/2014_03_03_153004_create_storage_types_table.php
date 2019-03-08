@@ -16,6 +16,13 @@ class CreateStorageTypesTable extends Migration
         Schema::create('storage_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+
+            $table->unsignedInteger('account_id')->nullable();
+
+            $table->foreign('account_id')
+                  ->references('id')
+                  ->on('accounts');
+
             $table->timestamps();
         });
     }

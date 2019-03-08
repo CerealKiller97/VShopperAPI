@@ -44,19 +44,45 @@ class Account extends Authenticatable
       return $this->hasMany(Vendor::class);
     }
 
-    public function scopeActive($query)
+    public function brands()
     {
-        return $query->where('email_verified_at', '!=' ,null);
+      return $this->hasMany(Brand::class);
     }
+
+    public function units()
+    {
+      return $this->hasMany(Unit::class);
+    }
+
+    public function productTypes()
+    {
+      return $this->hasMany(ProductType::class);
+    }
+
+    public function groups()
+    {
+      return $this->hasMany(Group::class);
+    }
+
+    public function storageTypes()
+    {
+      return $this->hasMany(StorageType::class);
+    }
+
+    public function products()
+    {
+      return $this->hasMany(Product::class);
+    }
+
 
     public function setPasswordAttribute($password)
     {
-        $this->attributes['password'] = bcrypt($password);
+      $this->attributes['password'] = bcrypt($password);
     }
 
     public function setTokenAttribute()
     {
-        $this->attributes['token'] = bin2hex(random_bytes(60));
+      $this->attributes['token'] = bin2hex(random_bytes(60));
     }
 
 }

@@ -10,4 +10,14 @@ class ProductStorage extends Model
         'product_id',
         'storage_id'
     ];
+
+    public function product()
+    {
+      return $this->belongsToMany(Product::class);
+    }
+
+    public function storage()
+    {
+      return $this->belongsToMany(Storage::class);
+    }
 }

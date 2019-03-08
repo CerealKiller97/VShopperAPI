@@ -11,4 +11,9 @@ class Brand extends Model
         'account_id',
         'image_id'
     ];
+
+    public function type()
+    {
+        return $this->belongsTo(Account::class);
+    }
 }

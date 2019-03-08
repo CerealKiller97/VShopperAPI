@@ -14,4 +14,9 @@ class Product extends Model
         'name',
         'description'
     ];
+
+    public function account()
+    {
+      return $this->belongsTo(Account::class);
+    }
 }

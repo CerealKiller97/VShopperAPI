@@ -75,15 +75,14 @@ class AccountEloquentService implements AccountContract
   {
     $account = Account::find($id);
 
+    if (!$account)
+      throw new EntityNotFoundException('Account not found');
+
     $accountDTO = new AccountDTO();
     $accountDTO->id = $account->id;
     $accountDTO->name = $account->name;
     $accountDTO->email = $account->email;
     $accountDTO->address = $account->address;
-
-
-    if (!$account)
-      throw new EntityNotFoundException('Account not found');
 
     return $accountDTO;
   }
@@ -114,6 +113,6 @@ class AccountEloquentService implements AccountContract
     // Return AccountDTO object back to front
 
     //FIX:: The Response content must be a string or object implementing __toString(), \"object\" given
-    dd($accountDTO);
+    return $accountDTO;
   }
 }

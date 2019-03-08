@@ -10,4 +10,14 @@ class StorageImage extends Model
         'storage_id',
         'image_id'
     ];
+
+    public function storages()
+    {
+      return $this->belongsToMany(Storage::class);
+    }
+
+    public function images()
+    {
+      return $this->belongsToMany(Image::class);
+    }
 }

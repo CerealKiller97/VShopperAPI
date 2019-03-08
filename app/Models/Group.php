@@ -10,4 +10,9 @@ class Group extends Model
         'name',
         'account_id'
     ];
+
+    public function account()
+    {
+      return $this->belongsTo(Account::class);
+    }
 }

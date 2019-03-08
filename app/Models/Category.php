@@ -12,4 +12,14 @@ class Category extends Model
         'category_id',
         'image_id'
     ];
+
+    public function account()
+    {
+      return $this->belongsTo(Account::class);
+    }
+
+    // public function category()
+    // {
+    //   return $this->hasMany(Category::class, 'category_id', 'id');
+    // }
 }
