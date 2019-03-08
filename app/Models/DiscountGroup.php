@@ -10,4 +10,14 @@ class DiscountGroup extends Model
         'discount_id',
         'group_id'
     ];
+
+    public function discount()
+    {
+      return $this->belongsToMany(Discount::class);
+    }
+
+    public function group()
+    {
+      return $this->belongsToMany(Group::class);
+    }
 }

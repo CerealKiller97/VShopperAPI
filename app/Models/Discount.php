@@ -12,4 +12,6 @@ class Discount extends Model
         'valid_from',
         'valid_until'
     ];
+
+
 }

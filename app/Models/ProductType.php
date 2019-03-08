@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class ProductType extends Model
 {
   protected $fillable = [
-      'name',
-      'account_id'
+    'name',
+    'account_id'
   ];
 
   public function account()

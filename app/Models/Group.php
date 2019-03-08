@@ -15,4 +15,9 @@ class Group extends Model
     {
       return $this->belongsTo(Account::class);
     }
+
+    public function discounts()
+    {
+      return $this->belongsTo(Account::class);
+    }
 }

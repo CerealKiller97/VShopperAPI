@@ -18,8 +18,13 @@ class Category extends Model
       return $this->belongsTo(Account::class);
     }
 
-    public function subcategory()
+    public function category()
     {
-      return $this->hasMany(Category::class, 'subcategory_id', 'id');
+      return $this->hasMany(Category::class, 'subcategory_id', 'category_id');
+    }
+
+    public function image()
+    {
+      return $this->belongsTo(Image::class);
     }
 }
