@@ -15,11 +15,11 @@ class GroupTableSeeder extends Seeder
         $data = [
             [
                 'name' => 'Subscribers',
-                'account_id' => 1
+                'account_id' => null
             ],
             [
                 'name' => 'Premium users',
-                'account_id' => 2
+                'account_id' => null
             ]
         ];
 

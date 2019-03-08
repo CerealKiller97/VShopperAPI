@@ -17,7 +17,7 @@ class CreateCategoriesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->unsignedInteger('account_id');
-            $table->unsignedInteger('category_id')->nullable();
+            $table->unsignedInteger('subcategory_id')->nullable();
 
             $table->unsignedInteger('image_id')->nullable();
 
@@ -25,7 +25,7 @@ class CreateCategoriesTable extends Migration
                   ->references('id')
                   ->on('accounts');
 
-            $table->foreign('category_id')
+            $table->foreign('subcategory_id')
                   ->references('id')
                   ->on('categories');
 

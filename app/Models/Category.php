@@ -9,7 +9,7 @@ class Category extends Model
     protected $fillable = [
         'name',
         'account_id',
-        'category_id',
+        'subcategory_id',
         'image_id'
     ];
 
@@ -18,8 +18,8 @@ class Category extends Model
       return $this->belongsTo(Account::class);
     }
 
-    // public function category()
-    // {
-    //   return $this->hasMany(Category::class, 'category_id', 'id');
-    // }
+    public function subcategory()
+    {
+      return $this->hasMany(Category::class, 'subcategory_id', 'id');
+    }
 }

@@ -16,7 +16,7 @@ class CreateGroupsTable extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->unsignedInteger('account_id');
+            $table->unsignedInteger('account_id')->nullable();
 
             $table->foreign('account_id')
                   ->references('id')

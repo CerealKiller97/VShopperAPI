@@ -54,6 +54,11 @@ class Account extends Authenticatable
       return $this->hasMany(Unit::class);
     }
 
+    public function categories()
+    {
+      return $this->hasMany(Category::class);
+    }
+
     public function productTypes()
     {
       return $this->hasMany(ProductType::class);
