@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>{{ env('APP_NAME') }}</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" type="text/css">
@@ -12,8 +12,8 @@
         <!-- Styles -->
         <style>
             html, body {
-                background-color: #fff;
-                color: #636b6f;
+                background-color: #1976d2 !important;
+                color: #fff;
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
                 height: 100vh;
@@ -49,7 +49,7 @@
             }
 
             .links > a {
-                color: #636b6f;
+                color: #fff;
                 padding: 0 25px;
                 font-size: 13px;
                 font-weight: 600;
@@ -68,12 +68,12 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
-                        <a href="{{ url('/home') }}">Home</a>
+                        <a href="{{ url('/home') }}">Routes</a>
                     @else
-                        <a href="{{ route('login') }}">Login</a>
+                        <a href="{{ route('login') }}">Documentation</a>
 
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
+                            <a href="{{ route('register') }}">About project</a>
                         @endif
                     @endauth
                 </div>
@@ -81,15 +81,13 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    {{ env('APP_NAME') }}
                 </div>
 
                 <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
+                    <a href="https://laravel.com/docs">Routes</a>
+                    <a href="https://laracasts.com">Documentation</a>
+                    <a href="https://laravel-news.com">About project</a>
                     <a href="https://github.com/laravel/laravel">GitHub</a>
                 </div>
             </div>

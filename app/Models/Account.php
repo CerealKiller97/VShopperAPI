@@ -74,6 +74,11 @@ class Account extends Authenticatable
       return $this->hasMany(StorageType::class);
     }
 
+    public function storages()
+    {
+      return $this->hasMany(Storage::class);
+    }
+
     public function products()
     {
       return $this->hasMany(Product::class);
