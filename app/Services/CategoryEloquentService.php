@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Category;
+use App\Helpers\ImageUpload;
 use App\Contracts\CategoryContract;
 use App\Http\Requests\CategoryRequest;
 use Illuminate\Database\QueryException;
@@ -18,6 +19,7 @@ class CategoryEloquentService implements CategoryContract
   public function addCategory(CategoryRequest $request)
   {
     try {
+      ImageUpload::upload();
       Category::create($request->validated());
     } catch(QueryException $e) {
       throw new Exception("Server Error");
@@ -53,7 +55,13 @@ class CategoryEloquentService implements CategoryContract
 
   public function updateCategory(CategoryRequest $request, int $id)
   {
+    $category = Category::find($id);
 
+    if (!$category) {
+      throw new EntityNotFoundException('Category not found');
+    }
+
+    $category->update(array_merge($request->validated(), [$id]));
   }
 
   public function profileCategory()

@@ -10,7 +10,6 @@ use App\Exceptions\EntityNotFoundException;
 
 class CategoriesController extends ApiController
 {
-
     public function __construct(CategoryContract $service)
     {
       parent::__construct($service);
@@ -52,7 +51,7 @@ class CategoriesController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         try {
             return response()->json($this->service->findCategory($id), SELF::OK);
@@ -64,13 +63,18 @@ class CategoriesController extends ApiController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\CategoryRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, int $id)
     {
-        //
+        try {
+            $this->service->updateCategory($request, $id);
+            return response()->json('Successfully updated', SELF::NO_CONTENT);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     /**

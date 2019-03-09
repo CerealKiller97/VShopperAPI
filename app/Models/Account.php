@@ -84,7 +84,6 @@ class Account extends Authenticatable
       return $this->hasMany(Product::class);
     }
 
-
     public function setPasswordAttribute($password)
     {
       $this->attributes['password'] = bcrypt($password);
