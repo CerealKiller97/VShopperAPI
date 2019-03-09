@@ -23,7 +23,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::apiResources([
         'accounts'    => 'AccountsController',
         'products'    => 'ProductsController',
-        'categories'  => 'CategoriesController'
+        'categories'  => 'CategoriesController',
+        'brands'      => 'BrandsController'
     ]);
     Route::post('/logout', 'AuthController@logout');
 });

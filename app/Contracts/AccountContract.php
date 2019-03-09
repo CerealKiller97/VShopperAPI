@@ -7,13 +7,13 @@ use App\Http\Requests\AccountRequest;
 
 interface AccountContract
 {
-  public function getAllAccounts();
-  public function getAccountByEmailAndPassword(string $email,string $password);
-  public function registerAccount(AccountRequest $request);
-  public function deactivateAccount(int $id);
-  public function deleteAccount(int $id);
-  public function updateAccount(int $id, AccountRequest $request);
+  public function getAllAccounts() : array;
+  public function getAccountByEmailAndPassword(string $email,string $password) : AccountDTO;
+  public function registerAccount(AccountRequest $request) : void;
+  public function deactivateAccount(int $id) : void;
+  public function deleteAccount(int $id) : void;
+  public function updateAccount(int $id, AccountRequest $request) : void;
   public function findAccount(int $id) : AccountDTO;
-  public function verified(string $email);
-  public function profile(); // : AccountDTO;
+  public function verified(string $email) :boolean;
+  public function profile() : AccountDTO;
 }
