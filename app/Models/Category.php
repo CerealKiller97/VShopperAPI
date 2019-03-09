@@ -12,6 +12,11 @@ class Category extends Model
         'subcategory_id',
         'image_id'
     ];
+    // TMP SOLUTION
+    protected $hidden = [
+      'created_at',
+      'updated_at'
+    ];
 
     public function account()
     {
@@ -26,5 +31,10 @@ class Category extends Model
     public function image()
     {
       return $this->belongsTo(Image::class);
+    }
+
+    public function scopeDefault($query)
+    {
+        return $query->where('account_id', null);
     }
 }

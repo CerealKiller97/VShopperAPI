@@ -3,9 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Contracts\CategoryContract;
+use App\Http\Requests\CategoryRequest;
+use App\Http\Controllers\ApiController;
+use App\Exceptions\EntityNotFoundException;
 
-class CategoriesController extends Controller
+class CategoriesController extends ApiController
 {
+
+    public function __construct(CategoryContract $service)
+    {
+      parent::__construct($service);
+      $this->service = $service;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +24,9 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        //
+        // return response()->json($this->service->getCategories(),SELF::OK);
+        return response()->json($this->service->profileCategory(), SELF::OK);
+
     }
 
     /**
@@ -22,9 +35,15 @@ class CategoriesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        //
+        try {
+            $this->service->addCategory($request);
+            return response()->json('Successfully added new category', SELF::CREATED);
+        } catch (\QueryException $e) {
+            \Log::error($e);
+            return response()->json('Server error!', 500);
+        }
     }
 
     /**
@@ -35,7 +54,11 @@ class CategoriesController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+            return response()->json($this->service->findCategory($id), SELF::OK);
+        } catch (EntityNotFoundException $e) {
+            return response()->json($e->getMessage());
+        }
     }
 
     /**
@@ -58,6 +81,15 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $this->service->deleteCategory($id);
+            return response()->json('Successfully deleted', SELF::NO_CONTENT);
+        } catch (\EntityNotFoundException $e) {
+            return response()->json($e->getMessage());
+        }
     }
+
+    // public function profile()
+    // {
+    // }
 }

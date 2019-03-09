@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->get('/me', function (Request $request) {
     return $request->user();
 });
 
@@ -22,6 +22,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/profile', 'AccountsController@profile');
     Route::apiResource('accounts', 'AccountsController');
     Route::apiResource('products', 'ProductsController');
+    Route::apiResource('categories', 'CategoriesController');
+
 
     Route::post('/logout', 'AuthController@logout');
 });
