@@ -24,7 +24,7 @@ class UnitRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'       => 'required',
+            'name'       => 'required|alpha',
             'abbr'       => 'nullable|max:5',
             'account_id' => 'required|numeric'
         ];

@@ -16,4 +16,9 @@ class Unit extends Model
   {
     return $this->belongsTo(Account::class);
   }
+
+  public function scopeDefault($query)
+  {
+    return $query->where('account_id', null);
+  }
 }
