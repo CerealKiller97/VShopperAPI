@@ -24,7 +24,7 @@ class ProductTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
+            'name' => 'required|alpha',
             'account_id' => 'required|nullable|numeric'
         ];
     }

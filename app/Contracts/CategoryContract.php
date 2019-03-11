@@ -2,13 +2,14 @@
 
 namespace App\Contracts;
 
+use App\DTO\CategoryDTO;
 use App\Http\Requests\CategoryRequest;
 
 interface CategoryContract
 {
-  public function getCategories();
+  public function getCategories() : array;
   public function addCategory(CategoryRequest $request);
-  public function findCategory(int $id);
+  public function findCategory(int $id) : CategoryDTO;
   public function deleteCategory(int $id);
   public function updateCategory(CategoryRequest $request, int $id);
 }
