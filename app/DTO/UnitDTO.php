@@ -6,9 +6,8 @@ class UnitDTO
 {
   public $id;
   public $name;
-  public $email;
-  public $address;
-
+  public $abbr;
+  public $account_id;
 
   // public function __toString()
   // {

@@ -6,9 +6,11 @@ class VendorDTO
 {
   public $id;
   public $name;
-  public $email;
   public $address;
-
+  public $pib;
+  public $phone;
+  public $email;
+  public $account_id;
 
   // public function __toString()
   // {

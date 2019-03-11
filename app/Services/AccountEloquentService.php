@@ -15,22 +15,20 @@ use App\Exceptions\EntityNotFoundException;
 
 class AccountEloquentService implements AccountContract
 {
-  public function getAllAccounts()
+  public function getAccount() : AccountDTO
   {
-    $accounts =  Account::all();
-    $accountDTO = null;
-    $data = [];
+    $acc = request()->user();
 
-    foreach ($accounts as $acc) {
-      $accountDTO = new AccountDTO();
-      $accountDTO->id = $acc->id;
-      $accountDTO->name = $acc->name;
-      $accountDTO->email = $acc->email;
-      $accountDTO->address = $acc->address;
-      $data[] = $accountDTO;
-    }
-    // if data length > 0 return array else empty [] TODO:: ask Luka
-    return $data;
+    // Creating AccountDTO and filling it with data
+    $accountDTO = new AccountDTO();
+    $accountDTO->id = $acc->id;
+    $accountDTO->name = $acc->name;
+    $accountDTO->email = $acc->email;
+    $accountDTO->address = $acc->address;
+    // Return AccountDTO object back to front
+
+    //FIX:: The Response content must be a string or object implementing __toString(), \"object\" given
+    return $accountDTO;
   }
 
   public function getAccountByEmailAndPassword($email, $password)
@@ -49,11 +47,7 @@ class AccountEloquentService implements AccountContract
 
   public function registerAccount(AccountRequest $request)
   {
-    try {
-      Account::create($request->validated());
-    } catch(QueryException $e) {
-      \Log::error($e->getMessage());
-    }
+    Account::create($request->validated());
   }
 
   public function deactivateAccount($id)
@@ -100,19 +94,4 @@ class AccountEloquentService implements AccountContract
     return true;
   }
 
-  public function profile() : AccountDTO
-  {
-    $acc = request()->user();
-    //dd($acc);
-    // Creating AccountDTO and filling it with data
-    $accountDTO = new AccountDTO();
-    $accountDTO->id = $acc->id;
-    $accountDTO->name = $acc->name;
-    $accountDTO->email = $acc->email;
-    $accountDTO->address = $acc->address;
-    // Return AccountDTO object back to front
-
-    //FIX:: The Response content must be a string or object implementing __toString(), \"object\" given
-    return $accountDTO;
-  }
 }

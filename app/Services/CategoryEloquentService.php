@@ -13,18 +13,20 @@ class CategoryEloquentService implements CategoryContract
 {
   public function getCategories()
   {
-    return Category::all();
+    // Get default categories
+    $default = Category::default()->get();
+    // Get user's categories
+    $acc = request()->user()->categories;
+    $acc->push($default);
+    // TODO: map to DTO
+    return $acc;
   }
 
   public function addCategory(CategoryRequest $request)
   {
-    try {
-      ImageUpload::upload();
+      //ImageUpload::upload();
       Category::create($request->validated());
-    } catch(QueryException $e) {
-      throw new Exception("Server Error");
-      \Log::error($e->getMessage());
-    }
+
   }
 
   public function findCategory(int $id)
@@ -34,7 +36,7 @@ class CategoryEloquentService implements CategoryContract
     if (!$category) {
       throw new EntityNotFoundException('Category not found');
     }
-
+    // TODO: map to DTO
     return $category;
   }
 
@@ -46,11 +48,7 @@ class CategoryEloquentService implements CategoryContract
       throw new EntityNotFoundException('Category not found');
     }
 
-    // try {
-      $category->delete();
-    // } catch (\QueryException $e) {
-      //throw $e;
-    // }
+    $category->delete();
   }
 
   public function updateCategory(CategoryRequest $request, int $id)
@@ -62,17 +60,6 @@ class CategoryEloquentService implements CategoryContract
     }
 
     $category->update(array_merge($request->validated(), [$id]));
-  }
-
-  public function profileCategory()
-  {
-    // Get default categories
-    $default = Category::default()->get();
-    // Get user's categories
-    $acc = request()->user()->categories;
-    $acc->push($default);
-    // TODO: map to DTO
-    return $acc;
   }
 
 }
