@@ -31,7 +31,7 @@ class AccountEloquentService implements AccountContract
     return $accountDTO;
   }
 
-  public function getAccountByEmailAndPassword($email, $password)
+  public function getAccountByEmailAndPassword($email, $password) : AccountDTO
   {
     $user = Account::where([
       ['email', $email],
@@ -55,7 +55,7 @@ class AccountEloquentService implements AccountContract
 
   }
 
-  public function updateAccount($id, AccountRequest $request)
+  public function updateAccount(AccountRequest $request, int $id)
   {
 
   }
@@ -76,7 +76,7 @@ class AccountEloquentService implements AccountContract
     return $accountDTO;
   }
 
-  public function verified(string $email)
+  public function verified(string $email) : bool
   {
     $auth = Account::where([
       ['email', '=', $email],

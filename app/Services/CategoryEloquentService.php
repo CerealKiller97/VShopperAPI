@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTO\CategoryDTO;
 use App\Models\Category;
 use App\Helpers\ImageUpload;
 use App\Contracts\CategoryContract;
@@ -11,7 +12,7 @@ use App\Exceptions\EntityNotFoundException;
 
 class CategoryEloquentService implements CategoryContract
 {
-  public function getCategories()
+  public function getCategories() : array
   {
     // Get default categories
     $default = Category::default()->get();
@@ -19,7 +20,7 @@ class CategoryEloquentService implements CategoryContract
     $acc = request()->user()->categories;
     $acc->push($default);
     // TODO: map to DTO
-    return $acc;
+    return $acc->toArray();
   }
 
   public function addCategory(CategoryRequest $request)
@@ -29,7 +30,7 @@ class CategoryEloquentService implements CategoryContract
 
   }
 
-  public function findCategory(int $id)
+  public function findCategory(int $id) : CategoryDTO
   {
     $category = Category::find($id);
 

@@ -13,6 +13,6 @@ interface AccountContract
   public function registerAccount(AccountRequest $request);
   public function deactivateAccount(int $id);
   public function updateAccount(AccountRequest $request, int $id);
-  public function verified(string $email) : boolean;
+  public function verified(string $email) : bool;
   public function changePassword(int $id, string $password);
 }

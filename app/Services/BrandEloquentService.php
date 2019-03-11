@@ -2,17 +2,18 @@
 
 namespace App\Services;
 
+use App\DTO\BrandDTO;
 use App\Contracts\BrandContract;
 use App\Http\Requests\BrandRequest;
 
 class BrandEloquentService implements BrandContract
 {
-  public function getBrands()
+  public function getBrands() : array
   {
 
   }
 
-  public function findBrand(int $id)
+  public function findBrand(int $id) : BrandDTO
   {
 
   }

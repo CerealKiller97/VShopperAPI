@@ -21,10 +21,12 @@ Route::middleware('auth:api')->get('/me', function (Request $request) {
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/me', 'AccountsController@index');
     Route::apiResources([
-        'accounts'    => 'AccountsController',
-        'products'    => 'ProductsController',
-        'categories'  => 'CategoriesController',
-        'brands'      => 'BrandsController'
+        'accounts'      => 'AccountsController',
+        'products'      => 'ProductsController',
+        'categories'    => 'CategoriesController',
+        'brands'        => 'BrandsController',
+        'vendors'       => 'VendorsController',
+        'storage-types' => 'StorageTypesController'
     ]);
     Route::post('/logout', 'AuthController@logout');
 });

@@ -3,17 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Contracts\VendorContract;
-use App\Http\Controllers\ApiController;
 
-class VendorsController extends ApiController
+class StorageTypesController extends Controller
 {
-    public function __construct(VendorContract $service)
-    {
-        parent::__construct($service);
-        $this->service = $service;
-    }
-
     /**
      * Display a listing of the resource.
      *

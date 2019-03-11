@@ -2,23 +2,41 @@
 
 namespace App\Services;
 
+use App\DTO\ProductDTO;
 use App\Models\Product;
 use App\Contracts\ProductContract;
+use App\Http\Requests\ProductRequest;
 
 class ProductEloquentService implements ProductContract
 {
-  public function getAllProducts()
+  public function getProducts() : array
   {
-    return Product::all();
+
   }
 
-  public function addProduct()
+  public function findProduct(int $id) : ProductDTO
   {
-    # code...
+
+  }
+
+  public function addProduct(ProductRequest $request)
+  {
+
+  }
+
+  public function updateProduct(ProductRequest $request, int $id)
+  {
+
   }
 
   public function removeProduct(int $id)
   {
-    # code...
+
   }
+
+  public function addPictureToProduct(int $id)
+  {
+
+  }
+
 }
