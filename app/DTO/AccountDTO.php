@@ -9,9 +9,5 @@ class AccountDTO
   public $email;
   public $address;
 
-
-  // public function __toString()
-  // {
-  //   return "";
-  // }
+  // Maybe some relations to images?
 }

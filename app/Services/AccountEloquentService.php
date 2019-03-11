@@ -55,11 +55,6 @@ class AccountEloquentService implements AccountContract
 
   }
 
-  public function deleteAccount(int $id)
-  {
-
-  }
-
   public function updateAccount($id, AccountRequest $request)
   {
 
@@ -94,4 +89,8 @@ class AccountEloquentService implements AccountContract
     return true;
   }
 
+  public function changePassword(int $id, string $password)
+  {
+
+  }
 }

@@ -11,5 +11,4 @@ interface CategoryContract
   public function findCategory(int $id);
   public function deleteCategory(int $id);
   public function updateCategory(CategoryRequest $request, int $id);
-  public function profileCategory();
 }

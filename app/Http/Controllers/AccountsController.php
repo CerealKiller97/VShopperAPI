@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\DTO\AccountDTO;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Mail\AccountVerification;
@@ -28,7 +29,7 @@ class AccountsController extends ApiController
      */
     public function index()
     {
-      return response()->json($this->service->getAllAccounts(), SELF::OK);
+      return response()->json($this->service->getAccount(), SELF::OK);
     }
 
     /**
@@ -44,8 +45,8 @@ class AccountsController extends ApiController
         // \Mail::to($request->email)->queue(new AccountVerification($account));
         return response()->json('Successfully registered!', SELF::CREATED);
       } catch (\QueryException $e) {
-        return response()->json('Server error!', 500);
         \Log::error($e);
+        return response()->json('Server error!', 500);
       }
     }
 
@@ -61,6 +62,10 @@ class AccountsController extends ApiController
         $user = $this->service->findAccount($id);
         return response()->json($user, SELF::OK);
       } catch (EntityNotFoundException $e) {
+        \Log::error($e->getMessage());
+        return response()->json($e->getMessage());
+      } catch (Exception $e) {
+        \Log::error($e->getMessage());
         return response()->json($e->getMessage());
       }
     }
@@ -92,10 +97,5 @@ class AccountsController extends ApiController
         \Log::error($e->getMessage());
         return response()->json('Server error!', 400);
       }
-    }
-
-    public function profile()
-    {
-      return $this->service->profile();
     }
 }

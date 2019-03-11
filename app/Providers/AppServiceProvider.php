@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Contracts\BrandContract;
 use App\Contracts\AccountContract;
 use App\Contracts\ProductContract;
 use App\Contracts\CategoryContract;
+use App\Services\BrandEloquentService;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use App\Services\AccountEloquentService;
@@ -24,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AccountContract::class, AccountEloquentService::class);
         $this->app->bind(ProductContract::class, ProductEloquentService::class);
         $this->app->bind(CategoryContract::class, CategoryEloquentService::class);
+        $this->app->bind(BrandContract::class, BrandEloquentService::class);
+
 
 
     }

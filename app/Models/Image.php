@@ -10,7 +10,7 @@ class Image extends Model
 
   public function account()
   {
-    return $this->belongsTo(Account::class);
+    return $this->hasMany(Account::class);
   }
 
 }

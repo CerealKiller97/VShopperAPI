@@ -9,9 +9,4 @@ class ProductDTO
   public $email;
   public $address;
 
-
-  // public function __toString()
-  // {
-  //   return "";
-  // }
 }

@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/me', function (Request $request) {
 
 // Routes require passport token
 Route::group(['middleware' => ['auth:api']], function () {
-    Route::get('/profile', 'AccountsController@profile');
+    Route::get('/me', 'AccountsController@index');
     Route::apiResources([
         'accounts'    => 'AccountsController',
         'products'    => 'ProductsController',

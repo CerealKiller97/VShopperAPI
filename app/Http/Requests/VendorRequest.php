@@ -26,10 +26,10 @@ class VendorRequest extends FormRequest
         return [
             'name'       => 'required',
             'address'    => 'required',
-            'pib'        => 'required',
-            'phone'      => 'numeric',
+            'pib'        => 'required|numeric|digits:9',
+            'phone'      => 'required|numeric',
             'email'      => 'required|email',
-            'account_id' => 'required|numeric'
+           // 'account_id' => 'required|numeric'
         ];
     }
 }

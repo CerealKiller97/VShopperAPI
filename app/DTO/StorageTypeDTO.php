@@ -6,12 +6,5 @@ class StorageTypeDTO
 {
   public $id;
   public $name;
-  public $email;
-  public $address;
-
-
-  // public function __toString()
-  // {
-  //   return "";
-  // }
+  public $account_id;
 }
