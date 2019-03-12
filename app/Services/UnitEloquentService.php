@@ -19,13 +19,11 @@ class UnitEloquentService implements UnitContract
     $unitsArr = [];
     foreach($units as $unit)
     {
-      $unitDTO = new UnitDTO();
+      $unitDTO = new UnitDTO;
 
       $unitDTO->id = $unit['id'];
       $unitDTO->name = $unit['name'];
       $unitDTO->abbr = $unit['abbr'];
-      // should I remove account_id?
-      //$unitDTO->account_id = $unit['account_id'];
 
       $unitsArr[] = $unitDTO;
     }
@@ -40,12 +38,11 @@ class UnitEloquentService implements UnitContract
     if (!$unit)
       throw new EntityNotFoundException('Unit not found');
 
-    $unitDTO = new UnitDTO();
+    $unitDTO = new UnitDTO;
 
     $unitDTO->id = $unit->id;
     $unitDTO->name = $unit->name;
     $unitDTO->abbr = $unit->abbr;
-    $unitDTO->account_id = $unit->account_id;
 
     return $unitDTO;
   }

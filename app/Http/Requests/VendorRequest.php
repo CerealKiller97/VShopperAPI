@@ -24,12 +24,11 @@ class VendorRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'       => 'required',
-            'address'    => 'required',
+            'name'       => 'required|min:3|max:255',
+            'address'    => 'required|alpha_num|max:255',
             'pib'        => 'required|numeric|digits:9',
             'phone'      => 'required|numeric',
             'email'      => 'required|email',
-            'account_id' => 'required|numeric'
         ];
     }
 }

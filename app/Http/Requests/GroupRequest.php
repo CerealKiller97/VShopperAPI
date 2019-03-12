@@ -25,7 +25,6 @@ class GroupRequest extends FormRequest
     {
         return [
             'name'       => 'required',
-            'account_id' => 'numeric'
         ];
     }
 }

@@ -16,7 +16,7 @@ class VendorEloquentService implements VendorContract
 
     foreach ($vendors as $vendor)
     {
-      $vendorDTO = new VendorDTO();
+      $vendorDTO = new VendorDTO;
 
       $vendorDTO->id = $vendor->id;
       $vendorDTO->name = $vendor->name;
@@ -39,7 +39,7 @@ class VendorEloquentService implements VendorContract
       throw new EntityNotFoundException('Vendor not found');
     }
 
-    $vendorDTO = new VendorDTO();
+    $vendorDTO = new VendorDTO;
 
     $vendorDTO->id = $vendor->id;
     $vendorDTO->name = $vendor->name;
@@ -47,7 +47,6 @@ class VendorEloquentService implements VendorContract
     $vendorDTO->pib = $vendor->pib;
     $vendorDTO->phone = $vendor->phone;
     $vendorDTO->email = $vendor->email;
-    $vendorDTO->account_id = $vendor->account_id;
 
     return $vendorDTO;
   }
@@ -55,17 +54,31 @@ class VendorEloquentService implements VendorContract
   public function addVendor(VendorRequest $request)
   {
     $vendor = Vendor::create($request->validated());
-    request()->user()->vendors()->save($vendor);
+    auth()->user()->vendors()->save($vendor);
+    // auth()->user()->vendors()->associate(auth()->user()->id)->save();
   }
 
   public function updateVendor(VendorRequest $request, int $id)
   {
+    $vendor = Vendor::find($id);
 
+    if (!$vendor) {
+      throw new EntityNotFoundException('Vendor not found');
+    }
+
+    $vendor->fill($request->validated());
+    $vendor->save();
   }
 
   public function deleteVendor(int $id)
   {
+    $vendor = Vendor::find($id);
 
+    if (!$vendor) {
+      throw new EntityNotFoundException('Vendor not found');
+    }
+
+    $vendor->delete();
   }
 }
 

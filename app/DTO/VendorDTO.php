@@ -10,9 +10,4 @@ class VendorDTO
   public $pib;
   public $phone;
   public $email;
-
-  // public function __toString()
-  // {
-  //   return "";
-  // }
 }

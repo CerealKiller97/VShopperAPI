@@ -33,16 +33,18 @@ class VendorsController extends ApiController
      */
     public function store(VendorRequest $request)
     {
-        try {
-            $this->service->addVendor($request);
-            return response()->json('Successfully added new vendor', SELF::CREATED);
-          } catch (\QueryException $e) {
-            \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
-          } catch (Exception $e) {
-            \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
-          }
+      $this->service->addVendor($request);
+
+      // try {
+      //     $this->service->addVendor($request);
+      //     return response()->json('Successfully added new vendor', SELF::CREATED);
+      //   } catch (\QueryException $e) {
+      //     \Log::error($e->getMessage());
+      //     return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      //   } catch (Exception $e) {
+      //     \Log::error($e->getMessage());
+      //     return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      //   }
     }
 
     /**
@@ -74,7 +76,19 @@ class VendorsController extends ApiController
      */
     public function update(VendorRequest $request, $id)
     {
-        //
+      try {
+        $this->service->updateVendor($request, $id);
+        return response()->json(null, SELF::NO_CONTENT);
+      } catch (EntityNotFoundException $e) {
+        \Log::error($e->getMessage());
+        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+      } catch(\QueryException $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      } catch(Exception $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      }
     }
 
     /**
@@ -85,6 +99,18 @@ class VendorsController extends ApiController
      */
     public function destroy($id)
     {
-        //
+      try {
+        $this->service->deleteVendor($id);
+        return response()->json(null, SELF::NO_CONTENT);
+      } catch(\QueryException $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      } catch (EntityNotFoundException $e) {
+        report($e);
+        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+      } catch(Exception $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      }
     }
 }

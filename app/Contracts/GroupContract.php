@@ -11,5 +11,5 @@ interface GroupContract
   public function findGroup(int $id) : GroupDTO;
   public function addGroup(GroupRequest $request);
   public function updateGroup(GroupRequest $request, int $id);
-  public function removeGroup(int $id);
+  public function deleteGroup(int $id);
 }

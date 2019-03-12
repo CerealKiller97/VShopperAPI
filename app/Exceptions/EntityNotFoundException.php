@@ -10,4 +10,11 @@ class EntityNotFoundException extends Exception
   {
     parent::__construct($message, $code, $previous);
   }
+
+  public function report(Exception $exception)
+  {
+    if ($exception instanceof EntityNotFoundException) {
+      \Log::error($exception->getMessage());
+    }
+  }
 }
