@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Contracts\VendorContract;
+use App\Http\Requests\VendorRequest;
 use App\Http\Controllers\ApiController;
 
 class VendorsController extends ApiController
@@ -21,7 +22,7 @@ class VendorsController extends ApiController
      */
     public function index()
     {
-        //
+      return response()->json($this->service->getVendors(), SELF::OK);
     }
 
     /**
@@ -30,9 +31,9 @@ class VendorsController extends ApiController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(VendorRequest $request)
     {
-        //
+
     }
 
     /**
@@ -53,7 +54,7 @@ class VendorsController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(VendorRequest $request, $id)
     {
         //
     }

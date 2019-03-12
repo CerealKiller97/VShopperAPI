@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Contracts\UnitContract;
 use App\Http\Requests\UnitRequest;
 use App\Http\Controllers\ApiController;
+use App\Exceptions\EntityNotFoundException;
 
 class UnitsController extends ApiController
 {
@@ -74,7 +75,19 @@ class UnitsController extends ApiController
      */
     public function update(UnitRequest $request, $id)
     {
-        //
+      try {
+        $this->service->updateUnit($request, $id);
+        return response()->json(null, SELF::NO_CONTENT);
+      } catch (EntityNotFoundException $e) {
+        \Log::error($e->getMessage());
+        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+      } catch(\QueryException $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      } catch(Exception $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      }
     }
 
     /**
@@ -88,10 +101,10 @@ class UnitsController extends ApiController
       try {
         $this->service->deleteUnit($id);
         return response()->json('Successfully deleted unit', SELF::NO_CONTENT);
-      } catch (\QueryException $e) {
+      } catch(\QueryException $e) {
         \Log::error($e->getMessage());
         return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
-      } catch (Exception $e) {
+      } catch(Exception $e) {
         \Log::error($e->getMessage());
         return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
       }

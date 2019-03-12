@@ -12,12 +12,11 @@ class UnitEloquentService implements UnitContract
 {
   public function getUnits() : array
   {
-    $default = Unit::default()->get();
-
-    $acc = request()->user()->units;
-    $acc->push($default);
+    $default = Unit::default()->get()->toArray();
+    $acc = request()->user()->units->toArray();
+    $units = array_merge($default, $acc);
     // TODO: map to DTO
-    return $acc->toArray();
+    return $units;
   }
 
   public function findUnit(int $id) : UnitDTO
@@ -44,9 +43,12 @@ class UnitEloquentService implements UnitContract
 
   public function updateUnit(UnitRequest $request, int $id)
   {
-    $found = Unit::find($id);
-    $found->fill($request->validated());
-    $found->save();
+    $unit = Unit::find($id);
+    if (!$unit) {
+      throw new EntityNotFoundException('Unit not found');
+    }
+    $unit->fill($request->validated());
+    $unit->save();
   }
 
   public function deleteUnit(int $id)
