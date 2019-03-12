@@ -8,5 +8,4 @@ class ProductDTO
   public $name;
   public $email;
   public $address;
-
 }

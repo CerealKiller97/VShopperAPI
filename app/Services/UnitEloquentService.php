@@ -15,8 +15,22 @@ class UnitEloquentService implements UnitContract
     $default = Unit::default()->get()->toArray();
     $acc = request()->user()->units->toArray();
     $units = array_merge($default, $acc);
-    // TODO: map to DTO
-    return $units;
+
+    $unitsArr = [];
+    foreach($units as $unit)
+    {
+      $unitDTO = new UnitDTO();
+
+      $unitDTO->id = $unit['id'];
+      $unitDTO->name = $unit['name'];
+      $unitDTO->abbr = $unit['abbr'];
+      // should I remove account_id?
+      //$unitDTO->account_id = $unit['account_id'];
+
+      $unitsArr[] = $unitDTO;
+    }
+
+    return $unitsArr;
   }
 
   public function findUnit(int $id) : UnitDTO

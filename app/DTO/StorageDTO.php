@@ -8,6 +8,5 @@ class StorageDTO
   public $address;
   public $size;
   public $storage_type_id;
-  public $account_id;
 }
 

@@ -29,7 +29,7 @@ class VendorRequest extends FormRequest
             'pib'        => 'required|numeric|digits:9',
             'phone'      => 'required|numeric',
             'email'      => 'required|email',
-           // 'account_id' => 'required|numeric'
+            'account_id' => 'required|numeric'
         ];
     }
 }

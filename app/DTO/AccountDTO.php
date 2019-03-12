@@ -8,6 +8,5 @@ class AccountDTO
   public $name;
   public $email;
   public $address;
-
   // Maybe some relations to images?
 }

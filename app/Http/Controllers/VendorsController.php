@@ -33,7 +33,16 @@ class VendorsController extends ApiController
      */
     public function store(VendorRequest $request)
     {
-
+        try {
+            $this->service->addVendor($request);
+            return response()->json('Successfully added new vendor', SELF::CREATED);
+          } catch (\QueryException $e) {
+            \Log::error($e->getMessage());
+            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+          } catch (Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+          }
     }
 
     /**
@@ -44,7 +53,16 @@ class VendorsController extends ApiController
      */
     public function show($id)
     {
-        //
+        try {
+            $vendor = $this->service->findVendor($id);
+            return response()->json($vendor, SELF::OK);
+          } catch (EntityNotFoundException $e) {
+            \Log::error($e->getMessage());
+            return response()->json('No vendor found');
+          } catch (Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json('Server error');
+          }
     }
 
     /**

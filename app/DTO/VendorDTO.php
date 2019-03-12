@@ -10,7 +10,6 @@ class VendorDTO
   public $pib;
   public $phone;
   public $email;
-  public $account_id;
 
   // public function __toString()
   // {
