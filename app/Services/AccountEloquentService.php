@@ -17,17 +17,16 @@ class AccountEloquentService implements AccountContract
 {
   public function getAccount() : AccountDTO
   {
-    $acc = request()->user();
+    $acc = auth()->user();
 
-    // Creating AccountDTO and filling it with data
+    //Creating AccountDTO and filling it with data
+
     $accountDTO = new AccountDTO();
     $accountDTO->id = $acc->id;
     $accountDTO->name = $acc->name;
     $accountDTO->email = $acc->email;
     $accountDTO->address = $acc->address;
-    // Return AccountDTO object back to front
 
-    //FIX:: The Response content must be a string or object implementing __toString(), \"object\" given
     return $accountDTO;
   }
 

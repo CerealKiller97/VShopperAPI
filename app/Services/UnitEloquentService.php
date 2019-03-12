@@ -13,7 +13,7 @@ class UnitEloquentService implements UnitContract
   public function getUnits() : array
   {
     $default = Unit::default()->get()->toArray();
-    $acc = request()->user()->units->toArray();
+    $acc = auth()->user()->units->toArray();
     $units = array_merge($default, $acc);
 
     $unitsArr = [];
@@ -52,7 +52,8 @@ class UnitEloquentService implements UnitContract
 
   public function addUnit(UnitRequest $request)
   {
-    Unit::create($request->validated());
+    $unit = Unit::create($request->validated());
+    auth()->user()->units()->save($unit);
   }
 
   public function updateUnit(UnitRequest $request, int $id)

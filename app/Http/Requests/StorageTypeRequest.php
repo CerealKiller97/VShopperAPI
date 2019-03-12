@@ -24,8 +24,7 @@ class StorageTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'       => 'required',
-            'account_id' => 'required|numeric'
+            'name' => 'required',
         ];
     }
 }

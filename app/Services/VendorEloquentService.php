@@ -11,8 +11,9 @@ class VendorEloquentService implements VendorContract
 {
   public function getVendors() : array
   {
-    $vendors = request()->user()->vendors;
+    $vendors = auth()->user()->vendors;
     $vendorsArr = [];
+
     foreach ($vendors as $vendor)
     {
       $vendorDTO = new VendorDTO();
@@ -23,7 +24,6 @@ class VendorEloquentService implements VendorContract
       $vendorDTO->pib = $vendor->pib;
       $vendorDTO->phone = $vendor->phone;
       $vendorDTO->email = $vendor->email;
-      // $vendorDTO->account_id = $vendor->account_id;
 
       $vendorsArr[] = $vendorDTO;
     }
@@ -54,7 +54,8 @@ class VendorEloquentService implements VendorContract
 
   public function addVendor(VendorRequest $request)
   {
-    Vendor::create($request->validated());
+    $vendor = Vendor::create($request->validated());
+    request()->user()->vendors()->save($vendor);
   }
 
   public function updateVendor(VendorRequest $request, int $id)

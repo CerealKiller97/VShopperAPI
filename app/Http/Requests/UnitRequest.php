@@ -26,7 +26,6 @@ class UnitRequest extends FormRequest
         return [
             'name'       => 'required|alpha',
             'abbr'       => 'nullable|max:5',
-            'account_id' => 'required|numeric'
         ];
     }
 }
