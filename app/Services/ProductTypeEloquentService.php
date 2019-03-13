@@ -6,6 +6,7 @@ use App\DTO\ProductTypeDTO;
 use App\Models\ProductType;
 use App\Contracts\ProductTypeContract;
 use App\Http\Requests\ProductTypeRequest;
+use App\Exceptions\EntityNotFoundException;
 
 class ProductTypeEloquentService implements ProductTypeContract
 {
@@ -34,7 +35,7 @@ class ProductTypeEloquentService implements ProductTypeContract
     $productType = ProductType::find($id);
 
     if (!$productType)
-      throw new EntityNotFoundException('ProductType not found');
+      throw new EntityNotFoundException('Product type not found');
 
     $productTypeDTO = new ProductTypeDTO;
 
@@ -47,8 +48,8 @@ class ProductTypeEloquentService implements ProductTypeContract
 
   public function addProductType(ProductTypeRequest $request)
   {
-    $produtcType = ProductType::create($request->validated());
-    auth()->user()->productTypes()->save($produtcType);
+    $productType = ProductType::create($request->validated());
+    auth()->user()->productTypes()->save($productType);
   }
 
   public function updateProductType(ProductTypeRequest $request, int $id)

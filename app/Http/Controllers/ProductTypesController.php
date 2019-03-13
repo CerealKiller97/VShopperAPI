@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Contracts\ProductTypeContract;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\ProductTypeRequest;
+use App\Exceptions\EntityNotFoundException;
 
 class ProductTypesController extends ApiController
 {
@@ -53,16 +54,16 @@ class ProductTypesController extends ApiController
      */
     public function show($id)
     {
-        try {
-            $productType = $this->service->findProductType($id);
-            return response()->json($productType, SELF::OK);
-          } catch (EntityNotFoundException $e) {
-            \Log::error($e->getMessage());
-            return response()->json('No product type found');
-          } catch (Exception $e) {
-            \Log::error($e->getMessage());
-            return response()->json('Server error');
-          }
+      try {
+          $productType = $this->service->findProductType($id);
+          return response()->json($productType, SELF::OK);
+        } catch (EntityNotFoundException $e) {
+          \Log::error($e->getMessage());
+          return response()->json('No product type found', SELF::NOT_FOUND);
+        } catch (Exception $e) {
+          \Log::error($e->getMessage());
+          return response()->json('Server error');
+        }
     }
 
     /**
@@ -100,6 +101,9 @@ class ProductTypesController extends ApiController
         try {
             $this->service->deleteProductType($id);
             return response()->json(null, SELF::NO_CONTENT);
+          } catch (EntityNotFoundException $e) {
+            \Log::error($e->getMessage());
+            return response()->json($e->getMessage(), SELF::NOT_FOUND);
           } catch(\QueryException $e) {
             \Log::error($e->getMessage());
             return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
