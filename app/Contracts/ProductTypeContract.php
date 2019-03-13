@@ -7,9 +7,9 @@ use App\Http\Requests\ProductTypeRequest;
 
 interface ProductTypeContract
 {
-  public function getAllProductsTypes();
-  public function findProductType(int $id) :ProductTypeDTO;
-  public function addProduct(ProductTypeRequest $request);
-  public function updateProduct(ProductTypeRequest $request, int $id);
-  public function removeProduct(int $id);
+  public function getProductTypes() : array;
+  public function findProductType(int $id) : ProductTypeDTO;
+  public function addProductType(ProductTypeRequest $request);
+  public function updateProductType(ProductTypeRequest $request, int $id);
+  public function deleteProductType(int $id);
 }

@@ -11,6 +11,7 @@ use App\Contracts\ProductContract;
 use App\Contracts\StorageContract;
 use App\Contracts\CategoryContract;
 use App\Services\UnitEloquentService;
+use App\Contracts\ProductTypeContract;
 use App\Services\BrandEloquentService;
 use App\Services\GroupEloquentService;
 use Illuminate\Support\Facades\Schema;
@@ -20,6 +21,7 @@ use App\Services\AccountEloquentService;
 use App\Services\ProductEloquentService;
 use App\Services\StorageEloquentService;
 use App\Services\CategoryEloquentService;
+use App\Services\ProductTypeEloquentService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,6 +41,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(StorageContract::class, StorageEloquentService::class);
         $this->app->bind(UnitContract::class, UnitEloquentService::class);
         $this->app->bind(GroupContract::class, GroupEloquentService::class);
+        $this->app->bind(ProductTypeContract::class, ProductTypeEloquentService::class);
+
 
 
     }

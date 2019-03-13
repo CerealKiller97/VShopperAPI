@@ -28,7 +28,7 @@ class UnitEloquentService implements UnitContract
       $unitsArr[] = $unitDTO;
     }
 
-    return $unitsArr;
+    return ['data' => $unitsArr];
   }
 
   public function findUnit(int $id) : UnitDTO
@@ -56,9 +56,11 @@ class UnitEloquentService implements UnitContract
   public function updateUnit(UnitRequest $request, int $id)
   {
     $unit = Unit::find($id);
+
     if (!$unit) {
       throw new EntityNotFoundException('Unit not found');
     }
+
     $unit->fill($request->validated());
     $unit->save();
   }
@@ -67,8 +69,9 @@ class UnitEloquentService implements UnitContract
   {
     $unit = Unit::find($id);
 
-    if (!$unit)
+    if (!$unit) {
       throw new EntityNotFoundException('Unit not found');
+    }
 
     $unit->delete();
   }

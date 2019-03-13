@@ -2,10 +2,8 @@
 
 namespace App\DTO;
 
-class ProducTypeDTO
+class ProductTypeDTO
 {
   public $id;
   public $name;
-  public $email;
-  public $address;
 }
