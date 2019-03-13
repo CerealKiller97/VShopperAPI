@@ -6,6 +6,7 @@ use App\DTO\VendorDTO;
 use App\Models\Vendor;
 use App\Contracts\VendorContract;
 use App\Http\Requests\VendorRequest;
+use App\Exceptions\EntityNotFoundException;
 
 class VendorEloquentService implements VendorContract
 {
@@ -28,7 +29,7 @@ class VendorEloquentService implements VendorContract
       $vendorsArr[] = $vendorDTO;
     }
 
-    return $vendorsArr;
+    return ['data' => $vendorsArr];
   }
 
   public function findVendor(int $id) : VendorDTO

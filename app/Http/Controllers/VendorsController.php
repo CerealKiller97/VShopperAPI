@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Contracts\VendorContract;
 use App\Http\Requests\VendorRequest;
 use App\Http\Controllers\ApiController;
+use App\Exceptions\EntityNotFoundException;
 
 class VendorsController extends ApiController
 {
@@ -33,18 +34,16 @@ class VendorsController extends ApiController
      */
     public function store(VendorRequest $request)
     {
-      $this->service->addVendor($request);
-
-      // try {
-      //     $this->service->addVendor($request);
-      //     return response()->json('Successfully added new vendor', SELF::CREATED);
-      //   } catch (\QueryException $e) {
-      //     \Log::error($e->getMessage());
-      //     return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
-      //   } catch (Exception $e) {
-      //     \Log::error($e->getMessage());
-      //     return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
-      //   }
+      try {
+          $this->service->addVendor($request);
+          return response()->json('Successfully added new vendor', SELF::CREATED);
+        } catch (\QueryException $e) {
+          \Log::error($e->getMessage());
+          return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        } catch (Exception $e) {
+          \Log::error($e->getMessage());
+          return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -60,7 +59,7 @@ class VendorsController extends ApiController
             return response()->json($vendor, SELF::OK);
           } catch (EntityNotFoundException $e) {
             \Log::error($e->getMessage());
-            return response()->json('No vendor found');
+            return response()->json('No vendor found', SELF::NOT_FOUND);
           } catch (Exception $e) {
             \Log::error($e->getMessage());
             return response()->json('Server error');

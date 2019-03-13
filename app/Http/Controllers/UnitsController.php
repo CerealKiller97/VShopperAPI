@@ -59,7 +59,7 @@ class UnitsController extends ApiController
         return response()->json($unit, SELF::OK);
       } catch (EntityNotFoundException $e) {
         \Log::error($e->getMessage());
-        return response()->json('No unit found');
+        return response()->json('No unit found', SELF::NOT_FOUND);
       } catch (Exception $e) {
         \Log::error($e->getMessage());
         return response()->json('Server error');
