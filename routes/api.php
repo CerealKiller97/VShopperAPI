@@ -13,10 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/me', function (Request $request) {
-    return $request->user();
-});
-
 // Routes require passport token
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/me', 'AccountsController@index');
@@ -28,9 +24,9 @@ Route::group(['middleware' => ['auth:api']], function () {
         'groups'        => 'GroupsController',
         'vendors'       => 'VendorsController',
         'storage-types' => 'StorageTypesController',
+        'storages'      => 'StoragesController',
         'units'         => 'UnitsController',
         'product-types' => 'ProductTypesController'
-
     ]);
     Route::post('/logout', 'AuthController@logout');
 });
