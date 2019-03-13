@@ -54,16 +54,16 @@ class VendorsController extends ApiController
      */
     public function show($id)
     {
-        try {
-            $vendor = $this->service->findVendor($id);
-            return response()->json($vendor, SELF::OK);
-          } catch (EntityNotFoundException $e) {
-            \Log::error($e->getMessage());
-            return response()->json('No vendor found', SELF::NOT_FOUND);
-          } catch (Exception $e) {
-            \Log::error($e->getMessage());
-            return response()->json('Server error');
-          }
+      try {
+        $vendor = $this->service->findVendor($id);
+        return response()->json($vendor, SELF::OK);
+        } catch (EntityNotFoundException $e) {
+          \Log::error($e->getMessage());
+          return response()->json('Vendor not found', SELF::NOT_FOUND);
+        } catch (Exception $e) {
+          \Log::error($e->getMessage());
+          return response()->json('Server error');
+        }
     }
 
     /**
@@ -101,12 +101,12 @@ class VendorsController extends ApiController
       try {
         $this->service->deleteVendor($id);
         return response()->json(null, SELF::NO_CONTENT);
+      } catch (EntityNotFoundException $e) {
+        \Log::error($e->getMessage());
+        return response()->json($e->getMessage(), SELF::NOT_FOUND);
       } catch(\QueryException $e) {
         \Log::error($e->getMessage());
         return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
-      } catch (EntityNotFoundException $e) {
-        report($e);
-        return response()->json($e->getMessage(), SELF::NOT_FOUND);
       } catch(Exception $e) {
         \Log::error($e->getMessage());
         return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);

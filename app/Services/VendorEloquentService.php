@@ -54,8 +54,9 @@ class VendorEloquentService implements VendorContract
 
   public function addVendor(VendorRequest $request)
   {
-    $vendor = Vendor::create($request->validated());
-    auth()->user()->vendors()->save($vendor);
+    // $vendor = Vendor::create($request->validated());
+    // auth()->user()->vendors()->save($vendor);
+    auth()->user()->vendors()->create($request->validated());
     // auth()->user()->vendors()->associate(auth()->user()->id)->save();
   }
 

@@ -76,7 +76,19 @@ class BrandsController extends ApiController
      */
     public function update(BrandRequest $request, $id)
     {
-        //
+      try {
+        $this->service->updateBrand($request, $id);
+        return response()->json(null, SELF::NO_CONTENT);
+      } catch (EntityNotFoundException $e) {
+        \Log::error($e->getMessage());
+        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+      } catch(\QueryException $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      } catch(Exception $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      }
     }
 
     /**
@@ -87,6 +99,18 @@ class BrandsController extends ApiController
      */
     public function destroy($id)
     {
-        //
+      try {
+        $this->service->deleteBrand($id);
+        return response()->json(null, SELF::NO_CONTENT);
+      } catch (EntityNotFoundException $e) {
+        \Log::error($e->getMessage());
+        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+      } catch(\QueryException $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      } catch(Exception $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      }
     }
 }
