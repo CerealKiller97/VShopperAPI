@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Contracts\BrandContract;
+use App\Http\Requests\BrandRequest;
 use App\Http\Controllers\ApiController;
+use App\Exceptions\EntityNotFoundException;
 
 
 class BrandsController extends ApiController
@@ -22,7 +24,7 @@ class BrandsController extends ApiController
      */
     public function index()
     {
-        //
+        return response()->json($this->service->getBrands(), SELF::OK);
     }
 
     /**
@@ -31,9 +33,18 @@ class BrandsController extends ApiController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BrandRequest $request)
     {
-        //
+        try {
+            $this->service->addBrand($request);
+            return response()->json('Successfully added new brand', SELF::CREATED);
+          } catch (\QueryException $e) {
+            \Log::error($e->getMessage());
+            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+          } catch (Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+          }
     }
 
     /**
@@ -44,7 +55,16 @@ class BrandsController extends ApiController
      */
     public function show($id)
     {
-        //
+        try {
+            $brand = $this->service->findBrand($id);
+            return response()->json($brand, SELF::OK);
+          } catch (EntityNotFoundException $e) {
+            \Log::error($e->getMessage());
+            return response()->json('Brand not found', SELF::NOT_FOUND);
+          } catch (Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json('Server error');
+          }
     }
 
     /**
@@ -54,7 +74,7 @@ class BrandsController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BrandRequest $request, $id)
     {
         //
     }

@@ -25,6 +25,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         'products'      => 'ProductsController',
         'categories'    => 'CategoriesController',
         'brands'        => 'BrandsController',
+        'groups'        => 'GroupsController',
         'vendors'       => 'VendorsController',
         'storage-types' => 'StorageTypesController',
         'units'         => 'UnitsController',

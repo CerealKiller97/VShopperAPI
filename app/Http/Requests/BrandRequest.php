@@ -24,9 +24,7 @@ class BrandRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'account_id' => 'required|numeric',
-            'image_id' => 'required|image|nullable'
+            'name' => 'required'
         ];
     }
 }

@@ -13,5 +13,8 @@ class Discount extends Model
         'valid_until'
     ];
 
-
+    public function groups()
+    {
+        return $this->hasMany(DiscountGroup::class);
+    }
 }
