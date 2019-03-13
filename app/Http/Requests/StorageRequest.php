@@ -24,7 +24,7 @@ class StorageRequest extends FormRequest
     public function rules()
     {
         return [
-            'address'         => 'required|alpha',
+            'address'         => 'required|max:255',
             'size'            => 'required|numeric',
             'storage_type_id' => 'required|numeric',
         ];

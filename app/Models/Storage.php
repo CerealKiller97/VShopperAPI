@@ -15,7 +15,7 @@ class Storage extends Model
 
     public function type()
     {
-      return $this->belongsTo(StorageType::class);
+      return $this->belongsTo(StorageType::class, 'storage_type_id');
     }
 
     public function account()

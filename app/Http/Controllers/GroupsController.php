@@ -97,15 +97,18 @@ class GroupsController extends ApiController
      */
     public function destroy($id)
     {
-        try {
-            $this->service->deleteGroup($id);
-            return response()->json(null, SELF::NO_CONTENT);
-          } catch(\QueryException $e) {
-            \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
-          } catch(Exception $e) {
-            \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
-          }
+      try {
+          $this->service->deleteGroup($id);
+          return response()->json(null, SELF::NO_CONTENT);
+        } catch (EntityNotFoundException $e) {
+          \Log::error($e->getMessage());
+          return response()->json($e->getMessage(), SELF::NOT_FOUND);
+        } catch(\QueryException $e) {
+          \Log::error($e->getMessage());
+          return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        } catch(Exception $e) {
+          \Log::error($e->getMessage());
+          return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        }
     }
 }
