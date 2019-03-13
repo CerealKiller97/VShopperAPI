@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Storage extends Model
 {
-    protected $fillable = ['address', 'size', 'storage_type_id', 'account_id'];
-
+    protected $fillable = [
+      'address',
+      'size',
+      'storage_type_id',
+      'account_id'
+    ];
 
     public function type()
     {

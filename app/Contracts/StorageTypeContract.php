@@ -7,9 +7,9 @@ use App\Http\Requests\StorageTypeRequest;
 
 interface StorageTypeContract
 {
-  public function getStorages() : array;
-  public function findStorage(int $id): StorageTypeDTO;
-  public function addStorage(StorageTypeRequest $request) : void;
-  public function updateStorage(StorageTypeRequest $request, int $id);
-  public function deleteStorage(int $id);
+  public function getStorageTypes() : array;
+  public function findStorageType(int $id): StorageTypeDTO;
+  public function addStorageType(StorageTypeRequest $request);
+  public function updateStorageType(StorageTypeRequest $request, int $id);
+  public function deleteStorageType(int $id);
 }
