@@ -23,9 +23,7 @@ class CategoriesController extends ApiController
      */
     public function index()
     {
-        // return response()->json($this->service->getCategories(),SELF::OK);
-        return response()->json($this->service->profileCategory(), SELF::OK);
-
+        return response()->json($this->service->getCategories(), SELF::OK);
     }
 
     /**
@@ -56,7 +54,7 @@ class CategoriesController extends ApiController
         try {
             return response()->json($this->service->findCategory($id), SELF::OK);
         } catch (EntityNotFoundException $e) {
-            return response()->json($e->getMessage());
+            return response()->json($e->getMessage(), SELF::NOT_FOUND);
         }
     }
 

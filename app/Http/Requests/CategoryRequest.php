@@ -24,10 +24,9 @@ class CategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'           => 'required|alpha',
-            'account_id'     => 'required|numeric',
+            'name'           => 'required|alpha|max:255',
             'subcategory_id' => 'nullable|numeric',
-            'image_id'       => 'nullable|image'
+            'image'          => 'nullable|image'
         ];
     }
 }

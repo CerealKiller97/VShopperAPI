@@ -2,13 +2,10 @@
 
 namespace App\DTO;
 
-class DiscountDTO
+class PriceDTO
 {
   public $id;
   public $product_id;
-  public $product;
+  public $product; // relation to products
   public $amount;
-  public $valid_from;
-  public $valid_until;
 }
-

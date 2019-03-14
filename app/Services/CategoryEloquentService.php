@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\CategoryDTO;
 use App\Models\Category;
+use App\Helpers\UploadFile;
 use App\Helpers\ImageUpload;
 use App\Contracts\CategoryContract;
 use App\Http\Requests\CategoryRequest;
@@ -14,20 +15,41 @@ class CategoryEloquentService implements CategoryContract
 {
   public function getCategories() : array
   {
-    // Get default categories
-    $default = Category::default()->get();
-    // Get user's categories
-    $acc = request()->user()->categories;
-    $acc->push($default);
-    // TODO: map to DTO
-    return $acc->toArray();
-  }
+    $default = Category::default()->get()->toArray();
+    $acc = auth()->user()->categories->toArray();
+    $categories = array_merge($default, $acc);
+    dd($categories);
+    // foreach($categories as $category)
+    // {
+    //   if ($category->image) {
+    //     dd($category->image);
+    //   }
+    // }
+  //   $default = Category::default()->get()->toArray();
+  //   $acc = auth()->user()->categories->toArray();
+  //    $categories = array_merge($default, $acc);
+  //   //dd($acc);
 
-  public function addCategory(CategoryRequest $request)
-  {
-      //ImageUpload::upload();
-      Category::create($request->validated());
+  // //   $images = $acc->map(function ($item, $key) {
+  // //     return $item->image->src;
+  // // });
 
+  // // dd($images);
+  //   // $categoriesArr = [];
+  //   foreach($categories as $category)
+  //   {
+  //     dd($category);
+      // $categoryDTO = new CategoryDTO;
+
+      // $categoryDTO->id = $category['id'];
+      // $categoryDTO->name = $category['name'];
+      // $categoryDTO->subcategory_id = $category['subcategory_id'];
+
+
+      // $categorysArr[] = $categoryDTO;
+    //}
+
+    // return ['data' => $categorysArr];
   }
 
   public function findCategory(int $id) : CategoryDTO
@@ -37,8 +59,38 @@ class CategoryEloquentService implements CategoryContract
     if (!$category) {
       throw new EntityNotFoundException('Category not found');
     }
-    // TODO: map to DTO
-    return $category;
+
+    $categoryDTO = new CategoryDTO;
+
+    $categoryDTO->id = $category->id;
+    $categoryDTO->name = $category->name;
+    $categoryDTO->subcategory_id = $category->subcategory_id;
+    // Check if category has an image
+     ($category->image)
+     ? $categoryDTO->image = $category->image->src
+     : $categoryDTO->image = $category->image;
+
+    return $categoryDTO;
+  }
+
+  public function addCategory(CategoryRequest $request)
+  {
+    //dd($request->all());
+    UploadFile::move($request->image);
+    //$category = Category::create($request->validated());
+    //auth()->user()->categories()->create($request->validated());
+  }
+
+  public function updateCategory(CategoryRequest $request, int $id)
+  {
+    $category = Category::find($id);
+
+    if (!$category) {
+      throw new EntityNotFoundException('Category not found');
+    }
+
+    $category->fill($request->validated());
+    $category->save();
   }
 
   public function deleteCategory(int $id)
@@ -50,17 +102,6 @@ class CategoryEloquentService implements CategoryContract
     }
 
     $category->delete();
-  }
-
-  public function updateCategory(CategoryRequest $request, int $id)
-  {
-    $category = Category::find($id);
-
-    if (!$category) {
-      throw new EntityNotFoundException('Category not found');
-    }
-
-    $category->update(array_merge($request->validated(), [$id]));
   }
 
 }

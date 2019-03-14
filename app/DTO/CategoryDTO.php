@@ -7,6 +7,6 @@ class CategoryDTO
   public $id;
   public $name;
   public $subcategory_id;
-  public $image_id;
+  public $image;
 }
 
