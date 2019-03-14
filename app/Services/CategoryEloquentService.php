@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Image;
 use App\DTO\CategoryDTO;
 use App\Models\Category;
 use App\Helpers\UploadFile;
@@ -75,12 +76,16 @@ class CategoryEloquentService implements CategoryContract
 
   public function addCategory(CategoryRequest $request)
   {
-    //dd($request->all());
     $src = UploadFile::move($request->image);
 
-    dd($src);
-    //$category = Category::create($request->validated());
-    //auth()->user()->categories()->create($request->validated());
+    $image_id = Image::create($src)->id;
+
+    $category = Category::create([
+      'name' => $request->name,
+      'account_id' => auth()->user()->id,
+      'subcategory_id' => $request->subcategory_id ?? null,
+      'image_id' => $image_id
+    ]);
   }
 
   public function updateCategory(CategoryRequest $request, int $id)
@@ -101,6 +106,10 @@ class CategoryEloquentService implements CategoryContract
 
     if (!$category) {
       throw new EntityNotFoundException('Category not found');
+    }
+
+    if ($category->image !== null) {
+      unlink(public_path('/') . $category->image->src);
     }
 
     $category->delete();
