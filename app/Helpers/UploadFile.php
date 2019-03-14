@@ -5,6 +5,7 @@ namespace App\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use App\Http\Requests\ImageRequest;
+use Illuminate\Support\Facades\Storage;
 
 class UploadFile
 {
@@ -16,16 +17,29 @@ class UploadFile
    */
   public static function move(UploadedFile $request) : string
   {
+    $fileWithExtension = $request->getClientOriginalName();
+    $fileName = pathinfo($fileWithExtension, PATHINFO_FILENAME);
+    $extension = $request->guessClientExtension();
+
+    $src = time() . $fileName . '.' .$extension;
+
+
     dd($request);
+
+
     // $slika = $request->file('slikaPosta');
     // $slikaIme = $slika->getClientOriginalName();
 
-    // $slikaIme = time() . '_' . $slikaIme;
-    // $putanjaSlike = 'images/' . time() . '_' . $slikaIme;
-    // public_path('images');
+    // $name = time() . '_' . $src;
 
-    // $slika->move(public_path('images'), $slikaIme);
-    // return $slikaIme; // images/
+    //  //$slikaIme = time() . '_' . $slikaIme;
+    //  $path = 'images/' . $name;
+    // // $putanjaSlike = 'images/' . time() . '_' . $slikaIme;
+    // // public_path('images');
+    // Storage::move(path, target);
+    // File::move($src, public_path('images'));
+    //  $slika->move(public_path('images'), $slikaIme);
+    // return $slikaIme;
   }
 
   public function store(Request $request)

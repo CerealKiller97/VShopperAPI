@@ -76,7 +76,9 @@ class CategoryEloquentService implements CategoryContract
   public function addCategory(CategoryRequest $request)
   {
     //dd($request->all());
-    UploadFile::move($request->image);
+    $src = UploadFile::move($request->image);
+
+    dd($src);
     //$category = Category::create($request->validated());
     //auth()->user()->categories()->create($request->validated());
   }
