@@ -5,7 +5,7 @@ namespace App\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 
-class UploadFile
+class UploadFile  // add to base service as dependency ?
 {
   /**
    * @function upload

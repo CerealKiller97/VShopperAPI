@@ -4,11 +4,12 @@ namespace App\Services;
 
 use App\DTO\VendorDTO;
 use App\Models\Vendor;
+use App\Services\BaseService;
 use App\Helpers\PolicyChecker;
 use App\Contracts\VendorContract;
 use App\Http\Requests\VendorRequest;
 
-class VendorEloquentService implements VendorContract
+class VendorEloquentService extends BaseService implements VendorContract
 {
   public function getVendors() : array
   {
@@ -37,7 +38,7 @@ class VendorEloquentService implements VendorContract
     $acc = auth()->user()->vendors;
     $vendor = Vendor::find($id);
 
-    PolicyChecker::can($acc, $vendor, 'Vendor');
+    $this->policy->can($acc, $vendor, 'Vendor');
 
     $vendorDTO = new VendorDTO;
 
@@ -61,7 +62,7 @@ class VendorEloquentService implements VendorContract
     $acc = auth()->user()->vendors;
     $vendor = Vendor::find($id);
 
-    PolicyChecker::can($acc, $vendor, 'Vendor');
+    $this->policy->can($acc, $vendor, 'Vendor');
 
     $vendor->fill($request->validated());
     $vendor->save();
@@ -72,7 +73,7 @@ class VendorEloquentService implements VendorContract
     $acc = auth()->user()->vendors;
     $vendor = Vendor::find($id);
 
-    PolicyChecker::can($acc, $vendor, 'Vendor');
+    $this->policy->can($acc, $vendor, 'Vendor');
 
     $vendor->delete();
   }
