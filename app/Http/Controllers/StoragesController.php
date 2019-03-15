@@ -23,7 +23,7 @@ class StoragesController extends ApiController
      */
     public function index()
     {
-        return response()->json($this->service->getStorages(), SELF::OK);
+      return response()->json($this->service->getStorages(), SELF::OK);
     }
 
     /**

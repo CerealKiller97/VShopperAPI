@@ -4,11 +4,12 @@ namespace App\Services;
 
 use App\DTO\BrandDTO;
 use App\Models\Brand;
+use App\Services\BaseService;
 use App\Contracts\BrandContract;
 use App\Http\Requests\BrandRequest;
 use App\Exceptions\EntityNotFoundException;
 
-class BrandEloquentService implements BrandContract
+class BrandEloquentService extends BaseService implements BrandContract
 {
   public function getBrands() : array
   {
@@ -30,11 +31,10 @@ class BrandEloquentService implements BrandContract
 
   public function findBrand(int $id) : BrandDTO
   {
+    $acc = auth()->user()->brands;
     $brand = Brand::find($id);
 
-    if (!$brand) {
-      throw new EntityNotFoundException('Brand not found');
-    }
+    $this->policy->can($acc, $brand, 'Brand');
 
     $brandDTO = new BrandDTO;
 
@@ -46,17 +46,15 @@ class BrandEloquentService implements BrandContract
 
   public function addBrand(BrandRequest $request)
   {
-    // $brand = Brand::create($request->validated());
     auth()->user()->brands()->create($request->validated());
   }
 
   public function updateBrand(BrandRequest $request, int $id)
   {
+    $acc = auth()->user()->brands;
     $brand = Brand::find($id);
 
-    if (!$brand) {
-      throw new EntityNotFoundException('Brand not found');
-    }
+    $this->policy->can($acc, $brand, 'Brand');
 
     $brand->fill($request->validated());
     $brand->save();
@@ -64,11 +62,10 @@ class BrandEloquentService implements BrandContract
 
   public function deleteBrand(int $id)
   {
+    $acc = auth()->user()->brands;
     $brand = Brand::find($id);
 
-    if (!$brand) {
-      throw new EntityNotFoundException('Brand not found');
-    }
+    $this->policy->can($acc, $brand, 'Brand');
 
     $brand->delete();
   }

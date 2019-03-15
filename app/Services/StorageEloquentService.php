@@ -55,7 +55,6 @@ class StorageEloquentService implements StorageContract
     // $storage = Storage::create($request->validated());
     // auth()->user()->storages()->save($storage);
     auth()->user()->storages()->create($request->validated());
-
   }
 
   public function updateStorage(StorageRequest $request, int $id)
