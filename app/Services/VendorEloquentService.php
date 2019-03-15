@@ -4,9 +4,9 @@ namespace App\Services;
 
 use App\DTO\VendorDTO;
 use App\Models\Vendor;
+use App\Helpers\PolicyChecker;
 use App\Contracts\VendorContract;
 use App\Http\Requests\VendorRequest;
-use App\Exceptions\EntityNotFoundException;
 
 class VendorEloquentService implements VendorContract
 {
@@ -37,20 +37,7 @@ class VendorEloquentService implements VendorContract
     $acc = auth()->user()->vendors;
     $vendor = Vendor::find($id);
 
-    $allowedToSee = $acc->filter(function ($value, $key) use ($vendor) {
-      if ($vendor === null) {
-        return [];
-      }
-      return $value->id === $vendor->id ?? [];
-    });
-
-    if (!$vendor) {
-      throw new EntityNotFoundException('Vendor not found');
-    }
-    // Vendor doesn't belong to auth user account but exists in DB
-    if ((count($allowedToSee)=== 0) ) {
-      throw new EntityNotFoundException('Vendor not found');
-    }
+    PolicyChecker::can($acc, $vendor, 'Vendor');
 
     $vendorDTO = new VendorDTO;
 
@@ -74,20 +61,7 @@ class VendorEloquentService implements VendorContract
     $acc = auth()->user()->vendors;
     $vendor = Vendor::find($id);
 
-    $allowedToSee = $acc->filter(function ($value, $key) use ($vendor) {
-      if ($vendor === null) {
-        return [];
-      }
-      return $value->id === $vendor->id ?? [];
-    });
-
-    if (!$vendor) {
-      throw new EntityNotFoundException('Vendor not found');
-    }
-    // Vendor doesn't belong to auth user account but exists in DB
-    if ((count($allowedToSee)=== 0) ) {
-      throw new EntityNotFoundException('Vendor not found');
-    }
+    PolicyChecker::can($acc, $vendor, 'Vendor');
 
     $vendor->fill($request->validated());
     $vendor->save();
@@ -98,20 +72,7 @@ class VendorEloquentService implements VendorContract
     $acc = auth()->user()->vendors;
     $vendor = Vendor::find($id);
 
-    $allowedToSee = $acc->filter(function ($value, $key) use ($vendor) {
-      if ($vendor === null) {
-        return [];
-      }
-      return $value->id === $vendor->id ?? [];
-    });
-
-    if (!$vendor) {
-      throw new EntityNotFoundException('Vendor not found');
-    }
-    // Vendor doesn't belong to auth user account but exists in DB
-    if ((count($allowedToSee)=== 0) ) {
-      throw new EntityNotFoundException('Vendor not found');
-    }
+    PolicyChecker::can($acc, $vendor, 'Vendor');
 
     $vendor->delete();
   }

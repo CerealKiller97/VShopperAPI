@@ -59,7 +59,7 @@ class VendorsController extends ApiController
         return response()->json($vendor, SELF::OK);
         } catch (EntityNotFoundException $e) {
           \Log::error($e->getMessage());
-          return response()->json('Vendor not found', SELF::NOT_FOUND);
+          return response()->json($e->getMessage(), SELF::NOT_FOUND);
         } catch (Exception $e) {
           \Log::error($e->getMessage());
           return response()->json('Server error');

@@ -6,6 +6,9 @@ use App\Exceptions\EntityNotFoundException;
 
 class PolicyChecker // a.k.a PolicyChecker
 {
+
+  // TODO: maybe create BaseService that contains PolicyChecker and change to normal function instead of static ???
+
   // logic to avoid repetition for policy finding resources that don't belong to us
   /**
    * @function can
