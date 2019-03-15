@@ -4,11 +4,11 @@ namespace App\Services;
 
 use App\DTO\ProductTypeDTO;
 use App\Models\ProductType;
+use App\Services\BaseService;
 use App\Contracts\ProductTypeContract;
 use App\Http\Requests\ProductTypeRequest;
-use App\Exceptions\EntityNotFoundException;
 
-class ProductTypeEloquentService implements ProductTypeContract
+class ProductTypeEloquentService extends BaseService implements ProductTypeContract
 {
   public function getProductTypes() : array
   {
@@ -32,10 +32,10 @@ class ProductTypeEloquentService implements ProductTypeContract
 
   public function findProductType(int $id) : ProductTypeDTO
   {
+    $acc = auth()->user()->productTypes;
     $productType = ProductType::find($id);
 
-    if (!$productType)
-      throw new EntityNotFoundException('Product type not found');
+    $this->policy->can($acc, $productType, 'Product type');
 
     $productTypeDTO = new ProductTypeDTO;
 
@@ -54,11 +54,10 @@ class ProductTypeEloquentService implements ProductTypeContract
 
   public function updateProductType(ProductTypeRequest $request, int $id)
   {
+    $acc = auth()->user()->productTypes;
     $productType = ProductType::find($id);
 
-    if (!$productType) {
-      throw new EntityNotFoundException('Product type not found');
-    }
+    $this->policy->can($acc, $productType, 'Product type');
 
     $productType->fill($request->validated());
     $productType->save();
@@ -66,11 +65,10 @@ class ProductTypeEloquentService implements ProductTypeContract
 
   public function deleteProductType(int $id)
   {
+    $acc = auth()->user()->productTypes;
     $productType = ProductType::find($id);
 
-    if (!$productType) {
-      throw new EntityNotFoundException('Unit not found');
-    }
+    $this->policy->can($acc, $productType, 'Product type');
 
     $productType->delete();
   }
