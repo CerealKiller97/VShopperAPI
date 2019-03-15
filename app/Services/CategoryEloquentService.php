@@ -19,45 +19,43 @@ class CategoryEloquentService implements CategoryContract
     $default = Category::default()->get()->toArray();
     $acc = auth()->user()->categories->toArray();
     $categories = array_merge($default, $acc);
-    dd($categories);
-    // foreach($categories as $category)
-    // {
-    //   if ($category->image) {
-    //     dd($category->image);
-    //   }
-    // }
-  //   $default = Category::default()->get()->toArray();
-  //   $acc = auth()->user()->categories->toArray();
-  //    $categories = array_merge($default, $acc);
-  //   //dd($acc);
 
-  // //   $images = $acc->map(function ($item, $key) {
-  // //     return $item->image->src;
-  // // });
+    $categoriesArr = [];
+    foreach($categories as $category)
+    {
+      $categoryDTO = new CategoryDTO;
 
-  // // dd($images);
-  //   // $categoriesArr = [];
-  //   foreach($categories as $category)
-  //   {
-  //     dd($category);
-      // $categoryDTO = new CategoryDTO;
+      $categoryDTO->id = $category['id'];
+      $categoryDTO->name = $category['name'];
+      $categoryDTO->subcategory_id = $category['subcategory_id'];
 
-      // $categoryDTO->id = $category['id'];
-      // $categoryDTO->name = $category['name'];
-      // $categoryDTO->subcategory_id = $category['subcategory_id'];
+       $categoryDTO->image = ($category['image_id'])
+         ? Image::find($category['image_id'])->src
+         : null;
 
+      $categoriesArr[] = $categoryDTO;
+    }
 
-      // $categorysArr[] = $categoryDTO;
-    //}
-
-    // return ['data' => $categorysArr];
+    return ['data' => $categoriesArr];
   }
 
   public function findCategory(int $id) : CategoryDTO
   {
+    $acc = auth()->user()->categories;
     $category = Category::find($id);
 
+    $allowedToSee = $acc->filter(function ($value, $key) use ($category) {
+      if ($category === null) {
+        return [];
+      }
+      return $value->id === $category->id ?? [];
+    });
+
     if (!$category) {
+      throw new EntityNotFoundException('Category not found');
+    }
+    // Category doesn't belong to auth user account but exists in DB
+    if ((count($allowedToSee)=== 0) ) {
       throw new EntityNotFoundException('Category not found');
     }
 
@@ -86,13 +84,26 @@ class CategoryEloquentService implements CategoryContract
       'subcategory_id' => $request->subcategory_id ?? null,
       'image_id' => $image_id
     ]);
+
   }
 
   public function updateCategory(CategoryRequest $request, int $id)
   {
+    $acc = auth()->user()->categories;
     $category = Category::find($id);
 
+    $allowedToUpdate = $acc->filter(function ($value, $key) use ($category) {
+      if ($category === null) {
+        return [];
+      }
+      return $value->id === $category->id ?? [];
+    });
+
     if (!$category) {
+      throw new EntityNotFoundException('Category not found');
+    }
+    // Category doesn't belong to auth user account but exists in DB
+    if ((count($allowedToUpdate)=== 0) ) {
       throw new EntityNotFoundException('Category not found');
     }
 
@@ -102,9 +113,21 @@ class CategoryEloquentService implements CategoryContract
 
   public function deleteCategory(int $id)
   {
+    $acc = auth()->user()->categories;
     $category = Category::find($id);
 
+    $allowedToDelete = $acc->filter(function ($value, $key) use ($category) {
+      if ($category === null) {
+        return [];
+      }
+      return $value->id === $category->id ?? [];
+    });
+
     if (!$category) {
+      throw new EntityNotFoundException('Category not found');
+    }
+    // Category doesn't belong to auth user account but exists in DB
+    if ((count($allowedToDelete)=== 0) ) {
       throw new EntityNotFoundException('Category not found');
     }
 
