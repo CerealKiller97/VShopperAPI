@@ -4,11 +4,11 @@ namespace App\Services;
 
 use App\DTO\GroupDTO;
 use App\Models\Group;
+use App\Services\BaseService;
 use App\Contracts\GroupContract;
 use App\Http\Requests\GroupRequest;
-use App\Exceptions\EntityNotFoundException;
 
-class GroupEloquentService implements GroupContract
+class GroupEloquentService extends BaseService implements GroupContract
 {
   public function getGroups() : array
   {
@@ -32,11 +32,10 @@ class GroupEloquentService implements GroupContract
 
   public function findGroup(int $id) : GroupDTO
   {
+    $acc = auth()->user()->groups;
     $group = Group::find($id);
 
-    if (!$group) {
-      throw new EntityNotFoundException('Group not found');
-    }
+    $this->policy->can($acc, $group, 'Group');
 
     $groupDTO = new GroupDTO;
 
@@ -54,11 +53,10 @@ class GroupEloquentService implements GroupContract
 
   public function updateGroup(GroupRequest $request, int $id)
   {
+    $acc = auth()->user()->groups;
     $group = Group::find($id);
 
-    if (!$group) {
-      throw new EntityNotFoundException('Group not found');
-    }
+    $this->policy->can($acc, $group, 'Group');
 
     $group->fill($request->validated());
     $group->save();
@@ -66,11 +64,10 @@ class GroupEloquentService implements GroupContract
 
   public function deleteGroup(int $id)
   {
+    $acc = auth()->user()->groups;
     $group = Group::find($id);
 
-    if (!$group) {
-      throw new EntityNotFoundException('Group not found');
-    }
+    $this->policy->can($acc, $group, 'Group');
 
     $group->delete();
   }
