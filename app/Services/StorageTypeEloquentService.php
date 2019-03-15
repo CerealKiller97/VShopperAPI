@@ -4,12 +4,11 @@ namespace App\Services;
 
 use App\DTO\StorageTypeDTO;
 use App\Models\StorageType;
-use App\Helpers\PolicyChecker;
+use App\Services\BaseService;
 use App\Contracts\StorageTypeContract;
 use App\Http\Requests\StorageTypeRequest;
-use App\Exceptions\EntityNotFoundException;
 
-class StorageTypeEloquentService implements StorageTypeContract
+class StorageTypeEloquentService extends BaseService implements StorageTypeContract
 {
   public function getStorageTypes() : array
   {
@@ -36,7 +35,7 @@ class StorageTypeEloquentService implements StorageTypeContract
     $acc = auth()->user()->storageTypes;
     $storageType = StorageType::find($id);
 
-    PolicyChecker::can($acc, $storageType, 'Storage type');
+    $this->policy->can($acc, $storageType, 'Storage type');
 
     $storageTypeDTO = new StorageTypeDTO;
 
@@ -58,7 +57,7 @@ class StorageTypeEloquentService implements StorageTypeContract
     $acc = auth()->user()->storageTypes;
     $storageType = StorageType::find($id);
 
-    PolicyChecker::can($acc, $storageType, 'Storage type');
+    $this->policy->can($acc, $storageType, 'Storage type');
 
     $storageType->fill($request->validated());
     $storageType->save();
@@ -69,7 +68,7 @@ class StorageTypeEloquentService implements StorageTypeContract
     $acc = auth()->user()->storageTypes;
     $storageType = StorageType::find($id);
 
-    PolicyChecker::can($acc, $storageType, 'Storage type');
+    $this->policy->can($acc, $storageType, 'Storage type');
 
     $storageType->delete();
   }

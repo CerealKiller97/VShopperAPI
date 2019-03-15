@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Helpers\PolicyChecker;
 
-class BaseService
+abstract class BaseService
 {
   protected $policy;
   protected $user;
