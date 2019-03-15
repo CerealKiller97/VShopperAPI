@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 use App\Exceptions\EntityNotFoundException;
 
-class EntityHelper
+class PolicyChecker // a.k.a PolicyChecker
 {
   // logic to avoid repetition for policy finding resources that don't belong to us
   /**
@@ -26,7 +26,7 @@ class EntityHelper
     if (!$entityModel) {
       throw new EntityNotFoundException("$error not found");
     }
-    // Unit doesn't belong to auth user account but exists in DB
+    // Resource doesn't belong to auth user account but exists in DB
     if ((count($allowedToSee)=== 0) ) {
       throw new EntityNotFoundException("$error not found");
     }

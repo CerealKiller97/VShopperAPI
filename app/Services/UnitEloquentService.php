@@ -4,10 +4,9 @@ namespace App\Services;
 
 use App\DTO\UnitDTO;
 use App\Models\Unit;
-use App\Helpers\EntityHelper;
+use App\Helpers\PolicyChecker;
 use App\Contracts\UnitContract;
 use App\Http\Requests\UnitRequest;
-use App\Exceptions\EntityNotFoundException;
 
 class UnitEloquentService implements UnitContract
 {
@@ -37,22 +36,7 @@ class UnitEloquentService implements UnitContract
     $acc = auth()->user()->units;
     $unit = Unit::find($id);
 
-    EntityHelper::can($acc, $unit, 'Unit');
-
-    // $allowedToSee = $acc->filter(function ($value, $key) use ($unit) {
-    //   if ($unit === null) {
-    //     return [];
-    //   }
-    //   return $value->id === $unit->id ?? [];
-    // });
-
-    // if (!$unit) {
-    //   throw new EntityNotFoundException('Unit not found');
-    // }
-    // // Unit doesn't belong to auth user account but exists in DB
-    // if ((count($allowedToSee)=== 0) ) {
-    //   throw new EntityNotFoundException('Unit not found');
-    // }
+    PolicyChecker::can($acc, $unit, 'Unit');
 
     $unitDTO = new UnitDTO;
 
@@ -74,20 +58,7 @@ class UnitEloquentService implements UnitContract
     $acc = auth()->user()->units;
     $unit = Unit::find($id);
 
-    $allowedToSee = $acc->filter(function ($value, $key) use ($unit) {
-      if ($unit === null) {
-        return [];
-      }
-      return $value->id === $unit->id ?? [];
-    });
-
-    if (!$unit) {
-      throw new EntityNotFoundException('Unit not found');
-    }
-    // Unit doesn't belong to auth user account but exists in DB
-    if ((count($allowedToSee)=== 0) ) {
-      throw new EntityNotFoundException('Unit not found');
-    }
+    PolicyChecker::can($acc, $unit, 'Unit');
 
     $unit->fill($request->validated());
     $unit->save();
@@ -98,20 +69,7 @@ class UnitEloquentService implements UnitContract
     $acc = auth()->user()->units;
     $unit = Unit::find($id);
 
-    $allowedToSee = $acc->filter(function ($value, $key) use ($unit) {
-      if ($unit === null) {
-        return [];
-      }
-      return $value->id === $unit->id ?? [];
-    });
-
-    if (!$unit) {
-      throw new EntityNotFoundException('Unit not found');
-    }
-    // Unit doesn't belong to auth user account but exists in DB
-    if ((count($allowedToSee)=== 0) ) {
-      throw new EntityNotFoundException('Unit not found');
-    }
+    PolicyChecker::can($acc, $unit, 'Unit');
 
     $unit->delete();
   }
