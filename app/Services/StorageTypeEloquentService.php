@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\StorageTypeDTO;
 use App\Models\StorageType;
+use App\Helpers\PolicyChecker;
 use App\Contracts\StorageTypeContract;
 use App\Http\Requests\StorageTypeRequest;
 use App\Exceptions\EntityNotFoundException;
@@ -35,20 +36,7 @@ class StorageTypeEloquentService implements StorageTypeContract
     $acc = auth()->user()->storageTypes;
     $storageType = StorageType::find($id);
 
-    $allowedToSee = $acc->filter(function ($value, $key) use ($storageType) {
-      if ($storageType === null) {
-        return [];
-      }
-      return $value->id === $storageType->id ?? [];
-    });
-
-    if (!$storageType) {
-      throw new EntityNotFoundException('Storage type not found');
-    }
-    // Storage type doesn't belong to auth user account but exists in DB
-    if ((count($allowedToSee)=== 0) ) {
-      throw new EntityNotFoundException('Storage type not found');
-    }
+    PolicyChecker::can($acc, $storageType, 'Storage type');
 
     $storageTypeDTO = new StorageTypeDTO;
 
@@ -70,20 +58,7 @@ class StorageTypeEloquentService implements StorageTypeContract
     $acc = auth()->user()->storageTypes;
     $storageType = StorageType::find($id);
 
-    $allowedToSee = $acc->filter(function ($value, $key) use ($storageType) {
-      if ($storageType === null) {
-        return [];
-      }
-      return $value->id === $storageType->id ?? [];
-    });
-
-    if (!$storageType) {
-      throw new EntityNotFoundException('Storage type not found');
-    }
-    // Storage type doesn't belong to auth user account but exists in DB
-    if ((count($allowedToSee)=== 0) ) {
-      throw new EntityNotFoundException('Storage type not found');
-    }
+    PolicyChecker::can($acc, $storageType, 'Storage type');
 
     $storageType->fill($request->validated());
     $storageType->save();
@@ -94,20 +69,7 @@ class StorageTypeEloquentService implements StorageTypeContract
     $acc = auth()->user()->storageTypes;
     $storageType = StorageType::find($id);
 
-    $allowedToSee = $acc->filter(function ($value, $key) use ($storageType) {
-      if ($storageType === null) {
-        return [];
-      }
-      return $value->id === $storageType->id ?? [];
-    });
-
-    if (!$storageType) {
-      throw new EntityNotFoundException('Storage type not found');
-    }
-    // Storage type doesn't belong to auth user account but exists in DB
-    if ((count($allowedToSee)=== 0) ) {
-      throw new EntityNotFoundException('Storage type not found');
-    }
+    PolicyChecker::can($acc, $storageType, 'Storage type');
 
     $storageType->delete();
   }
