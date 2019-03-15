@@ -6,13 +6,11 @@ use App\Models\Image;
 use App\DTO\CategoryDTO;
 use App\Models\Category;
 use App\Helpers\UploadFile;
-use App\Helpers\ImageUpload;
+use App\Services\BaseService;
 use App\Contracts\CategoryContract;
 use App\Http\Requests\CategoryRequest;
-use Illuminate\Database\QueryException;
-use App\Exceptions\EntityNotFoundException;
 
-class CategoryEloquentService implements CategoryContract
+class CategoryEloquentService extends BaseService implements CategoryContract
 {
   public function getCategories() : array
   {
@@ -44,20 +42,7 @@ class CategoryEloquentService implements CategoryContract
     $acc = auth()->user()->categories;
     $category = Category::find($id);
 
-    $allowedToSee = $acc->filter(function ($value, $key) use ($category) {
-      if ($category === null) {
-        return [];
-      }
-      return $value->id === $category->id ?? [];
-    });
-
-    if (!$category) {
-      throw new EntityNotFoundException('Category not found');
-    }
-    // Category doesn't belong to auth user account but exists in DB
-    if ((count($allowedToSee)=== 0) ) {
-      throw new EntityNotFoundException('Category not found');
-    }
+    $this->policy->can($acc, $category, 'Category');
 
     $categoryDTO = new CategoryDTO;
 
@@ -92,20 +77,7 @@ class CategoryEloquentService implements CategoryContract
     $acc = auth()->user()->categories;
     $category = Category::find($id);
 
-    $allowedToUpdate = $acc->filter(function ($value, $key) use ($category) {
-      if ($category === null) {
-        return [];
-      }
-      return $value->id === $category->id ?? [];
-    });
-
-    if (!$category) {
-      throw new EntityNotFoundException('Category not found');
-    }
-    // Category doesn't belong to auth user account but exists in DB
-    if ((count($allowedToUpdate)=== 0) ) {
-      throw new EntityNotFoundException('Category not found');
-    }
+    $this->policy->can($acc, $category, 'Category');
 
     $category->fill($request->validated());
     $category->save();
@@ -116,20 +88,7 @@ class CategoryEloquentService implements CategoryContract
     $acc = auth()->user()->categories;
     $category = Category::find($id);
 
-    $allowedToDelete = $acc->filter(function ($value, $key) use ($category) {
-      if ($category === null) {
-        return [];
-      }
-      return $value->id === $category->id ?? [];
-    });
-
-    if (!$category) {
-      throw new EntityNotFoundException('Category not found');
-    }
-    // Category doesn't belong to auth user account but exists in DB
-    if ((count($allowedToDelete)=== 0) ) {
-      throw new EntityNotFoundException('Category not found');
-    }
+    $this->policy->can($acc, $category, 'Category');
 
     if ($category->image !== null) {
       unlink(public_path('/') . $category->image->src);
