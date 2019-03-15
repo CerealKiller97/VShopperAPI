@@ -33,10 +33,23 @@ class UnitEloquentService implements UnitContract
 
   public function findUnit(int $id) : UnitDTO
   {
+    $acc = auth()->user()->units;
     $unit = Unit::find($id);
 
-    if (!$unit)
+    $allowedToSee = $acc->filter(function ($value, $key) use ($unit) {
+      if ($unit === null) {
+        return [];
+      }
+      return $value->id === $unit->id ?? [];
+    });
+
+    if (!$unit) {
       throw new EntityNotFoundException('Unit not found');
+    }
+    // Unit doesn't belong to auth user account but exists in DB
+    if ((count($allowedToSee)=== 0) ) {
+      throw new EntityNotFoundException('Unit not found');
+    }
 
     $unitDTO = new UnitDTO;
 
@@ -55,9 +68,21 @@ class UnitEloquentService implements UnitContract
 
   public function updateUnit(UnitRequest $request, int $id)
   {
+    $acc = auth()->user()->units;
     $unit = Unit::find($id);
 
+    $allowedToSee = $acc->filter(function ($value, $key) use ($unit) {
+      if ($unit === null) {
+        return [];
+      }
+      return $value->id === $unit->id ?? [];
+    });
+
     if (!$unit) {
+      throw new EntityNotFoundException('Unit not found');
+    }
+    // Unit doesn't belong to auth user account but exists in DB
+    if ((count($allowedToSee)=== 0) ) {
       throw new EntityNotFoundException('Unit not found');
     }
 
@@ -67,9 +92,21 @@ class UnitEloquentService implements UnitContract
 
   public function deleteUnit(int $id)
   {
+    $acc = auth()->user()->units;
     $unit = Unit::find($id);
 
+    $allowedToSee = $acc->filter(function ($value, $key) use ($unit) {
+      if ($unit === null) {
+        return [];
+      }
+      return $value->id === $unit->id ?? [];
+    });
+
     if (!$unit) {
+      throw new EntityNotFoundException('Unit not found');
+    }
+    // Unit doesn't belong to auth user account but exists in DB
+    if ((count($allowedToSee)=== 0) ) {
       throw new EntityNotFoundException('Unit not found');
     }
 

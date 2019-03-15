@@ -59,7 +59,7 @@ class UnitsController extends ApiController
         return response()->json($unit, SELF::OK);
       } catch (EntityNotFoundException $e) {
         \Log::error($e->getMessage());
-        return response()->json('No unit found', SELF::NOT_FOUND);
+        return response()->json($e->getMessage(), SELF::NOT_FOUND);
       } catch (Exception $e) {
         \Log::error($e->getMessage());
         return response()->json('Server error');
@@ -100,7 +100,10 @@ class UnitsController extends ApiController
     {
       try {
         $this->service->deleteUnit($id);
-        return response()->json('Successfully deleted unit', SELF::NO_CONTENT);
+        return response()->json(null, SELF::NO_CONTENT);
+      } catch (EntityNotFoundException $e) {
+        \Log::error($e->getMessage());
+        return response()->json($e->getMessage(), SELF::NOT_FOUND);
       } catch(\QueryException $e) {
         \Log::error($e->getMessage());
         return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
