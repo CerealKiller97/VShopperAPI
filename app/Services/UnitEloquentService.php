@@ -4,11 +4,11 @@ namespace App\Services;
 
 use App\DTO\UnitDTO;
 use App\Models\Unit;
-use App\Helpers\PolicyChecker;
+use App\Services\BaseService;
 use App\Contracts\UnitContract;
 use App\Http\Requests\UnitRequest;
 
-class UnitEloquentService implements UnitContract
+class UnitEloquentService extends BaseService implements UnitContract
 {
   public function getUnits() : array
   {
@@ -36,7 +36,7 @@ class UnitEloquentService implements UnitContract
     $acc = auth()->user()->units;
     $unit = Unit::find($id);
 
-    PolicyChecker::can($acc, $unit, 'Unit');
+    $this->policy->can($acc, $unit, 'Unit');
 
     $unitDTO = new UnitDTO;
 
@@ -58,7 +58,7 @@ class UnitEloquentService implements UnitContract
     $acc = auth()->user()->units;
     $unit = Unit::find($id);
 
-    PolicyChecker::can($acc, $unit, 'Unit');
+    $this->policy->can($acc, $unit, 'Unit');
 
     $unit->fill($request->validated());
     $unit->save();
@@ -69,7 +69,7 @@ class UnitEloquentService implements UnitContract
     $acc = auth()->user()->units;
     $unit = Unit::find($id);
 
-    PolicyChecker::can($acc, $unit, 'Unit');
+    $this->policy->can($acc, $unit, 'Unit');
 
     $unit->delete();
   }

@@ -17,7 +17,7 @@ class PolicyChecker // a.k.a PolicyChecker
    * @param  {type} $error       { Entity model error }
    * @return {type} {description}
    */
-  public static function can($acc, $entityModel, $error = 'Resource')
+  public function can($acc, $entityModel, $error = 'Resource')
   {
     $allowedToSee = $acc->filter(function ($value, $key) use ($entityModel) {
       if ($entityModel === null) {
