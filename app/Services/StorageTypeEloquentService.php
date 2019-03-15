@@ -32,9 +32,21 @@ class StorageTypeEloquentService implements StorageTypeContract
 
   public function findStorageType(int $id): StorageTypeDTO
   {
+    $acc = auth()->user()->storageTypes;
     $storageType = StorageType::find($id);
 
+    $allowedToSee = $acc->filter(function ($value, $key) use ($storageType) {
+      if ($storageType === null) {
+        return [];
+      }
+      return $value->id === $storageType->id ?? [];
+    });
+
     if (!$storageType) {
+      throw new EntityNotFoundException('Storage type not found');
+    }
+    // Storage type doesn't belong to auth user account but exists in DB
+    if ((count($allowedToSee)=== 0) ) {
       throw new EntityNotFoundException('Storage type not found');
     }
 
@@ -55,9 +67,21 @@ class StorageTypeEloquentService implements StorageTypeContract
 
   public function updateStorageType(StorageTypeRequest $request, int $id)
   {
+    $acc = auth()->user()->storageTypes;
     $storageType = StorageType::find($id);
 
+    $allowedToSee = $acc->filter(function ($value, $key) use ($storageType) {
+      if ($storageType === null) {
+        return [];
+      }
+      return $value->id === $storageType->id ?? [];
+    });
+
     if (!$storageType) {
+      throw new EntityNotFoundException('Storage type not found');
+    }
+    // Storage type doesn't belong to auth user account but exists in DB
+    if ((count($allowedToSee)=== 0) ) {
       throw new EntityNotFoundException('Storage type not found');
     }
 
@@ -67,9 +91,21 @@ class StorageTypeEloquentService implements StorageTypeContract
 
   public function deleteStorageType(int $id)
   {
+    $acc = auth()->user()->storageTypes;
     $storageType = StorageType::find($id);
 
+    $allowedToSee = $acc->filter(function ($value, $key) use ($storageType) {
+      if ($storageType === null) {
+        return [];
+      }
+      return $value->id === $storageType->id ?? [];
+    });
+
     if (!$storageType) {
+      throw new EntityNotFoundException('Storage type not found');
+    }
+    // Storage type doesn't belong to auth user account but exists in DB
+    if ((count($allowedToSee)=== 0) ) {
       throw new EntityNotFoundException('Storage type not found');
     }
 
