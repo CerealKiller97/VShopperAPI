@@ -34,9 +34,21 @@ class VendorEloquentService implements VendorContract
 
   public function findVendor(int $id) : VendorDTO
   {
+    $acc = auth()->user()->vendors;
     $vendor = Vendor::find($id);
 
+    $allowedToSee = $acc->filter(function ($value, $key) use ($vendor) {
+      if ($vendor === null) {
+        return [];
+      }
+      return $value->id === $vendor->id ?? [];
+    });
+
     if (!$vendor) {
+      throw new EntityNotFoundException('Vendor not found');
+    }
+    // Vendor doesn't belong to auth user account but exists in DB
+    if ((count($allowedToSee)=== 0) ) {
       throw new EntityNotFoundException('Vendor not found');
     }
 
@@ -54,17 +66,26 @@ class VendorEloquentService implements VendorContract
 
   public function addVendor(VendorRequest $request)
   {
-    // $vendor = Vendor::create($request->validated());
-    // auth()->user()->vendors()->save($vendor);
     auth()->user()->vendors()->create($request->validated());
-    // auth()->user()->vendors()->associate(auth()->user()->id)->save();
   }
 
   public function updateVendor(VendorRequest $request, int $id)
   {
+    $acc = auth()->user()->vendors;
     $vendor = Vendor::find($id);
 
+    $allowedToSee = $acc->filter(function ($value, $key) use ($vendor) {
+      if ($vendor === null) {
+        return [];
+      }
+      return $value->id === $vendor->id ?? [];
+    });
+
     if (!$vendor) {
+      throw new EntityNotFoundException('Vendor not found');
+    }
+    // Vendor doesn't belong to auth user account but exists in DB
+    if ((count($allowedToSee)=== 0) ) {
       throw new EntityNotFoundException('Vendor not found');
     }
 
@@ -74,9 +95,21 @@ class VendorEloquentService implements VendorContract
 
   public function deleteVendor(int $id)
   {
+    $acc = auth()->user()->vendors;
     $vendor = Vendor::find($id);
 
+    $allowedToSee = $acc->filter(function ($value, $key) use ($vendor) {
+      if ($vendor === null) {
+        return [];
+      }
+      return $value->id === $vendor->id ?? [];
+    });
+
     if (!$vendor) {
+      throw new EntityNotFoundException('Vendor not found');
+    }
+    // Vendor doesn't belong to auth user account but exists in DB
+    if ((count($allowedToSee)=== 0) ) {
       throw new EntityNotFoundException('Vendor not found');
     }
 
