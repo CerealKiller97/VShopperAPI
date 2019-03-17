@@ -24,11 +24,11 @@ class AccountRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'     => 'required|alpha',
+            'name'     => 'required|regex:/^[A-Z][a-z]+(\s[A-Z][a-z]+)+$/',
             'email'    => 'required|email|unique:accounts',
             'password' => 'required|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/',
             'address'  => 'required|min:5',
-           // 'image_id' => 'required|numeric'
+            'image'    => 'required|image'
         ];
     }
 

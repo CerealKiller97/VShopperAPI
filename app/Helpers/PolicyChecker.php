@@ -17,6 +17,8 @@ class PolicyChecker // a.k.a PolicyChecker
    * @param  {type} $error       { Entity model error }
    * @return {type} {description}
    */
+  // brands auth()->user->[brands]
+
   public function can($acc, $entityModel, $error = 'Resource')
   {
     $allowedToSee = $acc->filter(function ($value, $key) use ($entityModel) {

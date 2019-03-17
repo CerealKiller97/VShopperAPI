@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Contracts\AccountContract;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\ApiController;
 use App\Exceptions\NotVerifiedException;
@@ -18,7 +19,7 @@ class AuthController extends ApiController
         $this->service = $service;
     }
 
-    public function login(LoginRequest $request)
+    public function login(Request $request)
     {
         // try {
         //     $this->service->verified($request->username);
@@ -26,17 +27,17 @@ class AuthController extends ApiController
         //     return response()->json($e->getMessage());
         // }
 
-            $auth = \DB::table('accounts')->where([
-                ['email', '=', $request->username],
-                ['email_verified_at', '!=', null]
-            ])->first();
+            // $auth = \DB::table('accounts')->where([
+            //     ['email', '=', $request->username],
+            //     ['email_verified_at', '!=', null]
+            // ])->first();
 
-            if (!$auth) {
-                return response()->json('Your account is not verified!', 500);
-            }
+            // if (!$auth) {
+            //     return response()->json('Your account is not verified!', 500);
+            // }
 
 
-        $http = new \GuzzleHttp\Client;
+        $http = new \GuzzleHttp\Client();
         try {
             $response = $http->post(config('services.passport.login_endpoint'), [
                 'form_params' => [
@@ -49,10 +50,12 @@ class AuthController extends ApiController
             ]);
             return $response->getBody();
         } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+            dd($e);
             if ($e->getCode() === 400) {
                 return response()->json('Invalid Request. Please enter a username or a password.', $e->getCode());
             } else if ($e->getCode() === 401) {
-                return response()->json('Your credentials are incorrect. Please try again', $e->getCode());
+
+                return response()->json('You credentials are incorrect. Please try again', 401);
             }
             return response()->json('Something went wrong on the server.', $e->getCode());
         }

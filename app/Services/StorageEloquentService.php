@@ -7,30 +7,44 @@ use App\DTO\StorageDTO;
 use App\Models\Storage;
 use App\Helpers\UploadFile;
 use App\Services\BaseService;
+use App\Helpers\PagedResponse;
 use App\Contracts\StorageContract;
 use App\Http\Requests\StorageRequest;
+use App\Http\Requests\StorageSearchRequest;
 
 class StorageEloquentService extends BaseService implements StorageContract
 {
-  public function getStorages() : array
+  public function getStorages(StorageSearchRequest $request) : PagedResponse
   {
-    $storages = auth()->user()->storages;
+    $page = $request->getPaging()->page;
+    $perPage = $request->getPaging()->perPage;
+
+    $storages = new Storage;
+    $account_id =  auth()->user()->id;
+
+    $acc = $storages->where('account_id', $account_id);
+    $this->generatePagedResponse($acc, $perPage, $page);
+    $items = $acc->get()->toArray();
+    $storagesCount = auth()->user()->storages->count();
+
     $storagesArr = [];
 
-    foreach($storages as $storage)
+    foreach($items as $storage)
     {
       $storageDTO = new StorageDTO;
 
-      $storageDTO->id = $storage->id;
-      $storageDTO->address = $storage->address;
-      $storageDTO->size = $storage->size;
-      $storageDTO->storage_type_id = $storage->storage_type_id;
-      $storageDTO->storage_name = $storage->type->name;
+      $storageDTO->id = $storage['id'];
+      $storageDTO->address = $storage['address'];
+      $storageDTO->size = $storage['size'];
+      // $storageDTO->storage_type_id = $storage->storage_type_id;
+      // $storageDTO->storage_name = ($storage['id'])
+      //    ? Image::find($category['image_id'])->src
+      //    : null;
+      // TODO: $storageDTO->storage_name = $storage->type->name;
 
       $storagesArr[] = $storageDTO;
     }
-
-    return ['data' => $storagesArr];
+    return new PagedResponse($storagesArr, $storagesCount, $page, );
   }
 
   public function findStorage(int $id) : StorageDTO

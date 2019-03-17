@@ -9,7 +9,7 @@ interface AccountContract
 {
   public function getAccount() : AccountDTO;
   public function findAccount(int $id) : AccountDTO;
-  public function getAccountByEmailAndPassword(string $email,string $password) : AccountDTO;
+  public function getAccountByEmailAndPassword(string $email, string $password) : AccountDTO;
   public function registerAccount(AccountRequest $request);
   public function deactivateAccount(int $id);
   public function updateAccount(AccountRequest $request, int $id);

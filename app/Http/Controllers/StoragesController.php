@@ -7,6 +7,7 @@ use App\Contracts\StorageContract;
 use App\Http\Requests\StorageRequest;
 use App\Http\Controllers\ApiController;
 use App\Exceptions\EntityNotFoundException;
+use App\Http\Requests\StorageSearchRequest;
 
 class StoragesController extends ApiController
 {
@@ -21,9 +22,9 @@ class StoragesController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(StorageSearchRequest $request)
     {
-      return response()->json($this->service->getStorages(), SELF::OK);
+      return response()->json($this->service->getStorages($request), SELF::OK);
     }
 
     /**

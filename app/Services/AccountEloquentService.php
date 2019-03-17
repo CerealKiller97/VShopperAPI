@@ -3,17 +3,18 @@
 namespace App\Services;
 
 use Exception;
+use App\Models\Image;
 use App\DTO\AccountDTO;
 use App\Models\Account;
-use Illuminate\Http\Request;
+use App\Helpers\UploadFile;
+use App\Services\BaseService;
 use App\Contracts\AccountContract;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\AccountRequest;
 use Illuminate\Database\QueryException;
 use App\Exceptions\NotVerifiedException;
-use App\Exceptions\EntityNotFoundException;
 
-class AccountEloquentService implements AccountContract
+class AccountEloquentService extends BaseService implements AccountContract
 {
   public function getAccount() : AccountDTO
   {
@@ -21,7 +22,7 @@ class AccountEloquentService implements AccountContract
 
     //Creating AccountDTO and filling it with data
 
-    $accountDTO = new AccountDTO();
+    $accountDTO = new AccountDTO;
     $accountDTO->id = $acc->id;
     $accountDTO->name = $acc->name;
     $accountDTO->email = $acc->email;
@@ -46,7 +47,16 @@ class AccountEloquentService implements AccountContract
 
   public function registerAccount(AccountRequest $request)
   {
-    Account::create($request->validated());
+    $src = UploadFile::move($request->image);
+    $image_id = Image::create($src)->id;
+
+     Account::create([
+       'name'      => $request->name,
+       'email'     => $request->email,
+       'password'  => Hash::make($request->password),
+       'address'   => $request->address,
+       'image_id' => $image_id
+     ]);
   }
 
   public function deactivateAccount($id)
@@ -63,8 +73,9 @@ class AccountEloquentService implements AccountContract
   {
     $account = Account::find($id);
 
-    if (!$account)
+    if (!$account) {
       throw new EntityNotFoundException('Account not found');
+    }
 
     $accountDTO = new AccountDTO();
     $accountDTO->id = $account->id;

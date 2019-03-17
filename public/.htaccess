@@ -20,9 +20,5 @@
     RewriteRule ^ index.php [L]
 </IfModule>
 
-# Passport problem unauthenticated 401
-# RewriteEngine On
-# RewriteCond %{HTTP:Authorization} ^(.*)
-# RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
 
 Header unset X-Powered-By
