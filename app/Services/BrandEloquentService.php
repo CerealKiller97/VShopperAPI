@@ -8,36 +8,38 @@ use App\Services\BaseService;
 use App\Helpers\PagedResponse;
 use App\Contracts\BrandContract;
 use App\Http\Requests\BrandRequest;
+use App\Http\Requests\PagedRequest;
 use App\Exceptions\EntityNotFoundException;
 
 class BrandEloquentService extends BaseService implements BrandContract
 {
-  public function getBrands() : PagedResponse
+  public function getBrands(PagedRequest $request) : PagedResponse
   {
     $page = $request->getPaging()->page;
     $perPage = $request->getPaging()->perPage;
 
-    $storages = new Storage;
+
+    $brands = new Brand;
     $account_id =  auth()->user()->id;
 
-    $acc = $storages->where('account_id', $account_id);
+    $acc = $brands->where('account_id', $account_id);
     $items = $this->generatePagedResponse($acc, $perPage, $page)->toArray();
-    $storagesCount = auth()->user()->storages->count();
+    $brandsCount = auth()->user()->brands->count();
 
     $brands = auth()->user()->brands;
     $brandsArr = [];
 
-    foreach ($brands as $brand)
+    foreach ($items as $brand)
     {
       $brandDTO = new BrandDTO;
 
-      $brandDTO->id = $brand->id;
-      $brandDTO->name = $brand->name;
+      $brandDTO->id = $brand['id'];
+      $brandDTO->name = $brand['name'];
 
       $brandsArr[] = $brandDTO;
     }
 
-    return ['data' => $brandsArr];
+    return new PagedResponse($brandsArr, $brandsCount, $page);
   }
 
   public function findBrand(int $id) : BrandDTO

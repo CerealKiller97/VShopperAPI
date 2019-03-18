@@ -27,7 +27,8 @@ class PagedRequest extends FormRequest
     {
         return [
             'perPage' => 'nullable|numeric',
-            'page'    => 'nullable|numeric'
+            'page'    => 'nullable|numeric',
+            'name'    => 'nullable|max:255'
         ];
     }
 
