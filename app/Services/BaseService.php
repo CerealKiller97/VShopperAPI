@@ -14,7 +14,7 @@ abstract class BaseService
     $this->policy =  $policy;
   }
 
-  public function generatePagedResponse(Model $model, $perPage, $page)
+  public function generatePagedResponse(Model $model, $perPage, $page, $name = null)
   {
     if ($perPage) {
       $model->limit($perPage);
@@ -22,6 +22,10 @@ abstract class BaseService
 
     if ($page) {
       $model->offset(($page - 1) * $perPage)->limit($perPage);
+    }
+
+    if ($name) {
+      $model->where('name', 'LIKE', "%$request->name%");
     }
 
     return $model->get();

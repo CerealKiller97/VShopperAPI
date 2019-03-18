@@ -5,14 +5,25 @@ namespace App\Services;
 use App\DTO\BrandDTO;
 use App\Models\Brand;
 use App\Services\BaseService;
+use App\Helpers\PagedResponse;
 use App\Contracts\BrandContract;
 use App\Http\Requests\BrandRequest;
 use App\Exceptions\EntityNotFoundException;
 
 class BrandEloquentService extends BaseService implements BrandContract
 {
-  public function getBrands() : array
+  public function getBrands() : PagedResponse
   {
+    $page = $request->getPaging()->page;
+    $perPage = $request->getPaging()->perPage;
+
+    $storages = new Storage;
+    $account_id =  auth()->user()->id;
+
+    $acc = $storages->where('account_id', $account_id);
+    $items = $this->generatePagedResponse($acc, $perPage, $page)->toArray();
+    $storagesCount = auth()->user()->storages->count();
+
     $brands = auth()->user()->brands;
     $brandsArr = [];
 

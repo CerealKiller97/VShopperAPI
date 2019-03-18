@@ -6,6 +6,7 @@ use App\Models\Image;
 use App\DTO\StorageDTO;
 use App\Models\Storage;
 use App\Helpers\UploadFile;
+use App\Models\StorageType;
 use App\Services\BaseService;
 use App\Helpers\PagedResponse;
 use App\Contracts\StorageContract;
@@ -23,8 +24,7 @@ class StorageEloquentService extends BaseService implements StorageContract
     $account_id =  auth()->user()->id;
 
     $acc = $storages->where('account_id', $account_id);
-    $this->generatePagedResponse($acc, $perPage, $page);
-    $items = $acc->get()->toArray();
+    $items = $this->generatePagedResponse($acc, $perPage, $page)->toArray();
     $storagesCount = auth()->user()->storages->count();
 
     $storagesArr = [];
@@ -36,15 +36,12 @@ class StorageEloquentService extends BaseService implements StorageContract
       $storageDTO->id = $storage['id'];
       $storageDTO->address = $storage['address'];
       $storageDTO->size = $storage['size'];
-      // $storageDTO->storage_type_id = $storage->storage_type_id;
-      // $storageDTO->storage_name = ($storage['id'])
-      //    ? Image::find($category['image_id'])->src
-      //    : null;
-      // TODO: $storageDTO->storage_name = $storage->type->name;
-
+      $storageDTO->storage_name = ($storage['storage_type_id'])
+         ? StorageType::find($storage['storage_type_id'])->name
+         : null;
       $storagesArr[] = $storageDTO;
     }
-    return new PagedResponse($storagesArr, $storagesCount, $page, );
+    return new PagedResponse($storagesArr, $storagesCount, $page);
   }
 
   public function findStorage(int $id) : StorageDTO
@@ -67,8 +64,6 @@ class StorageEloquentService extends BaseService implements StorageContract
 
   public function addStorage(StorageRequest $request)
   {
-    // $storage = Storage::create($request->validated());
-    // auth()->user()->storages()->save($storage);
     auth()->user()->storages()->create($request->validated());
   }
 
@@ -100,7 +95,6 @@ class StorageEloquentService extends BaseService implements StorageContract
       $src = UploadFile::move($image);
 
       $image_id = Image::create($src)->id;
-
 
     }
   }

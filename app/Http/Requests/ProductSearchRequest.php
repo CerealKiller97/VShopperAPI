@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\PagedRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductSearchRequest extends FormRequest
+class ProductSearchRequest extends PagedRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,14 +24,12 @@ class ProductSearchRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'perPage'   => 'nullable|numeric',
-            'page'      => 'nullable|numeric',
+        return array_merge(parent::rules(), [
             'name'      => 'nullable|max:255',
             'minPrice'  => 'nullable|numeric',
             'maxPrice'  => 'nullable|numeric',
             'brand'     => 'nullable|numeric',
             'discount'  => 'nullable|numeric'
-        ];
+        ]);
     }
 }

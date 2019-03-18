@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Contracts\ProductContract;
 use App\Http\Controllers\ApiController;
+use App\Http\Requests\ProductSearchRequest;
 
 class ProductsController extends ApiController
 {
@@ -20,9 +21,9 @@ class ProductsController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ProductSearchRequest $request)
     {
-      return response()->json($this->service->getAllProducts(), SELF::OK);
+      return response()->json($this->service->getProducts($request), SELF::OK);
     }
 
     /**
