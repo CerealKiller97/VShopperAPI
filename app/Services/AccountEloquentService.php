@@ -66,7 +66,10 @@ class AccountEloquentService extends BaseService implements AccountContract
 
   public function updateAccount(AccountRequest $request, int $id)
   {
+    $acc = auth()->user()->id;
+    dd($acc);
 
+    // $acc->fill()
   }
 
   public function findAccount(int $id) : AccountDTO
@@ -101,6 +104,7 @@ class AccountEloquentService extends BaseService implements AccountContract
 
   public function changePassword(int $id, string $password)
   {
-
+    $user = auth()->user();
+    $user->update(['password' => Hash::make($password)]);
   }
 }

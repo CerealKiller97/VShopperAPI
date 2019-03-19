@@ -13,7 +13,7 @@ class CreateStorageImagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('storage_images', function (Blueprint $table) {
+        Schema::create('image_storage', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('storage_id');
             $table->unsignedInteger('image_id');

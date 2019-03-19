@@ -7,6 +7,7 @@ use App\DTO\StorageDTO;
 use App\Models\Storage;
 use App\Helpers\UploadFile;
 use App\Models\StorageType;
+use App\Models\StorageImage;
 use App\Services\BaseService;
 use App\Helpers\PagedResponse;
 use App\Contracts\StorageContract;
@@ -74,8 +75,19 @@ class StorageEloquentService extends BaseService implements StorageContract
 
     $this->policy->can($acc, $storage, 'Storage');
 
-    $storage->fill($request->validated());
-    $storage->save();
+    if (!$request->images) {
+      $storage->fill($request->validated());
+      $storage->save();
+    } else {
+      $src = UploadFile::move($request->images);
+
+      $image_id = Image::create($src)->id;
+      StorageImage::create([
+        'storage_id' => $id,
+        'image_id'   => $image_id
+      ]);
+    }
+
   }
 
   public function deleteStorage(int $id)

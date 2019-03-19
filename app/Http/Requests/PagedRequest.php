@@ -36,8 +36,8 @@ class PagedRequest extends FormRequest
     {
         $obj = new \stdClass;
         $obj->page = $this->page ?? 1;
-        $obj->perPage = $this->perPage ?? 3;
-
+        $obj->perPage = $this->perPage ?? 50;
+        $obj->name = $this->name ?? null;
         return $obj;
     }
 

@@ -25,7 +25,8 @@ abstract class BaseService
     }
 
     if ($name) {
-      $model->where('name', 'LIKE', "%$request->name%");
+      $model->whereRaw('LOWER(`name`) LIKE ? ',[trim(strtolower($name)).'%']);
+      // $model->whereRaw('name', 'LIKE', '%' . strtolower($name));
     }
 
     return $model->get();

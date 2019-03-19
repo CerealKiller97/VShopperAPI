@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class StorageImage extends Model
 {
+
+  protected $table = 'image_storage';
+
   protected $fillable = [
       'storage_id',
       'image_id'
@@ -16,8 +19,8 @@ class StorageImage extends Model
     return $this->belongsToMany(Storage::class);
   }
 
-  public function images()
-  {
-    return $this->belongsToMany(Image::class);
-  }
+  // public function images()
+  // {
+  //   return $this->belongsToMany();
+  // }
 }

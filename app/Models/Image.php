@@ -13,4 +13,8 @@ class Image extends Model
     return $this->hasMany(Account::class);
   }
 
+  // public function storages()
+  // {
+  //   return $this->belongsToMany(StorageImage::class);
+  // }
 }

@@ -13,5 +13,6 @@ interface ProductContract
   public function addProduct(ProductRequest $request);
   public function updateProduct(ProductRequest $request, int $id);
   public function removeProduct(int $id);
-  public function addPictureToProduct(int $id); // product id
+  public function addPictureToProduct(array $images, int $id); // product id
+  public function removePicturesFromProduct(array $images, int $id); // product id
 }

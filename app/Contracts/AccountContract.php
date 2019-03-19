@@ -3,6 +3,7 @@
 namespace App\Contracts;
 
 use App\DTO\AccountDTO;
+use Illuminate\Http\Request;
 use App\Http\Requests\AccountRequest;
 
 interface AccountContract

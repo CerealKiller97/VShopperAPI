@@ -13,15 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-
-Route::get('/test', function () {
-    return [1,23];
-});
-
-Route::get('fake-login', function () {
-    Auth::loginUsingId(6, true);
-});
-
 // Routes require passport token
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/me', 'AccountsController@index');

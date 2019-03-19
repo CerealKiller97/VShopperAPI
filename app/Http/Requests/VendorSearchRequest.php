@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\PagedRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorageRequest extends FormRequest
+class VendorSearchRequest extends PagedRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class StorageRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -23,11 +24,8 @@ class StorageRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'address'         => 'required|max:255',
-            'size'            => 'required|numeric',
-            'storage_type_id' => 'required|numeric',
-            'images'          => 'nullable|image'
-        ];
+        return array_merge(parent::rules(), [
+            ''
+        ]);
     }
 }

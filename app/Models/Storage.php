@@ -22,4 +22,9 @@ class Storage extends Model
     {
       return $this->belongsTo(Account::class);
     }
+
+    public function images()
+    {
+      return $this->belongsToMany(Image::class);
+    }
 }

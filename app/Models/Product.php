@@ -19,4 +19,14 @@ class Product extends Model
     {
       return $this->belongsTo(Account::class);
     }
+
+    public function prices()
+    {
+      return $this->hasMany(Price::class)->latest();
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
 }

@@ -12,20 +12,25 @@ class Category extends Model
         'subcategory_id',
         'image_id'
     ];
-    // TMP SOLUTION
-    protected $hidden = [
-      'created_at',
-      'updated_at'
-    ];
+    // // TMP SOLUTION
+    // protected $hidden = [
+    //   'created_at',
+    //   'updated_at'
+    // ];
 
     public function account()
     {
       return $this->belongsTo(Account::class);
     }
 
+    public function subcategory()
+    {
+      return $this->hasMany(Category::class, 'subcategory_id', 'id');
+    }
+
     public function category()
     {
-      return $this->hasMany(Category::class, 'subcategory_id', 'category_id');
+      return $this->belongsTo(Category::class, 'subcategory_id', 'id');
     }
 
     public function image()
@@ -35,6 +40,6 @@ class Category extends Model
 
     public function scopeDefault($query)
     {
-        return $query->where('account_id', null);
+      return $query->where('account_id', null);
     }
 }

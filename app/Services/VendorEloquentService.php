@@ -5,32 +5,43 @@ namespace App\Services;
 use App\DTO\VendorDTO;
 use App\Models\Vendor;
 use App\Services\BaseService;
+use App\Helpers\PagedResponse;
 use App\Helpers\PolicyChecker;
 use App\Contracts\VendorContract;
+use App\Http\Requests\PagedRequest;
 use App\Http\Requests\VendorRequest;
 
 class VendorEloquentService extends BaseService implements VendorContract
 {
-  public function getVendors() : array
+  public function getVendors(PagedRequest $request) : PagedResponse
   {
-    $vendors = auth()->user()->vendors;
+    $page = $request->getPaging()->page;
+    $perPage = $request->getPaging()->perPage;
+    $name = $request->getPaging()->name;
+
+    $vendor = new Vendor;
+    $account_id =  auth()->user()->id;
+    $acc = $vendor->where('account_id', $account_id);
+    $items = $this->generatePagedResponse($acc, $perPage, $page, $name)->toArray();
+    $vendorsCount = auth()->user()->vendors->count();
+
     $vendorsArr = [];
 
-    foreach ($vendors as $vendor)
+    foreach ($items as $vendor)
     {
       $vendorDTO = new VendorDTO;
 
-      $vendorDTO->id = $vendor->id;
-      $vendorDTO->name = $vendor->name;
-      $vendorDTO->address = $vendor->address;
-      $vendorDTO->pib = $vendor->pib;
-      $vendorDTO->phone = $vendor->phone;
-      $vendorDTO->email = $vendor->email;
+      $vendorDTO->id = $vendor['id'];
+      $vendorDTO->name = $vendor['name'];
+      $vendorDTO->address = $vendor['address'];
+      $vendorDTO->pib = $vendor['pib'];
+      $vendorDTO->phone = $vendor['phone'];
+      $vendorDTO->email = $vendor['email'];
 
       $vendorsArr[] = $vendorDTO;
     }
 
-    return ['data' => $vendorsArr];
+    return new PagedResponse($vendorsArr, $vendorsCount, $page);
   }
 
   public function findVendor(int $id) : VendorDTO

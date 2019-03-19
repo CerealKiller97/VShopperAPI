@@ -14,6 +14,7 @@ class ProductEloquentService extends BaseService implements ProductContract
 {
   public function getProducts(ProductSearchRequest $request) //: PagedResponse
   {
+
     $page = $request->getPaging()->page;
     $perPage = $request->getPaging()->perPage;
 
@@ -22,10 +23,6 @@ class ProductEloquentService extends BaseService implements ProductContract
 
     $acc = $product->where('account_id', $account_id);
 
-    if ($request->name) {
-      $acc->where('name', 'LIKE', "%$request->name%");
-      dd($acc->get());
-    }
 
   }
 
@@ -49,7 +46,12 @@ class ProductEloquentService extends BaseService implements ProductContract
 
   }
 
-  public function addPicturesToProduct(array $images, int $id)
+  public function addPictureToProduct(array $images, int $id)
+  {
+
+  }
+
+  public function removePicturesFromProduct(array $images, int $id)
   {
 
   }

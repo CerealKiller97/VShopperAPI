@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Contracts\VendorContract;
+use App\Http\Requests\PagedRequest;
 use App\Http\Requests\VendorRequest;
 use App\Http\Controllers\ApiController;
 use App\Exceptions\EntityNotFoundException;
@@ -21,9 +22,9 @@ class VendorsController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(PagedRequest $request)
     {
-      return response()->json($this->service->getVendors(), SELF::OK);
+      return response()->json($this->service->getVendors($request), SELF::OK);
     }
 
     /**
