@@ -19,6 +19,8 @@ class CreateProductsTable extends Migration
             $table->unsignedInteger('unit_id');
             $table->unsignedInteger('brand_id');
             $table->unsignedInteger('vendor_id');
+            $table->unsignedInteger('product_type_id');
+
             $table->string('name');
             $table->text('description');
 
@@ -29,6 +31,10 @@ class CreateProductsTable extends Migration
             $table->foreign('unit_id')
                   ->references('id')
                   ->on('units');
+
+            $table->foreign('product_type_id')
+                  ->references('id')
+                  ->on('product_types');
 
             $table->foreign('brand_id')
                   ->references('id')

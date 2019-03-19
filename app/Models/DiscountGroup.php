@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class DiscountGroup extends Model
 {
+    protected $table = 'discount_group';
+
     protected $fillable = [
         'discount_id',
         'group_id'

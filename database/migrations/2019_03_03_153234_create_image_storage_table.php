@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDiscountGroupsTable extends Migration
+class CreateImageStorageTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,18 @@ class CreateDiscountGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('discount_groups', function (Blueprint $table) {
+        Schema::create('image_storage', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('discount_id');
-            $table->unsignedInteger('group_id');
+            $table->unsignedInteger('storage_id');
+            $table->unsignedInteger('image_id');
 
-            $table->foreign('discount_id')
+            $table->foreign('storage_id')
                   ->references('id')
-                  ->on('discounts');
+                  ->on('storages');
 
-            $table->foreign('group_id')
+            $table->foreign('image_id')
                   ->references('id')
-                  ->on('groups');
+                  ->on('images');
 
             $table->timestamps();
         });
@@ -37,6 +37,6 @@ class CreateDiscountGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('discount_groups');
+        Schema::dropIfExists('storage_images');
     }
 }

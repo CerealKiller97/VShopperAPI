@@ -38,6 +38,11 @@ class Category extends Model
       return $this->belongsTo(Image::class);
     }
 
+    public function products()
+    {
+        return $this->belongsToMany(Product::class);
+    }
+
     public function scopeDefault($query)
     {
       return $query->where('account_id', null);
