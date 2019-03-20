@@ -9,6 +9,7 @@ use App\Helpers\UploadFile;
 use App\Models\StorageType;
 use App\Models\StorageImage;
 use Illuminate\Http\Request;
+use App\Helpers\ImageRemover;
 use App\Services\BaseService;
 use App\Helpers\PagedResponse;
 use App\Contracts\StorageContract;
@@ -139,15 +140,8 @@ class StorageEloquentService extends BaseService implements StorageContract
     { // Delete from pivot table
       $i = StorageImage::getByImageID($imageID)->get()[0];
       $i->delete();
-      // Delete from Image table
-      $image =Image::find($imageID);
-      // Delete file from server
-      unlink(public_path('/') . $image->src);
-      $image->delete();
+      ImageRemover::remove($imageID);
     }
-
-    Image::destroy($imageIDS);
   }
-
 }
 

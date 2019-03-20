@@ -93,8 +93,7 @@ class CategoryEloquentService extends BaseService implements CategoryContract
     if ($category->image !== null) {
       unlink(public_path('/') . $category->image->src);
     }
-
     $category->delete();
+    Image::destroy($category->image_id);
   }
-
 }
