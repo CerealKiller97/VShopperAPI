@@ -23,4 +23,9 @@ class StorageImage extends Model
   // {
   //   return $this->belongsToMany();
   // }
+
+  public function scopeGeTByImageID($query, $id)
+  {
+    return $query->where('image_id', $id);
+  }
 }

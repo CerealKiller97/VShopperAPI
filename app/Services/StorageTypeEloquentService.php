@@ -5,16 +5,20 @@ namespace App\Services;
 use App\DTO\StorageTypeDTO;
 use App\Models\StorageType;
 use App\Services\BaseService;
+use App\Helpers\PagedResponse;
 use App\Contracts\StorageTypeContract;
 use App\Http\Requests\StorageTypeRequest;
 
 class StorageTypeEloquentService extends BaseService implements StorageTypeContract
 {
-  public function getStorageTypes() : array
+  public function getStorageTypes() //: PagedResponse
   {
     $default = StorageType::default()->get()->toArray();
     $acc = auth()->user()->storageTypes->toArray();
     $storageTypes = array_merge($default, $acc);
+    $storageTypesTotal = count($storageTypes);
+
+    dd($storageTypes);
 
     $storageTypesArr = [];
     foreach($storageTypes as $storageType)

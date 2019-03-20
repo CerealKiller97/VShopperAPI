@@ -28,6 +28,15 @@ Route::group(['middleware' => ['auth:api']], function () {
         'units'         => 'UnitsController',
         'product-types' => 'ProductTypesController'
     ]);
+    // Routes for handling product images upload / delete
+    Route::post('/products/{id}/images', 'ProductImagesController@add');
+    Route::delete('/products/{id}/images', 'ProductImagesController@delete');
+
+    // Routes for handling product images upload / delete
+    Route::post('/storages/{id}/images', 'StorageImagesController@add');
+    Route::delete('/storages/{id}/images', 'StorageImagesController@delete');
+
+    // Logout route
     Route::post('/logout', 'AuthController@logout');
 });
 

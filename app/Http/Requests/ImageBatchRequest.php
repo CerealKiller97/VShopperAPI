@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ImageRequest extends FormRequest
+class ImageBatchRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,14 @@ class ImageRequest extends FormRequest
     public function rules()
     {
         return [
-            'images' => 'required|array'
+            'images' => 'array|required|exists:images,id'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'images.exists' => 'Images do not exist in DB'
         ];
     }
 }

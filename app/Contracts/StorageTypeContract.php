@@ -7,7 +7,7 @@ use App\Http\Requests\StorageTypeRequest;
 
 interface StorageTypeContract
 {
-  public function getStorageTypes() : PagedResponse;
+  public function getStorageTypes();// : PagedResponse;
   public function findStorageType(int $id): StorageTypeDTO;
   public function addStorageType(StorageTypeRequest $request);
   public function updateStorageType(StorageTypeRequest $request, int $id);
