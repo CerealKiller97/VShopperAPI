@@ -10,6 +10,7 @@ use App\Http\Controllers\ApiController;
 use Illuminate\Database\QueryException;
 use App\Exceptions\BatchDeleteException;
 use App\Http\Requests\ImageBatchRequest;
+use App\Exceptions\EntityNotFoundException;
 
 class StorageImagesController extends ApiController
 {
@@ -24,9 +25,9 @@ class StorageImagesController extends ApiController
       try {
         $this->service->addPicturesToStorage($request, $id);
         return response()->json('Successfully added new picture to storage', SELF::CREATED);
-      } catch(\QueryException $e) {
+      } catch(EntityNotFoundException $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return response()->json($e->getMessage(), SELF::NOT_FOUND);
       } catch(Exception $e) {
         \Log::error($e->getMessage());
         return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);

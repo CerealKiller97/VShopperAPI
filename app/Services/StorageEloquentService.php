@@ -23,7 +23,6 @@ use App\Http\Requests\StorageSearchRequest;
 
 class StorageEloquentService extends BaseService implements StorageContract
 {
-
   public function getStorages(StorageSearchRequest $request) : PagedResponse
   {
     $page = $request->getPaging()->page;
@@ -33,7 +32,7 @@ class StorageEloquentService extends BaseService implements StorageContract
     $account_id =  auth()->user()->id;
 
     $acc = $storages->where('account_id', $account_id);
-    $items = $this->generatePagedResponse($acc, $perPage, $page)->toArray();
+    $items = $this->generatePagedResponse($acc, $perPage, $page);
     $storagesCount = auth()->user()->storages->count();
 
     $storagesArr = [];
@@ -42,14 +41,12 @@ class StorageEloquentService extends BaseService implements StorageContract
     {
       $storageDTO = new StorageDTO;
 
-      $storageDTO->id = $storage['id'];
-      $storageDTO->address = $storage['address'];
-      $storageDTO->size = $storage['size'];
-      $storageDTO->storage_name = ($storage['storage_type_id'])
-         ? StorageType::find($storage['storage_type_id'])->name
-         : null;
+      $storageDTO->id = $storage->id;
+      $storageDTO->address = $storage->address;
+      $storageDTO->size = $storage->size;
+      $storageDTO->storage_name = $storage->type->name;
 
-      $tmp = Storage::find($storage['id'])->images;
+      $tmp = $storage->images;
       $images = $tmp->map(function ($item) {
         $image = new \StdClass;
         $image->id = $item->id;
