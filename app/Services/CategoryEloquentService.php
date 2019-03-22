@@ -24,22 +24,24 @@ class CategoryEloquentService extends BaseService implements CategoryContract
     $account_id =  auth()->user()->id;
 
     $acc = $categories->where('account_id', $account_id);
-    $items = $this->generatePagedResponse($acc, $perPage, $page, $name)->toArray();
-    $categoriesCount = auth()->user()->categories->count();
+    $items = $this->generatePagedResponse($acc, $perPage, $page, $name);
 
+    $default = Category::default()->get();
+
+    $final = $default->merge($items);
+
+    $categoriesCount = $final->count();
 
     $categoriesArr = [];
-    foreach($items as $category)
+
+    foreach($final as $category)
     {
       $categoryDTO = new CategoryDTO;
 
-      $categoryDTO->id = $category['id'];
-      $categoryDTO->name = $category['name'];
-      $categoryDTO->subcategory_id = $category['subcategory_id'];
-
-       $categoryDTO->image = ($category['image_id'])
-         ? Image::find($category['image_id'])->src
-         : null;
+      $categoryDTO->id = $category->id;
+      $categoryDTO->name = $category->name;
+      $categoryDTO->subcategory_id = $category->subcategory_id;
+      $categoryDTO->image = $category->image->src ?? null;
 
       $categoriesArr[] = $categoryDTO;
     }
@@ -69,15 +71,16 @@ class CategoryEloquentService extends BaseService implements CategoryContract
 
   public function addCategory(CategoryRequest $request)
   {
-    $src = UploadFile::move($request->image);
-
-    $image_id = Image::create($src)->id;
+    if ($request->image) {
+      $src = UploadFile::move($request->image);
+      $image_id = Image::create($src)->id;
+    }
 
     $category = Category::create([
       'name' => $request->name,
       'account_id' => auth()->user()->id,
       'subcategory_id' => $request->subcategory_id ?? null,
-      'image_id' => $image_id
+      'image_id' => $image_id ?? null
     ]);
 
   }
