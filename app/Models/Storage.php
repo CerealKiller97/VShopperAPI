@@ -27,4 +27,6 @@ class Storage extends Model
     {
       return $this->belongsToMany(Image::class);
     }
+
 }
+

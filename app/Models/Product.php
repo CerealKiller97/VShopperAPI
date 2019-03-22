@@ -25,6 +25,11 @@ class Product extends Model
     return $this->hasMany(Price::class)->latest();
   }
 
+  public function storages()
+  {
+    return $this->belongsToMany(Storage::class);
+  }
+
   public function brand()
   {
     return $this->belongsTo(Brand::class);

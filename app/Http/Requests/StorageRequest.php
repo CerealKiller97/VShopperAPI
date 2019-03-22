@@ -27,7 +27,6 @@ class StorageRequest extends FormRequest
             'address'         => 'required|max:255',
             'size'            => 'required|numeric',
             'storage_type_id' => 'required|numeric',
-            'images'          => 'nullable|image'
         ];
     }
 }

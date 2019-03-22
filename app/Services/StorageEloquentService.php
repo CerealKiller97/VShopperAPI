@@ -47,8 +47,8 @@ class StorageEloquentService extends BaseService implements StorageContract
       $storageDTO->storage_name = ($storage['storage_type_id'])
          ? StorageType::find($storage['storage_type_id'])->name
          : null;
+
       $tmp = Storage::find($storage['id'])->images;
-      // dd($tmp);
       $images = $tmp->map(function ($item) {
         $image = new \StdClass;
         $image->id = $item->id;
@@ -74,8 +74,18 @@ class StorageEloquentService extends BaseService implements StorageContract
     $storageDTO->id = $storage->id;
     $storageDTO->address = $storage->address;
     $storageDTO->size = $storage->size;
-    $storageDTO->storage_type_id = $storage->storage_type_id;
     $storageDTO->storage_name = $storage->type->name;
+
+    $storageImages = $storage->images;
+
+    $images = $storageImages->map(function ($item) {
+      $image = new \StdClass;
+      $image->id = $item->id;
+      $image->src = $item->src;
+
+      return $image;
+    });
+    $storageDTO->images = $images;
 
     return $storageDTO;
   }
@@ -92,19 +102,8 @@ class StorageEloquentService extends BaseService implements StorageContract
 
     $this->policy->can($acc, $storage, 'Storage');
 
-    if (!$request->images) {
-      $storage->fill($request->validated());
-      $storage->save();
-    } else {
-      $src = UploadFile::move($request->images);
-
-      $image_id = Image::create($src)->id;
-      StorageImage::create([
-        'storage_id' => $id,
-        'image_id'   => $image_id
-      ]);
-    }
-
+    $storage->fill($request->validated());
+    $storage->save();
   }
 
   public function deleteStorage(int $id)
@@ -132,7 +131,8 @@ class StorageEloquentService extends BaseService implements StorageContract
       throw new EntityNotFoundException('Storage not found');
     }
 
-    $images = ($request->all()['images']);
+    $images = $request->validated()['images'];
+
     foreach ($images as $image)
     {
       $src = UploadFile::move($image);
@@ -150,20 +150,22 @@ class StorageEloquentService extends BaseService implements StorageContract
 
     $imageIDS = $request->validated()['images'];
 
-    // $images = StorageImage::whereIn('image_id',  $imageIDS)
-    //                       ->where('storage_id', $id)
-    //                       ->count();
-    $images = \DB::table('image_storage')
-                   ->whereIn('image_id', $imageIDS)
-                   ->where('storage_id', $id)
-                   ->count();
-    dd($images);
+    // $this->policy->canDeleteFromPivotTable('image_storage', $imageIDS, $id, 'storage_id');
 
-    // if ($images === count($imageIDS)) {
-    //   StorageImage::whereIn('image_id',  $imageIDS)->delete();
-    // } else {
-    //   throw new Exception('Ne mere rodjak');
-    // }
+    $images = StorageImage::whereIn('image_id',  $imageIDS)
+                          ->where('storage_id', $id)
+                          ->count();
+
+    // $images = \DB::table('image_storage')
+    //                ->whereIn('image_id', $imageIDS)
+    //                ->where('storage_id', $id)
+    //                ->count();
+
+    if ($images === count($imageIDS)) {
+      StorageImage::whereIn('image_id',  $imageIDS)->delete();
+    } else {
+      throw new Exception('Server error: image id not valid');
+    }
 
     // \DB::table('storage_image')
     //   ->whereIn('image_id', [1, 2, 3])

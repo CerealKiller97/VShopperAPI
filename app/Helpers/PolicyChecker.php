@@ -37,14 +37,33 @@ class PolicyChecker // a.k.a PolicyChecker
     }
   }
 
-  public static function canDeleteFromPivotTable(array $ids, $id)
+  /**
+   * @function can
+   * @param  {string} $tableName  Table name
+   * @param  {array} $ids  Array of ids that we want to delete
+   * @param  {string} $entityIdentifierColumn  Name of entitity's unique field
+   * @param  {int} $id  ID  of entitity's unique field
+   * @return { bool} {bool / Exception }
+   */
+
+   /**
+    * @function canDeleteFromPivotTable
+      @param mixed $name
+      @throws Exception
+    */
+
+  public static function canDeleteFromPivotTable(string $tableName, array $ids,int $id, string $entityIdentifierColumn)
   {
-    $images = StorageImage::whereIn('image_id',  $ids)
-                          ->where('storage_id', $id)
+    $countRow = \DB::table($tableName)
+                          ->whereIn('image_id',  $ids)
+                          ->where($entityIdentifierColumn, $id)
                           ->count();
 
-    if ($images === count($ids)) {
-      StorageImage::whereIn('image_id',  $imageIDS)->delete();
+    if ($countRow === count($ids)) {
+      \DB::table($tableName)
+           ->whereIn($entityIdentifierColumn, $ids)
+           ->delete();
+      // StorageImage::whereIn('image_id',  $imageIDS)->delete();
     } else {
       throw new Exception('Ne mere rodjak');
     }
