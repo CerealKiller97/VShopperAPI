@@ -17,13 +17,13 @@ class BrandEloquentService extends BaseService implements BrandContract
   {
     $page = $request->getPaging()->page;
     $perPage = $request->getPaging()->perPage;
-
+    $name = $request->getPaging()->name;
 
     $brands = new Brand;
     $account_id =  auth()->user()->id;
 
     $acc = $brands->where('account_id', $account_id);
-    $items = $this->generatePagedResponse($acc, $perPage, $page)->toArray();
+    $items = $this->generatePagedResponse($acc, $perPage, $page, $name)->toArray();
     $brandsCount = auth()->user()->brands->count();
 
     $brands = auth()->user()->brands;
