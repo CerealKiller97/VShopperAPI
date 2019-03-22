@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Contracts\GroupContract;
 use App\Http\Requests\GroupRequest;
+use App\Http\Requests\PagedRequest;
 use App\Http\Controllers\ApiController;
 use App\Exceptions\EntityNotFoundException;
 
@@ -20,9 +21,9 @@ class GroupsController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(PagedRequest $request)
     {
-      return response()->json($this->service->getGroups(), SELF::OK);
+      return response()->json($this->service->getGroups($request), SELF::OK);
     }
 
     /**

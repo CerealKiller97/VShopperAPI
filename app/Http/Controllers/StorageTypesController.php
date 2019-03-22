@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\PagedRequest;
 use App\Contracts\StorageTypeContract;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\StorageTypeRequest;
@@ -21,9 +22,9 @@ class StorageTypesController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(PagedRequest $request)
     {
-      return response()->json($this->service->getStorageTypes(), SELF::OK);
+      return response()->json($this->service->getStorageTypes($request), SELF::OK);
     }
 
     /**

@@ -22,12 +22,17 @@ class UnitEloquentService extends BaseService implements UnitContract
     $account_id =  auth()->user()->id;
 
     $acc = $units->where('account_id', $account_id);
-    $items = $this->generatePagedResponse($acc, $perPage, $page, $name)->toArray();
-    $unitsCount = auth()->user()->units->count();
+    $items = $this->generatePagedResponse($acc, $perPage, $page, $name);
+
+    $default = Unit::default()->get();
+
+    $final = $default->merge($items);
+
+    $unitsCount = $final->count();
 
     $unitsArr = [];
 
-    foreach($items as $unit)
+    foreach($final as $unit)
     {
       $unitDTO = new UnitDTO;
 

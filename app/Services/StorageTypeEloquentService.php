@@ -6,32 +6,47 @@ use App\DTO\StorageTypeDTO;
 use App\Models\StorageType;
 use App\Services\BaseService;
 use App\Helpers\PagedResponse;
+use App\Http\Requests\PagedRequest;
 use App\Contracts\StorageTypeContract;
 use App\Http\Requests\StorageTypeRequest;
 
 class StorageTypeEloquentService extends BaseService implements StorageTypeContract
 {
-  public function getStorageTypes() //: PagedResponse
+  public function getStorageTypes(PagedRequest $request) //: PagedResponse
   {
-    $default = StorageType::default()->get()->toArray();
-    $acc = auth()->user()->storageTypes->toArray();
-    $storageTypes = array_merge($default, $acc);
-    $storageTypesTotal = count($storageTypes);
+    $page = $request->getPaging()->page;
+    $perPage = $request->getPaging()->perPage;
+    $name = $request->getPaging()->name;
 
-    dd($storageTypes);
+    $storageTypes = new StorageType;
+    $account_id =  auth()->user()->id;
 
-    $storageTypesArr = [];
-    foreach($storageTypes as $storageType)
-    {
-      $storageTypeDTO = new StorageTypeDTO;
+    $acc = $storageTypes->where('account_id', $account_id);
+    $items = $this->generatePagedResponse($acc, $perPage, $page, $name)->toArray();
+    $storageTypesCount = auth()->user()->storageTypes->count();
 
-      $storageTypeDTO->id = $storageType['id'];
-      $storageTypeDTO->name = $storageType['name'];
+    dd($items);
 
-      $storageTypesArr[] = $storageTypeDTO;
-    }
+    $categoriesArr = [];
+    // $default = StorageType::default()->get()->toArray();
+    // $acc = auth()->user()->storageTypes->toArray();
+    // $storageTypes = array_merge($default, $acc);
+    // $storageTypesTotal = count($storageTypes);
 
-    return ['data' => $storageTypesArr];
+    // dd($storageTypes);
+
+    // $storageTypesArr = [];
+    // foreach($storageTypes as $storageType)
+    // {
+    //   $storageTypeDTO = new StorageTypeDTO;
+
+    //   $storageTypeDTO->id = $storageType['id'];
+    //   $storageTypeDTO->name = $storageType['name'];
+
+    //   $storageTypesArr[] = $storageTypeDTO;
+    // }
+
+    // return ['data' => $storageTypesArr];
   }
 
   public function findStorageType(int $id): StorageTypeDTO
