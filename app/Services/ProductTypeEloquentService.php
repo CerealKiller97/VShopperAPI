@@ -22,8 +22,14 @@ class ProductTypeEloquentService extends BaseService implements ProductTypeContr
     $account_id =  auth()->user()->id;
 
     $acc = $productTypes->where('account_id', $account_id);
-    $items = $this->generatePagedResponse($acc, $perPage, $page, $name)->toArray();
+    $items = $this->generatePagedResponse($acc, $perPage, $page, $name);
     $productTypesCount = auth()->user()->productTypes->count();
+
+    // $default = ProductType::default()->get();
+
+    // $final = $default->merge($items);
+
+    // $unitsCount = $final->count();
 
     $productTypesArr = [];
 
@@ -31,8 +37,8 @@ class ProductTypeEloquentService extends BaseService implements ProductTypeContr
     {
       $productTypeDTO = new ProductTypeDTO;
 
-      $productTypeDTO->id = $productType['id'];
-      $productTypeDTO->name = $productType['name'];
+      $productTypeDTO->id = $productType->id;
+      $productTypeDTO->name = $productType->name;
 
       $productTypesArr[] = $productTypeDTO;
     }

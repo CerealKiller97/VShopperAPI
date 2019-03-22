@@ -22,7 +22,7 @@ class VendorEloquentService extends BaseService implements VendorContract
     $vendor = new Vendor;
     $account_id =  auth()->user()->id;
     $acc = $vendor->where('account_id', $account_id);
-    $items = $this->generatePagedResponse($acc, $perPage, $page, $name)->toArray();
+    $items = $this->generatePagedResponse($acc, $perPage, $page, $name);
     $vendorsCount = auth()->user()->vendors->count();
 
     $vendorsArr = [];
@@ -31,12 +31,12 @@ class VendorEloquentService extends BaseService implements VendorContract
     {
       $vendorDTO = new VendorDTO;
 
-      $vendorDTO->id = $vendor['id'];
-      $vendorDTO->name = $vendor['name'];
-      $vendorDTO->address = $vendor['address'];
-      $vendorDTO->pib = $vendor['pib'];
-      $vendorDTO->phone = $vendor['phone'];
-      $vendorDTO->email = $vendor['email'];
+      $vendorDTO->id = $vendor->id;
+      $vendorDTO->name = $vendor->name;
+      $vendorDTO->address = $vendor->address;
+      $vendorDTO->pib = $vendor->pib;
+      $vendorDTO->phone = $vendor->phone;
+      $vendorDTO->email = $vendor->email;
 
       $vendorsArr[] = $vendorDTO;
     }
