@@ -5,19 +5,29 @@ namespace App\Services;
 use App\DTO\ProductTypeDTO;
 use App\Models\ProductType;
 use App\Services\BaseService;
+use App\Helpers\PagedResponse;
+use App\Http\Requests\PagedRequest;
 use App\Contracts\ProductTypeContract;
 use App\Http\Requests\ProductTypeRequest;
 
 class ProductTypeEloquentService extends BaseService implements ProductTypeContract
 {
-  public function getProductTypes() : array
+  public function getProductTypes(PagedRequest $request) : PagedResponse
   {
-    $default = ProductType::default()->get()->toArray();
-    $acc = auth()->user()->productTypes->toArray();
-    $productTypes = array_merge($default, $acc);
+    $page = $request->getPaging()->page;
+    $perPage = $request->getPaging()->perPage;
+    $name = $request->getPaging()->name;
+
+    $productTypes = new ProductType;
+    $account_id =  auth()->user()->id;
+
+    $acc = $productTypes->where('account_id', $account_id);
+    $items = $this->generatePagedResponse($acc, $perPage, $page, $name)->toArray();
+    $productTypesCount = auth()->user()->productTypes->count();
 
     $productTypesArr = [];
-    foreach($productTypes as $productType)
+
+    foreach($items as $productType)
     {
       $productTypeDTO = new ProductTypeDTO;
 
@@ -27,7 +37,7 @@ class ProductTypeEloquentService extends BaseService implements ProductTypeContr
       $productTypesArr[] = $productTypeDTO;
     }
 
-    return ['data' => $productTypesArr];
+    return new PagedResponse($productTypesArr, $productTypesCount, $page);
   }
 
   public function findProductType(int $id) : ProductTypeDTO
