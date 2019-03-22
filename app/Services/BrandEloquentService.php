@@ -23,18 +23,17 @@ class BrandEloquentService extends BaseService implements BrandContract
     $account_id =  auth()->user()->id;
 
     $acc = $brands->where('account_id', $account_id);
-    $items = $this->generatePagedResponse($acc, $perPage, $page, $name)->toArray();
+    $items = $this->generatePagedResponse($acc, $perPage, $page, $name);
     $brandsCount = auth()->user()->brands->count();
 
-    $brands = auth()->user()->brands;
     $brandsArr = [];
 
     foreach ($items as $brand)
     {
       $brandDTO = new BrandDTO;
 
-      $brandDTO->id = $brand['id'];
-      $brandDTO->name = $brand['name'];
+      $brandDTO->id = $brand->id;
+      $brandDTO->name = $brand->name;
 
       $brandsArr[] = $brandDTO;
     }
