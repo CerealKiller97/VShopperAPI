@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Contracts\UnitContract;
 use App\Http\Requests\UnitRequest;
+use App\Http\Requests\PagedRequest;
 use App\Http\Controllers\ApiController;
 use App\Exceptions\EntityNotFoundException;
 
@@ -20,9 +21,9 @@ class UnitsController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(PagedRequest $request)
     {
-      return response()->json($this->service->getUnits(), SELF::OK);
+      return response()->json($this->service->getUnits($request), SELF::OK);
     }
 
     /**

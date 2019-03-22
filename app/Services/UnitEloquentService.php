@@ -5,19 +5,29 @@ namespace App\Services;
 use App\DTO\UnitDTO;
 use App\Models\Unit;
 use App\Services\BaseService;
+use App\Helpers\PagedResponse;
 use App\Contracts\UnitContract;
 use App\Http\Requests\UnitRequest;
+use App\Http\Requests\PagedRequest;
 
 class UnitEloquentService extends BaseService implements UnitContract
 {
-  public function getUnits() : array
+  public function getUnits(PagedRequest $request) : PagedResponse
   {
-    $default = Unit::default()->get()->toArray();
-    $acc = auth()->user()->units->toArray();
-    $units = array_merge($default, $acc);
+    $page = $request->getPaging()->page;
+    $perPage = $request->getPaging()->perPage;
+    $name = $request->getPaging()->name;
+
+    $units = new Unit;
+    $account_id =  auth()->user()->id;
+
+    $acc = $units->where('account_id', $account_id);
+    $items = $this->generatePagedResponse($acc, $perPage, $page, $name)->toArray();
+    $unitsCount = auth()->user()->units->count();
 
     $unitsArr = [];
-    foreach($units as $unit)
+
+    foreach($items as $unit)
     {
       $unitDTO = new UnitDTO;
 
@@ -28,7 +38,7 @@ class UnitEloquentService extends BaseService implements UnitContract
       $unitsArr[] = $unitDTO;
     }
 
-    return ['data' => $unitsArr];
+    return new PagedResponse($unitsArr, $unitsCount, $page);
   }
 
   public function findUnit(int $id) : UnitDTO
