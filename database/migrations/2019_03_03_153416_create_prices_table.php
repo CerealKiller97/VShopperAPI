@@ -16,11 +16,17 @@ class CreatePricesTable extends Migration
         Schema::create('prices', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('product_id');
+            $table->unsignedInteger('group_id')->nullable();
+
             $table->integer('amount');
 
             $table->foreign('product_id')
                   ->references('id')
                   ->on('products');
+
+            $table->foreign('group_id')
+                  ->references('id')
+                  ->on('groups');
 
             $table->timestamps();
         });

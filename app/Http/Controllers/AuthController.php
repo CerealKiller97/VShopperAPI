@@ -50,7 +50,6 @@ class AuthController extends ApiController
             ]);
             return $response->getBody();
         } catch (\GuzzleHttp\Exception\BadResponseException $e) {
-            dd($e);
             if ($e->getCode() === 400) {
                 return response()->json('Invalid Request. Please enter a username or a password.', $e->getCode());
             } else if ($e->getCode() === 401) {

@@ -20,7 +20,8 @@ class CreateImageStorageTable extends Migration
 
             $table->foreign('storage_id')
                   ->references('id')
-                  ->on('storages');
+                  ->on('storages')
+                  ->onDelete('cascade');
 
             $table->foreign('image_id')
                   ->references('id')

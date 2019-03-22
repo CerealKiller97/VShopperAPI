@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use App\Contracts\StorageContract;
 use App\Http\Requests\ImageRequest;
 use App\Http\Controllers\ApiController;
+use Illuminate\Database\QueryException;
 use App\Http\Requests\ImageBatchRequest;
 use App\Exceptions\EntityNotFoundException;
 

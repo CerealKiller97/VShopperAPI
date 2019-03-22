@@ -25,7 +25,8 @@ class CreateBrandsTable extends Migration
 
             $table->foreign('account_id')
                   ->references('id')
-                  ->on('accounts');
+                  ->on('accounts')
+                  ->onDelete('cascade');
 
             $table->timestamps();
         });

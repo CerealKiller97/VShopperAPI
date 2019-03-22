@@ -36,4 +36,17 @@ class PolicyChecker // a.k.a PolicyChecker
       throw new EntityNotFoundException("$error not found");
     }
   }
+
+  public static function canDeleteFromPivotTable(array $ids, $id)
+  {
+    $images = StorageImage::whereIn('image_id',  $ids)
+                          ->where('storage_id', $id)
+                          ->count();
+
+    if ($images === count($ids)) {
+      StorageImage::whereIn('image_id',  $imageIDS)->delete();
+    } else {
+      throw new Exception('Ne mere rodjak');
+    }
+  }
 }

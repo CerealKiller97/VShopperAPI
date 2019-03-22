@@ -17,9 +17,11 @@ class CreateProductTypesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->unsignedInteger('account_id')->unsigned()->nullable();
+
             $table->foreign('account_id')
                   ->references('id')
-                  ->on('accounts');
+                  ->on('accounts')
+                  ->onDelete('cascade');
 
             $table->timestamps();
         });

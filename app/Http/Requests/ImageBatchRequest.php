@@ -24,7 +24,7 @@ class ImageBatchRequest extends FormRequest
     public function rules()
     {
         return [
-            'images' => 'array|required|exists:images,id'
+            'images' => 'array|required'
         ];
     }
 

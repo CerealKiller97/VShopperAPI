@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Exception;
 use App\Models\Image;
 use App\DTO\StorageDTO;
 use App\Models\Storage;
@@ -21,6 +22,7 @@ use App\Http\Requests\StorageSearchRequest;
 
 class StorageEloquentService extends BaseService implements StorageContract
 {
+
   public function getStorages(StorageSearchRequest $request) : PagedResponse
   {
     $page = $request->getPaging()->page;
@@ -45,6 +47,16 @@ class StorageEloquentService extends BaseService implements StorageContract
       $storageDTO->storage_name = ($storage['storage_type_id'])
          ? StorageType::find($storage['storage_type_id'])->name
          : null;
+      $tmp = Storage::find($storage['id'])->images;
+      // dd($tmp);
+      $images = $tmp->map(function ($item) {
+        $image = new \StdClass;
+        $image->id = $item->id;
+        $image->src = $item->src;
+
+        return $image;
+      });
+      $storageDTO->images = $images;
       $storagesArr[] = $storageDTO;
     }
     return new PagedResponse($storagesArr, $storagesCount, $page);
@@ -134,14 +146,34 @@ class StorageEloquentService extends BaseService implements StorageContract
 
   public function deletePicturesToStorage(ImageBatchRequest $request, int $id)
   {
+    $account_id = auth()->user()->id;
+
     $imageIDS = $request->validated()['images'];
 
-    foreach ($imageIDS as $imageID)
-    { // Delete from pivot table
-      $i = StorageImage::getByImageID($imageID)->get()[0];
-      $i->delete();
-      ImageRemover::remove($imageID);
-    }
+    // $images = StorageImage::whereIn('image_id',  $imageIDS)
+    //                       ->where('storage_id', $id)
+    //                       ->count();
+    $images = \DB::table('image_storage')
+                   ->whereIn('image_id', $imageIDS)
+                   ->where('storage_id', $id)
+                   ->count();
+    dd($images);
+
+    // if ($images === count($imageIDS)) {
+    //   StorageImage::whereIn('image_id',  $imageIDS)->delete();
+    // } else {
+    //   throw new Exception('Ne mere rodjak');
+    // }
+
+    // \DB::table('storage_image')
+    //   ->whereIn('image_id', [1, 2, 3])
+    //   ->delete();
+    // foreach ($imageIDS as $imageID)
+    // { // Delete from pivot table
+    //   $i = StorageImage::getByImageID($imageID)->get()[0];
+    //   $i->delete();
+    //   ImageRemover::remove($imageID);
+    // }
   }
 }
 

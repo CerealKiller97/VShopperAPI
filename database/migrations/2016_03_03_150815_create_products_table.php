@@ -26,7 +26,8 @@ class CreateProductsTable extends Migration
 
             $table->foreign('account_id')
                   ->references('id')
-                  ->on('accounts');
+                  ->on('accounts')
+                  ->onDelete('cascade');
 
             $table->foreign('unit_id')
                   ->references('id')
