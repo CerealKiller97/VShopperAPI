@@ -21,8 +21,7 @@ class CreateStorageTypesTable extends Migration
 
             $table->foreign('account_id')
                   ->references('id')
-                  ->on('accounts')
-                  ->onDelete('cascade');
+                  ->on('accounts');
 
             $table->timestamps();
         });

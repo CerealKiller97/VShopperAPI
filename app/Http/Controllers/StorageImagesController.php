@@ -8,8 +8,8 @@ use App\Contracts\StorageContract;
 use App\Http\Requests\ImageRequest;
 use App\Http\Controllers\ApiController;
 use Illuminate\Database\QueryException;
+use App\Exceptions\BatchDeleteException;
 use App\Http\Requests\ImageBatchRequest;
-use App\Exceptions\EntityNotFoundException;
 
 class StorageImagesController extends ApiController
 {
@@ -24,9 +24,6 @@ class StorageImagesController extends ApiController
       try {
         $this->service->addPicturesToStorage($request, $id);
         return response()->json('Successfully added new picture to storage', SELF::CREATED);
-      } catch (EntityNotFoundException $e) {
-        \Log::error($e->getMessage());
-        return response()->json($e->getMessage(), SELF::NOT_FOUND);
       } catch(\QueryException $e) {
         \Log::error($e->getMessage());
         return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
@@ -41,13 +38,10 @@ class StorageImagesController extends ApiController
       try {
         $this->service-> deletePicturesToStorage($request, $id);
         return response()->json(null, SELF::NO_CONTENT);
-    } catch (EntityNotFoundException $e) {
+      } catch(BatchDeleteException $e) {
         \Log::error($e->getMessage());
-        return response()->json($e->getMessage(), SELF::NOT_FOUND);
-      } catch(\QueryException $e) {
-        \Log::error($e->getMessage());
-        return response()->json($e->getMessage(), SELF::INTERNAL_SERVER_ERROR);
-      } catch(Exception $e) {
+        return response()->json($e->getMessage(), SELF::CONFLICT);
+       }  catch(Exception $e) {
         \Log::error($e->getMessage());
         return response()->json($e->getMessage(), SELF::INTERNAL_SERVER_ERROR);
       }

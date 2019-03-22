@@ -7,19 +7,29 @@ use App\DTO\CategoryDTO;
 use App\Models\Category;
 use App\Helpers\UploadFile;
 use App\Services\BaseService;
+use App\Helpers\PagedResponse;
 use App\Contracts\CategoryContract;
+use App\Http\Requests\PagedRequest;
 use App\Http\Requests\CategoryRequest;
 
 class CategoryEloquentService extends BaseService implements CategoryContract
 {
-  public function getCategories() : array
+  public function getCategories(PagedRequest $request) : PagedResponse
   {
-    $default = Category::default()->get()->toArray();
-    $acc = auth()->user()->categories->toArray();
-    $categories = array_merge($default, $acc);
+    $page = $request->getPaging()->page;
+    $perPage = $request->getPaging()->perPage;
+    $name = $request->getPaging()->name;
+
+    $categories = new Category;
+    $account_id =  auth()->user()->id;
+
+    $acc = $categories->where('account_id', $account_id);
+    $items = $this->generatePagedResponse($acc, $perPage, $page, $name)->toArray();
+    $categoriesCount = auth()->user()->categories->count();
+
 
     $categoriesArr = [];
-    foreach($categories as $category)
+    foreach($items as $category)
     {
       $categoryDTO = new CategoryDTO;
 
@@ -34,7 +44,7 @@ class CategoryEloquentService extends BaseService implements CategoryContract
       $categoriesArr[] = $categoryDTO;
     }
 
-    return ['data' => $categoriesArr];
+    return new PagedResponse($categoriesArr, $categoriesCount, $page);
   }
 
   public function findCategory(int $id) : CategoryDTO

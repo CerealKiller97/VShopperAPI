@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Contracts\CategoryContract;
+use App\Http\Requests\PagedRequest;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Controllers\ApiController;
 use App\Exceptions\EntityNotFoundException;
@@ -21,9 +22,9 @@ class CategoriesController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(PagedRequest $request)
     {
-        return response()->json($this->service->getCategories(), SELF::OK);
+        return response()->json($this->service->getCategories($request), SELF::OK);
     }
 
     /**

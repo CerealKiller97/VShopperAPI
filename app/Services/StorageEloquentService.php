@@ -16,6 +16,7 @@ use App\Helpers\PagedResponse;
 use App\Contracts\StorageContract;
 use App\Http\Requests\ImageRequest;
 use App\Http\Requests\StorageRequest;
+use App\Exceptions\BatchDeleteException;
 use App\Http\Requests\ImageBatchRequest;
 use App\Exceptions\EntityNotFoundException;
 use App\Http\Requests\StorageSearchRequest;
@@ -164,18 +165,8 @@ class StorageEloquentService extends BaseService implements StorageContract
     if ($images === count($imageIDS)) {
       StorageImage::whereIn('image_id',  $imageIDS)->delete();
     } else {
-      throw new Exception('Server error: image id not valid');
+      throw new BatchDeleteException('One of ids is not valid');
     }
-
-    // \DB::table('storage_image')
-    //   ->whereIn('image_id', [1, 2, 3])
-    //   ->delete();
-    // foreach ($imageIDS as $imageID)
-    // { // Delete from pivot table
-    //   $i = StorageImage::getByImageID($imageID)->get()[0];
-    //   $i->delete();
-    //   ImageRemover::remove($imageID);
-    // }
   }
 }
 
