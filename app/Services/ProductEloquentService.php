@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\Group;
 use App\Models\Image;
+use App\Models\Price;
 use App\DTO\ProductDTO;
 use App\Models\Product;
 use App\Models\Storage;
@@ -17,6 +19,7 @@ use App\Http\Requests\ProductRequest;
 use App\Helpers\ImagePivotTableRemover;
 use App\Exceptions\BatchDeleteException;
 use App\Http\Requests\ImageBatchRequest;
+use App\Http\Requests\ProductPriceRequest;
 use App\Exceptions\EntityNotFoundException;
 use App\Http\Requests\ProductSearchRequest;
 use App\Http\Requests\ProductStorageRequest;
@@ -158,6 +161,45 @@ class ProductEloquentService extends BaseService implements ProductContract
     } else {
       throw new BatchDeleteException('One of ids is not valid');
     }
+  }
+  public function addNewPriceToProduct(ProductPriceRequest $request , int $id)
+  {
+    $product = Product::find($id);
+
+    if (!$product) {
+      throw new EntityNotFoundException('Product not found');
+    }
+
+    $account_id = auth()->user()->id;
+
+
+    // Product doesn't belong to auth user
+    if ($product->account->id !== $account_id) {
+      throw new EntityNotFoundException('Product not found');
+    }
+
+    $data = $request->validated();
+    $group_id = $data['group_id'];
+    $amount = $data['amount'];
+
+    $group = Group::find($group_id);
+
+    if (!$group) {
+      throw new EntityNotFoundException('Group not found');
+    }
+
+    if (($group->account_id === null) || ($group_id->account_id === $account_id)) {
+      Price::create([
+        'product_id' => $id,
+        'amount'     => $amount,
+        'group_id'   => $group_id ?? null
+      ]);
+    }
+
+  }
+  public function updatePriceToProduct(ProductPriceRequest $request , int $id)
+  {
+
   }
 
 }

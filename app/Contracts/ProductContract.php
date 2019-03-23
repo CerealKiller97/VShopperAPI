@@ -7,6 +7,7 @@ use App\Helpers\PagedResponse;
 use App\Http\Requests\ImageRequest;
 use App\Http\Requests\ProductRequest;
 use App\Http\Requests\ImageBatchRequest;
+use App\Http\Requests\ProductPriceRequest;
 use App\Http\Requests\ProductSearchRequest;
 use App\Http\Requests\ProductStorageRequest;
 use App\Http\Requests\BatchProductStorageRequest;
@@ -22,4 +23,7 @@ interface ProductContract
   public function deletePicturesFromProduct(ImageBatchRequest $request, int $id); // product id
   public function addProductToStorage(ProductStorageRequest $request , int $id);
   public function deleteProductFromStorage(BatchProductStorageRequest $request , int $id);
+  public function addNewPriceToProduct(ProductPriceRequest $request , int $id); // product_id
+  public function updatePriceToProduct(ProductPriceRequest $request , int $id);
+
 }

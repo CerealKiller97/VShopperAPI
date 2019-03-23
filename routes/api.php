@@ -40,6 +40,10 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/storages/{id}/products', 'ProductStoragesController@add');
     Route::delete('/storages/{id}/products', 'ProductStoragesController@delete');
 
+    // Routes for handling prices adding prices / updating prices
+    Route::post('/prices/products/{id}', 'ProductPricesController@add');
+    Route::put('/prices/products/{id}', 'ProductPricesController@update');
+
     // Logout route
     Route::post('/logout', 'AuthController@logout');
 });
