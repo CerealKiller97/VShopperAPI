@@ -13,13 +13,13 @@ class ProductImage extends Model
         'image_id'
     ];
 
-    public function product()
-    {
-      return $this->belongsToMany(Product::class);
-    }
+    // public function product()
+    // {
+    //   return $this->belongsToMany(Product::class);
+    // }
 
-    public function image()
-    {
-      return $this->belongsToMany(Image::class);
-    }
+    // public function image()
+    // {
+    //   return $this->belongsToMany(Image::class);
+    // }
 }

@@ -16,6 +16,7 @@ use App\Helpers\PagedResponse;
 use App\Contracts\StorageContract;
 use App\Http\Requests\ImageRequest;
 use App\Http\Requests\StorageRequest;
+use App\Helpers\ImagePivotTableRemover;
 use App\Exceptions\BatchDeleteException;
 use App\Http\Requests\ImageBatchRequest;
 use App\Exceptions\EntityNotFoundException;
@@ -144,26 +145,9 @@ class StorageEloquentService extends BaseService implements StorageContract
 
   public function deletePicturesToStorage(ImageBatchRequest $request, int $id)
   {
-    $account_id = auth()->user()->id;
-
     $imageIDS = $request->validated()['images'];
 
-    // $this->policy->canDeleteFromPivotTable('image_storage', $imageIDS, $id, 'storage_id');
-
-    $images = StorageImage::whereIn('image_id',  $imageIDS)
-                          ->where('storage_id', $id)
-                          ->count();
-
-    // $images = \DB::table('image_storage')
-    //                ->whereIn('image_id', $imageIDS)
-    //                ->where('storage_id', $id)
-    //                ->count();
-
-    if ($images === count($imageIDS)) {
-      StorageImage::whereIn('image_id',  $imageIDS)->delete();
-    } else {
-      throw new BatchDeleteException('One of ids is not valid');
-    }
+    ImagePivotTableRemover::remove('image_storage', $imageIDS, $id);
   }
 }
 
