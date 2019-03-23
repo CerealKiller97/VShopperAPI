@@ -10,7 +10,8 @@ class ProductStorage extends Model
 
   protected $fillable = [
       'product_id',
-      'storage_id'
+      'storage_id',
+      'quantity'
   ];
 
   public function product()

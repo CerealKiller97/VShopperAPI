@@ -28,5 +28,9 @@ class Storage extends Model
       return $this->belongsToMany(Image::class);
     }
 
+    public function products()
+    {
+      return $this->belongsToMany(Product::class)->withPivot('quantity');
+    }
 }
 

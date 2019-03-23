@@ -36,6 +36,10 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/storages/{id}/images', 'StorageImagesController@add');
     Route::delete('/storages/{id}/images', 'StorageImagesController@delete');
 
+    // Routes for adding products to storage
+    Route::post('/storages/{id}/products', 'ProductStoragesController@add');
+    Route::delete('/storages/{id}/products', 'ProductStoragesController@delete');
+
     // Logout route
     Route::post('/logout', 'AuthController@logout');
 });
