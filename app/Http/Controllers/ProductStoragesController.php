@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Contracts\ProductContract;
 use App\Http\Controllers\ApiController;
+use App\Exceptions\BatchDeleteException;
 use App\Exceptions\EntityNotFoundException;
 use App\Http\Requests\ProductStorageRequest;
+use App\Http\Requests\BatchProductStorageRequest;
 
 class ProductStoragesController extends ApiController
 {
@@ -30,8 +32,20 @@ class ProductStoragesController extends ApiController
           }
     }
 
-    public function delete(ProductStorageRequest $request ,int $id)
+    public function delete(BatchProductStorageRequest $request ,int $id)
     {
-        # code...
+        try {
+            $this->service->deleteProductFromStorage($request, $id);
+            return response()->json(null, SELF::NO_CONTENT);
+        } catch(BatchDeleteException $e) {
+            \Log::error($e->getMessage());
+            return response()->json($e->getMessage(), SELF::CONFLICT);
+        } catch(EntityNotFoundException $e) {
+            \Log::error($e->getMessage());
+            return response()->json($e->getMessage(), SELF::NOT_FOUND);
+        } catch(Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        }
     }
 }

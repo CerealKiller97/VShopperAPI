@@ -9,6 +9,7 @@ use App\Http\Requests\ProductRequest;
 use App\Http\Requests\ImageBatchRequest;
 use App\Http\Requests\ProductSearchRequest;
 use App\Http\Requests\ProductStorageRequest;
+use App\Http\Requests\BatchProductStorageRequest;
 
 interface ProductContract
 {
@@ -20,5 +21,5 @@ interface ProductContract
   public function addPicturesToProduct(ImageRequest $request, int $id); // product id
   public function deletePicturesFromProduct(ImageBatchRequest $request, int $id); // product id
   public function addProductToStorage(ProductStorageRequest $request , int $id);
-  public function deleteProductFromStorage(ProductStorageRequest $request , int $id);
+  public function deleteProductFromStorage(BatchProductStorageRequest $request , int $id);
 }

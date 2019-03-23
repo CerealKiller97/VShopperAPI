@@ -20,6 +20,7 @@ use App\Http\Requests\ImageBatchRequest;
 use App\Exceptions\EntityNotFoundException;
 use App\Http\Requests\ProductSearchRequest;
 use App\Http\Requests\ProductStorageRequest;
+use App\Http\Requests\BatchProductStorageRequest;
 
 class ProductEloquentService extends BaseService implements ProductContract
 {
@@ -129,9 +130,34 @@ class ProductEloquentService extends BaseService implements ProductContract
 
   }
 
-  public function deleteProductFromStorage(ProductStorageRequest $request , int $id)
+  public function deleteProductFromStorage(BatchProductStorageRequest $request , int $id)
   {
+    $storage = Storage::find($id);
 
+    // Storage doesn't exist in DB
+    if (!$storage) {
+      throw new EntityNotFoundException('Storage not found');
+    }
+
+    $account_id = auth()->user()->id;
+
+      // Storage doesn't belong to auth user
+    if ($storage->account_id !== $account_id) {
+      throw new EntityNotFoundException('Storage not found');
+    }
+
+    $data = $request->validated()['products'];
+
+    $products = ProductStorage::whereIn('product_id', $data)
+                              ->where('storage_id', $id)
+                              ->count();
+
+    if ($products === count($data)) {
+      ProductStorage::whereIn('product_id', $data)
+                    ->delete();
+    } else {
+      throw new BatchDeleteException('One of ids is not valid');
+    }
   }
 
 }
