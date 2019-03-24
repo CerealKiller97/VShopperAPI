@@ -44,6 +44,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/prices/products/{id}', 'ProductPricesController@add');
     Route::put('/prices/products/{id}', 'ProductPricesController@update');
 
+    Route::post('/discounts/products/{id}', 'DiscountsController@add');
+    Route::put('/discounts/products/{id}', 'DiscountsController@update');
+
     // Logout route
     Route::post('/logout', 'AuthController@logout');
 });

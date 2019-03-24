@@ -11,6 +11,7 @@ class Product extends Model
     'unit_id',
     'brand_id',
     'vendor_id',
+    'product_type_id',
     'name',
     'description'
   ];
@@ -25,6 +26,11 @@ class Product extends Model
     return $this->hasMany(Price::class)->latest();
   }
 
+  public function discounts()
+  {
+    return $this->hasMany(Discount::class)->latest();
+  }
+
   public function storages()
   {
     return $this->belongsToMany(Storage::class);
@@ -35,9 +41,24 @@ class Product extends Model
     return $this->belongsTo(Brand::class);
   }
 
+  public function unit()
+  {
+    return $this->belongsTo(Unit::class);
+  }
+
+  public function vendor()
+  {
+    return $this->belongsTo(Vendor::class);
+  }
+
   public function images()
   {
     return $this->belongsToMany(Image::class);
+  }
+
+  public function categories()
+  {
+    return $this->belongsToMany(Category::class);
   }
 
   public function scopePriceByGroup($query, $id)

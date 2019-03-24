@@ -6,6 +6,5 @@ class ProductDTO
 {
   public $id;
   public $name;
-  public $email;
-  public $address;
+  public $brand;
 }

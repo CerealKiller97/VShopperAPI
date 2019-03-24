@@ -6,6 +6,7 @@ use App\DTO\ProductDTO;
 use App\Helpers\PagedResponse;
 use App\Http\Requests\ImageRequest;
 use App\Http\Requests\ProductRequest;
+use App\Http\Requests\DiscountRequest;
 use App\Http\Requests\ImageBatchRequest;
 use App\Http\Requests\ProductPriceRequest;
 use App\Http\Requests\ProductSearchRequest;
@@ -25,5 +26,6 @@ interface ProductContract
   public function deleteProductFromStorage(BatchProductStorageRequest $request , int $id);
   public function addNewPriceToProduct(ProductPriceRequest $request , int $id); // product_id
   public function updatePriceToProduct(ProductPriceRequest $request , int $id);
-
+  public function addDiscountToProduct(DiscountRequest $request, int $id);
+  public function upateDiscountFromProduct(DiscountRequest $request, int $id);
 }

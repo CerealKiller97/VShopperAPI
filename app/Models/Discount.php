@@ -17,4 +17,12 @@ class Discount extends Model
     {
         return $this->hasMany(DiscountGroup::class);
     }
+
+    public function scopeValidDiscountForProduct($query, $id)
+    {
+        // return $query->where([
+        //     'product_id' => $id,
+
+        // ]);
+    }
 }

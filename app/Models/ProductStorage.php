@@ -23,4 +23,12 @@ class ProductStorage extends Model
   {
     return $this->belongsToMany(Storage::class);
   }
+
+  public function scopeGetQuantityByProductIDAndStorageID($query, $product_id, $storage_id)
+  {
+    return $query->where([
+      ['product_id', $product_id],
+      ['storage_id', $storage_id]
+    ]);
+  }
 }

@@ -24,10 +24,10 @@ class DiscountRequest extends FormRequest
     public function rules()
     {
         return [
-            'product_id'  => 'required|numeric',
             'amount'      => 'required|numeric',
             'valid_from'  => 'required|date',
-            'valid_until' => 'required|date'
+            'valid_until' => 'required|date',
+            'group_id'    => 'nullable|numeric'
         ];
     }
 }

@@ -25,15 +25,15 @@ class ProductTypeEloquentService extends BaseService implements ProductTypeContr
     $items = $this->generatePagedResponse($acc, $perPage, $page, $name);
     $productTypesCount = auth()->user()->productTypes->count();
 
-    // $default = ProductType::default()->get();
+    $default = ProductType::default()->get();
 
-    // $final = $default->merge($items);
+    $final = $default->merge($items);
 
-    // $unitsCount = $final->count();
+    $unitsCount = $final->count();
 
     $productTypesArr = [];
 
-    foreach($items as $productType)
+    foreach($final as $productType)
     {
       $productTypeDTO = new ProductTypeDTO;
 

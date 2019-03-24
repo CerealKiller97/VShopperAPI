@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
+    public const DEFAULT_CATEGORY_IDS = [1, 2, 3, 4, 5];
+
     protected $fillable = [
         'name',
         'account_id',
