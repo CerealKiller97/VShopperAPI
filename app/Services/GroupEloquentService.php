@@ -36,8 +36,8 @@ class GroupEloquentService extends BaseService implements GroupContract
     {
       $groupDTO = new GroupDTO;
 
-      $groupDTO->id = $group['id'];
-      $groupDTO->name = $group['name'];
+      $groupDTO->id = $group->id;
+      $groupDTO->name = $group->name;
 
       $groupsArr[] = $groupDTO;
     }
