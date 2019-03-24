@@ -25,7 +25,7 @@ class ProductPriceRequest extends FormRequest
     {
         return [
             'amount'    => 'required|numeric|min:1',
-            'group_id'  => 'required|numeric'
+            'group_id'  => 'nullable|numeric'
         ];
     }
 }

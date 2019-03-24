@@ -37,8 +37,16 @@ class ProductPricesController extends ApiController
     {
         try {
             $this->service->updatePriceToProduct($request, $id);
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
+            return response()->json(null, SELF::NO_CONTENT);
+        } catch(EntityNotFoundException $e) {
+            \Log::error($e->getMessage());
+            return response()->json($e->getMessage(), SELF::NOT_FOUND);
+          } catch(\QueryException $e) {
+            \Log::error($e->getMessage());
+            return response()->json('Server error', INTERNAL_SERVER_ERROR);
+          } catch(Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+          }
     }
 }

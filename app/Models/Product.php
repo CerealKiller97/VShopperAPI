@@ -39,4 +39,9 @@ class Product extends Model
   {
     return $this->belongsToMany(Image::class);
   }
+
+  public function scopePriceByGroup($query, $id)
+  {
+    return $query->prices->where('group_id', $id);
+  }
 }
