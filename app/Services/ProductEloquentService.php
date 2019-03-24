@@ -568,13 +568,6 @@ class ProductEloquentService extends BaseService implements ProductContract
     $data = $request->validated();
     $group_id = $data['group_id'] ?? null;
 
-    // $discount = Discount::where('product_id', $id)->get();
-
-    // // dd($discount);
-
-
-    // dd($tmp->discount_id);
-
     if ($group_id) {
       $group = Group::find($group_id);
 
@@ -597,17 +590,6 @@ class ProductEloquentService extends BaseService implements ProductContract
         'valid_from'   => $data['valid_from'],
         'valid_until'  => $data['valid_until']
       ]);
-      // $discount_id = Discount::create([
-      //   'product_id'  => $id,
-      //   'amount'      => $data['amount'],
-      //   'valid_from'  => $data['valid_from'],
-      //   'valid_until' => $data['valid_until']
-      // ])->id;
-
-      // DiscountGroup::create([
-      //   'discount_id' => $discount_id,
-      //   'group_id'    => $group_id
-      // ]);
     } else {
       $discountsForProduct = Discount::where('product_id', $id)->select('id')->get()->toArray();
       $isOk = DiscountGroup::whereIn('discount_id', $discountsForProduct)->select('discount_id')->get()->toArray();
@@ -627,38 +609,13 @@ class ProductEloquentService extends BaseService implements ProductContract
 
       $finallyDiscount = Discount::find($wantedDiscount->id);
 
-      // dd($finallyDiscount);
       $finallyDiscount->update([
         'product_id'   => $id,
         'amount'       => $data['amount'],
         'valid_from'   => $data['valid_from'],
         'valid_until'  => $data['valid_until']
-        // $request->validated()
       ]);
-
-      // dd(
-      //   Discount::whereNotIn('id', [$whereNotIn])->get()
-      //           // ->where('product_id', $id)
-      //           // ->get()
-      // );
-
-      // $arrayString = implode(',', $isOk['id']);
-
-      // dd($arrayString);
-
-      // dd('no group id discount is for all');
-      // dd($dicount);
-
-      // Discount::create([
-      //   'product_id'  => $id,
-      //   'amount'      => $data['amount'],
-      //   'valid_from'  => $data['valid_from'],
-      //   'valid_until' => $data['valid_until']
-      // ]);
     }
-
-    // $dicount = Discount::where('product_id', $id)->latest()->first();
-
     // dd($dicount);
     // $dt = Carbon::now();
 
