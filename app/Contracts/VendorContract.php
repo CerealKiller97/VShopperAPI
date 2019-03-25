@@ -15,3 +15,4 @@ interface VendorContract
   public function deleteVendor(int $id);
   public function updateVendor(VendorRequest $request, int $id);
 }
+

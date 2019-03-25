@@ -24,7 +24,7 @@ class StoragesController extends ApiController
      */
     public function index(StorageSearchRequest $request)
     {
-      return response()->json($this->service->getStorages($request), SELF::OK);
+      return $this->Ok($this->service->getStorages($request));
     }
 
     /**
@@ -37,13 +37,13 @@ class StoragesController extends ApiController
     {
         try {
             $this->service->addStorage($request);
-            return response()->json('Successfully added new storage', SELF::CREATED);
+            return $this->Created('Successfully added new storage');
           } catch (\QueryException $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           } catch (Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           }
     }
 
@@ -57,13 +57,13 @@ class StoragesController extends ApiController
     {
         try {
             $storage = $this->service->findStorage($id);
-            return response()->json($storage, SELF::OK);
+            return $this->Ok($storage);
           } catch (EntityNotFoundException $e) {
             \Log::error($e->getMessage());
-            return response()->json('Storage not found', SELF::NOT_FOUND);
+            return $this->NotFound($e->getMessage());
           } catch (Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server error');
+            return $this->ServerError();
           }
     }
 
@@ -78,16 +78,16 @@ class StoragesController extends ApiController
     {
         try {
             $this->service->updateStorage($request, $id);
-            return response()->json(null, SELF::NO_CONTENT);
-          } catch (EntityNotFoundException $e) {
+            return $this->NoContent();
+          } catch(EntityNotFoundException $e) {
             \Log::error($e->getMessage());
-            return response()->json($e->getMessage(), SELF::NOT_FOUND);
+            return $this->NotFound($e->getMessage());
           } catch(\QueryException $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           } catch(Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           }
     }
 
@@ -101,16 +101,16 @@ class StoragesController extends ApiController
     {
         try {
             $this->service->deleteStorage($id);
-            return response()->json(null, SELF::NO_CONTENT);
+            return $this->NoContent();
           } catch (EntityNotFoundException $e) {
             \Log::error($e->getMessage());
-            return response()->json($e->getMessage(), SELF::NOT_FOUND);
+            return $this->NotFound($e->getMessage());
           } catch(\QueryException $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           } catch(Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           }
     }
 }

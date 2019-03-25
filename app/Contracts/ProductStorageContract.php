@@ -10,3 +10,4 @@ interface ProductStorageContract
   public function addProductToStorage(ProductStorageRequest $request , int $id);
   public function deleteProductFromStorage(BatchProductStorageRequest $request , int $id);
 }
+

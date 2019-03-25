@@ -1,22 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
 // Routes require passport token
 Route::group(['middleware' => ['auth:api']], function () {
-    Route::get('/me', 'AccountsController@index');
-    Route::patch('/profile/change-password/', 'AccountsController@changePasswrod');
     Route::apiResources([
         'accounts'      => 'AccountsController',
         'products'      => 'ProductsController',
@@ -29,6 +14,9 @@ Route::group(['middleware' => ['auth:api']], function () {
         'units'         => 'UnitsController',
         'product-types' => 'ProductTypesController'
     ]);
+    // Route for changing account password
+    Route::patch('/accounts', 'AccountsController@changePasswrod');
+
     // Routes for handling product images upload / delete
     Route::post('/products/{id}/images', 'ProductImagesController@add');
     Route::delete('/products/{id}/images', 'ProductImagesController@delete');

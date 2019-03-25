@@ -29,6 +29,8 @@ abstract class ApiController extends Controller
       $this->service = $service;
    }
 
+   /* Inspiration ASP to make this status code methods */
+
    // Success response methods
 
    protected function Ok($message)
@@ -52,6 +54,11 @@ abstract class ApiController extends Controller
       return response()->json(['error' => $error], SELF::BAD_REQUEST);
    }
 
+   protected function Unauthorized($error)
+   {
+      return response()->json(['error' => $error], SELF::UNAUTHORIZED);
+   }
+
    protected function Conflitct($error)
    {
       return response()->json(['error' => $error], SELF::CONFLICT);
@@ -64,7 +71,7 @@ abstract class ApiController extends Controller
 
    // Server response methods
 
-   protected function ServerError($error)
+   protected function ServerError($error = 'Server error, please try later.')
    {
       return response()->json(['error' => $error], SELF::INTERNAL_SERVER_ERROR);
    }

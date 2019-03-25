@@ -15,3 +15,4 @@ interface ProductTypeContract
   public function updateProductType(ProductTypeRequest $request, int $id);
   public function deleteProductType(int $id);
 }
+

@@ -15,3 +15,4 @@ interface CategoryContract
   public function updateCategory(CategoryRequest $request, int $id);
   public function deleteCategory(int $id);
 }
+

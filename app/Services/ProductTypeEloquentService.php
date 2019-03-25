@@ -43,7 +43,7 @@ class ProductTypeEloquentService extends BaseService implements ProductTypeContr
       $productTypesArr[] = $productTypeDTO;
     }
 
-    return new PagedResponse($productTypesArr, $productTypesCount, $page);
+    return new PagedResponse($productTypesArr, $unitsCount, $page);
   }
 
   public function findProductType(int $id) : ProductTypeDTO

@@ -51,10 +51,9 @@ class AuthController extends ApiController
             return $response->getBody();
         } catch (\GuzzleHttp\Exception\BadResponseException $e) {
             if ($e->getCode() === 400) {
-                return response()->json('Invalid Request. Please enter a username or a password.', $e->getCode());
+                return $this->BadRequest('Invalid Request. Please enter a username or a password.');
             } else if ($e->getCode() === 401) {
-
-                return response()->json('You credentials are incorrect. Please try again', 401);
+                return $this->Unauthorized('You credentials are incorrect. Please try again.');
             }
             return response()->json('Something went wrong on the server.', $e->getCode());
         }
@@ -67,9 +66,13 @@ class AuthController extends ApiController
 
     public function logout()
     {
-        \DB::table('oauth_access_tokens')
+        try {
+            \DB::table('oauth_access_tokens')
             ->where('user_id', auth()->user()->id)
             ->delete();
-        return response()->json('Logged out successfully', SELF::OK);
+            return $this->Ok('Logged out successfully');
+        } catch(\Exception $e) {
+            return $this->ServerError();
+        }
     }
 }

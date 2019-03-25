@@ -24,7 +24,7 @@ class StorageTypesController extends ApiController
      */
     public function index(PagedRequest $request)
     {
-      return response()->json($this->service->getStorageTypes($request), SELF::OK);
+      return $this->Ok($this->service->getStorageTypes($request));
     }
 
     /**
@@ -37,13 +37,13 @@ class StorageTypesController extends ApiController
     {
         try {
             $this->service->addStorageType($request);
-            return response()->json('Successfully added new storage type', SELF::CREATED);
+            return $this->Created('Successfully added new storage type');
           } catch (\QueryException $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           } catch (Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           }
     }
 
@@ -57,13 +57,13 @@ class StorageTypesController extends ApiController
     {
         try {
             $storageType = $this->service->findStorageType($id);
-            return response()->json($storageType, SELF::OK);
+            return $this->Ok($storageType);
           } catch (EntityNotFoundException $e) {
             \Log::error($e->getMessage());
-            return response()->json('Storage type found', SELF::NOT_FOUND);
+            return $this->NotFound($e->getMessage());
           } catch (Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server error');
+            return $this->ServerError();
           }
     }
 
@@ -78,16 +78,16 @@ class StorageTypesController extends ApiController
     {
         try {
             $this->service->updateStorageType($request, $id);
-            return response()->json(null, SELF::NO_CONTENT);
+            return $this->NoContent();
           } catch (EntityNotFoundException $e) {
             \Log::error($e->getMessage());
-            return response()->json($e->getMessage(), SELF::NOT_FOUND);
+            return $this->NotFound($e->getMessage());
           } catch(\QueryException $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           } catch(Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           }
     }
 
@@ -101,16 +101,16 @@ class StorageTypesController extends ApiController
     {
         try {
             $this->service->deleteStorageType($id);
-            return response()->json(null, SELF::NO_CONTENT);
+            return $this->NoContent();
           } catch (EntityNotFoundException $e) {
             \Log::error($e->getMessage());
-            return response()->json($e->getMessage(), SELF::NOT_FOUND);
+            return $this->NotFound($e->getMessage());
           } catch(\QueryException $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           } catch(Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           }
     }
 }

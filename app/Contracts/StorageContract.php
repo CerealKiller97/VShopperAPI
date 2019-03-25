@@ -17,7 +17,5 @@ interface StorageContract
   public function addStorage(StorageRequest $request);
   public function updateStorage(StorageRequest $request, int $id);
   public function deleteStorage(int $id);
-  public function addPicturesToStorage(ImageRequest $request, int $id);
-  public function deletePicturesToStorage(ImageBatchRequest $request, int $id);
-
 }
+

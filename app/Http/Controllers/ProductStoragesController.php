@@ -22,13 +22,13 @@ class ProductStoragesController extends ApiController
     {
         try {
             $this->service->addProductToStorage($request, $id);
-            return response()->json('Successfully added new product to storage', SELF::CREATED);
+            return $this->Created('Successfully added new product to storage');
           } catch(EntityNotFoundException $e) {
             \Log::error($e->getMessage());
-            return response()->json($e->getMessage(), SELF::NOT_FOUND);
+            return $this->NotFound($e->getMessage());
           } catch(Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           }
     }
 
@@ -36,16 +36,16 @@ class ProductStoragesController extends ApiController
     {
         try {
             $this->service->deleteProductFromStorage($request, $id);
-            return response()->json(null, SELF::NO_CONTENT);
+            return $this->NoContent();
         } catch(BatchDeleteException $e) {
             \Log::error($e->getMessage());
-            return response()->json($e->getMessage(), SELF::CONFLICT);
+            return $this->Conflitct($e->getMessage());
         } catch(EntityNotFoundException $e) {
             \Log::error($e->getMessage());
-            return response()->json($e->getMessage(), SELF::NOT_FOUND);
+            return $this->NotFound($e->getMessage());
         } catch(Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
         }
     }
 }

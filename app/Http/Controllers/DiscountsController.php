@@ -21,19 +21,19 @@ class DiscountsController extends ApiController
     {
         try {
             $this->service->addDiscountToProduct($request, $id);
-            return response()->json('Successfully added new price to product', SELF::CREATED);
+            return $this->Created('Successfully added new price to product');
         } catch(EntityNotFoundException $e) {
             \Log::error($e->getMessage());
-            return response()->json($e->getMessage(), SELF::NOT_FOUND);
+            return $this->NotFound($e->getMessage());
           } catch(InvalidDiscountException $e) {
             \Log::error($e->getMessage());
-            return response()->json($e->getMessage(), SELF::CONFLICT);
+            return $this->Conflitct($e->getMessage());
           } catch(\QueryException $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           } catch(Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           }
     }
 
@@ -41,16 +41,16 @@ class DiscountsController extends ApiController
     {
       try {
         $this->service->upateDiscountFromProduct($request, $id);
-        return response()->json(null, SELF::NO_CONTENT);
+        return $this->NoContent();
       } catch(EntityNotFoundException $e) {
         \Log::error($e->getMessage());
-        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+        return $this->NotFound($e->getMessage());
       } catch(\QueryException $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server error', INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       } catch(Exception $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       }
     }
 }

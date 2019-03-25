@@ -25,7 +25,7 @@ class BrandsController extends ApiController
      */
     public function index(PagedRequest $request)
     {
-        return response()->json($this->service->getBrands($request), SELF::OK);
+        return $this->Ok($this->service->getBrands($request));
     }
 
     /**
@@ -38,13 +38,13 @@ class BrandsController extends ApiController
     {
         try {
             $this->service->addBrand($request);
-            return response()->json('Successfully added new brand', SELF::CREATED);
+            return $this->Created('Successfully added new brand');
           } catch (\QueryException $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           } catch (Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           }
     }
 
@@ -56,16 +56,16 @@ class BrandsController extends ApiController
      */
     public function show($id)
     {
-        try {
-            $brand = $this->service->findBrand($id);
-            return response()->json($brand, SELF::OK);
-          } catch (EntityNotFoundException $e) {
-            \Log::error($e->getMessage());
-            return response()->json('Brand not found', SELF::NOT_FOUND);
-          } catch (Exception $e) {
-            \Log::error($e->getMessage());
-            return response()->json('Server error');
-          }
+      try {
+        $brand = $this->service->findBrand($id);
+        return $this->Ok($brand);
+      } catch (EntityNotFoundException $e) {
+        \Log::error($e->getMessage());
+        return $this->NotFound($e->getMessage());
+      } catch (Exception $e) {
+        \Log::error($e->getMessage());
+        return $this->ServerError();
+      }
     }
 
     /**
@@ -79,16 +79,16 @@ class BrandsController extends ApiController
     {
       try {
         $this->service->updateBrand($request, $id);
-        return response()->json(null, SELF::NO_CONTENT);
+        return $this->NoContent();
       } catch (EntityNotFoundException $e) {
         \Log::error($e->getMessage());
-        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+        return $this->NotFound($e->getMessage());
       } catch(\QueryException $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       } catch(Exception $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       }
     }
 
@@ -102,16 +102,16 @@ class BrandsController extends ApiController
     {
       try {
         $this->service->deleteBrand($id);
-        return response()->json(null, SELF::NO_CONTENT);
+        return $this->NoContent();
       } catch (EntityNotFoundException $e) {
         \Log::error($e->getMessage());
-        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+        return $this->NotFound($e->getMessage());
       } catch(\QueryException $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       } catch(Exception $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       }
     }
 }

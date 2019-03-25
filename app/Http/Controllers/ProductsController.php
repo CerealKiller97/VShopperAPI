@@ -25,7 +25,7 @@ class ProductsController extends ApiController
      */
     public function index(ProductSearchRequest $request)
     {
-      return response()->json($this->service->getProducts($request), SELF::OK);
+      return $this->Ok($this->service->getProducts($request));
     }
 
     /**
@@ -38,16 +38,16 @@ class ProductsController extends ApiController
     {
         try {
             $this->service->addProduct($request);
-            return response()->json('Successfully added new product', SELF::CREATED);
+            return $this->Created('Successfully added new product');
           } catch (EntityNotFoundException $e) {
             \Log::error($e->getMessage());
-            return response()->json($e->getMessage(), SELF::NOT_FOUND);
+            return $this->NotFound($e->getMessage());
           } catch (\QueryException $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           } catch (Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           }
     }
 
@@ -61,13 +61,13 @@ class ProductsController extends ApiController
     {
       try {
         $storage = $this->service->findProduct($id);
-        return response()->json($storage, SELF::OK);
+        return $this->Ok($storage);
       } catch (EntityNotFoundException $e) {
         \Log::error($e->getMessage());
-        return response()->json('Product not found', SELF::NOT_FOUND);
+        return $this->NotFound($e->getMessage());
       } catch (Exception $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server error');
+        return $this->ServerError();
       }
     }
 
@@ -82,16 +82,16 @@ class ProductsController extends ApiController
     {
       try {
         $this->service->updateProduct ($request, $id);
-        return response()->json(null, SELF::NO_CONTENT);
+        return $this->NoContent();
       } catch (EntityNotFoundException $e) {
         \Log::error($e->getMessage());
-        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+        return $this->NotFound($e->getMessage());
       } catch(\QueryException $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       } catch(Exception $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       }
     }
 
@@ -105,16 +105,16 @@ class ProductsController extends ApiController
     {
       try {
         $this->service->deleteProduct($id);
-        return response()->json(null, SELF::NO_CONTENT);
+        return $this->NoContent();
       } catch (EntityNotFoundException $e) {
         \Log::error($e->getMessage());
-        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+        return $this->NotFound($e->getMessage());
       } catch(\QueryException $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       } catch(Exception $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       }
     }
 }

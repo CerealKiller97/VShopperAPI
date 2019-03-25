@@ -23,7 +23,7 @@ class UnitsController extends ApiController
      */
     public function index(PagedRequest $request)
     {
-      return response()->json($this->service->getUnits($request), SELF::OK);
+      return $this->Ok($this->service->getUnits($request));
     }
 
     /**
@@ -36,13 +36,13 @@ class UnitsController extends ApiController
     {
         try {
           $this->service->addUnit($request);
-          return response()->json('Successfully added new unit', SELF::CREATED);
+          return $this->Created('Successfully added new unit');
         } catch (\QueryException $e) {
           \Log::error($e->getMessage());
-          return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+          $this->ServerError();
         } catch (Exception $e) {
           \Log::error($e->getMessage());
-          return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+          $this->ServerError();
         }
 
     }
@@ -57,13 +57,13 @@ class UnitsController extends ApiController
     {
       try {
         $unit = $this->service->findUnit($id);
-        return response()->json($unit, SELF::OK);
+        return $this->Ok($unit);
       } catch (EntityNotFoundException $e) {
         \Log::error($e->getMessage());
-        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+        return $this->NotFound($e->getMessage());
       } catch (Exception $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server error');
+        $this->ServerError();
       }
     }
 
@@ -78,16 +78,16 @@ class UnitsController extends ApiController
     {
       try {
         $this->service->updateUnit($request, $id);
-        return response()->json(null, SELF::NO_CONTENT);
+        return $this->NoContent();
       } catch (EntityNotFoundException $e) {
         \Log::error($e->getMessage());
-        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+        return $this->NotFound($e->getMessage());
       } catch(\QueryException $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        $this->ServerError();
       } catch(Exception $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        $this->ServerError();
       }
     }
 
@@ -101,16 +101,16 @@ class UnitsController extends ApiController
     {
       try {
         $this->service->deleteUnit($id);
-        return response()->json(null, SELF::NO_CONTENT);
+        return $this->NoContent();
       } catch (EntityNotFoundException $e) {
         \Log::error($e->getMessage());
-        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+        return $this->NotFound($e->getMessage());
       } catch(\QueryException $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        $this->ServerError();
       } catch(Exception $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        $this->ServerError();
       }
     }
 }

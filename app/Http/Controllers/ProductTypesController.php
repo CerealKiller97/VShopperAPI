@@ -13,8 +13,8 @@ class ProductTypesController extends ApiController
 {
     public function __construct(ProductTypeContract $service)
     {
-        parent::__construct($service);
-        $this->service = $service;
+      parent::__construct($service);
+      $this->service = $service;
     }
 
     /**
@@ -24,7 +24,7 @@ class ProductTypesController extends ApiController
      */
     public function index(PagedRequest $request)
     {
-        return response()->json($this->service->getProductTypes($request), SELF::OK);
+      return $this->Ok($this->service->getProductTypes($request));
     }
 
     /**
@@ -35,16 +35,16 @@ class ProductTypesController extends ApiController
      */
     public function store(ProductTypeRequest $request)
     {
-        try {
-            $this->service->addProductType($request);
-            return response()->json('Successfully added new product type', SELF::CREATED);
-          } catch (\QueryException $e) {
-            \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
-          } catch (Exception $e) {
-            \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
-          }
+      try {
+          $this->service->addProductType($request);
+          return $this->Created('Successfully added new product type');
+        } catch (\QueryException $e) {
+          \Log::error($e->getMessage());
+          return $this->ServerError();
+        } catch (Exception $e) {
+          \Log::error($e->getMessage());
+          return $this->ServerError();
+        }
     }
 
     /**
@@ -57,13 +57,13 @@ class ProductTypesController extends ApiController
     {
       try {
           $productType = $this->service->findProductType($id);
-          return response()->json($productType, SELF::OK);
+          return $this->Ok($productType);
         } catch (EntityNotFoundException $e) {
           \Log::error($e->getMessage());
-          return response()->json('No product type found', SELF::NOT_FOUND);
+          return $this->NotFound($e->getMessage());
         } catch (Exception $e) {
           \Log::error($e->getMessage());
-          return response()->json('Server error');
+          return $this->ServerError();
         }
     }
 
@@ -78,16 +78,16 @@ class ProductTypesController extends ApiController
     {
         try {
             $this->service->updateProductType($request, $id);
-            return response()->json(null, SELF::NO_CONTENT);
+            return $this->NoContent();
           } catch (EntityNotFoundException $e) {
             \Log::error($e->getMessage());
-            return response()->json($e->getMessage(), SELF::NOT_FOUND);
+            return $this->NotFound($e->getMessage());
           } catch(\QueryException $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           } catch(Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           }
     }
 
@@ -101,16 +101,16 @@ class ProductTypesController extends ApiController
     {
         try {
             $this->service->deleteProductType($id);
-            return response()->json(null, SELF::NO_CONTENT);
+            return $this->NoContent();
           } catch (EntityNotFoundException $e) {
             \Log::error($e->getMessage());
-            return response()->json($e->getMessage(), SELF::NOT_FOUND);
+            return $this->NotFound($e->getMessage());
           } catch(\QueryException $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           } catch(Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError();
           }
     }
 }

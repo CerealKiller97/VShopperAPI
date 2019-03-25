@@ -12,7 +12,7 @@ use App\Http\Requests\StorageTypeRequest;
 
 class StorageTypeEloquentService extends BaseService implements StorageTypeContract
 {
-  public function getStorageTypes(PagedRequest $request) //: PagedResponse
+  public function getStorageTypes(PagedRequest $request) : PagedResponse
   {
     $page = $request->getPaging()->page;
     $perPage = $request->getPaging()->perPage;
@@ -25,13 +25,10 @@ class StorageTypeEloquentService extends BaseService implements StorageTypeContr
     $items = $this->generatePagedResponse($acc, $perPage, $page, $name)->toArray();
     $storageTypesCount = auth()->user()->storageTypes->count();
 
-
     $default = StorageType::default()->get()->toArray();
     $acc = auth()->user()->storageTypes->toArray();
     $storageTypes = array_merge($default, $acc);
     $storageTypesTotal = count($storageTypes);
-
-    // dd($storageTypes);
 
     $storageTypesArr = [];
     foreach($storageTypes as $storageType)

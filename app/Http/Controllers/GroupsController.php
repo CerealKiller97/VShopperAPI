@@ -13,8 +13,8 @@ class GroupsController extends ApiController
 {
     public function __construct(GroupContract $service)
     {
-        parent::__construct($service);
-        $this->service = $service;
+      parent::__construct($service);
+      $this->service = $service;
     }
     /**
      * Display a listing of the resource.
@@ -36,7 +36,7 @@ class GroupsController extends ApiController
     {
         try {
             $this->service->addGroup($request);
-            return $this->created('Successfully added new group');
+            return $this->Created('Successfully added new group');
           } catch (\QueryException $e) {
             \Log::error($e->getMessage());
             return $this->ServerError('Server Error');

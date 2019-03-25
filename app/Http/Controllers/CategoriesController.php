@@ -24,7 +24,7 @@ class CategoriesController extends ApiController
      */
     public function index(PagedRequest $request)
     {
-        return response()->json($this->service->getCategories($request), SELF::OK);
+        return $this->Ok($this->service->getCategories($request));
     }
 
     /**
@@ -37,13 +37,13 @@ class CategoriesController extends ApiController
     {
       try {
         $this->service->addCategory($request);
-        return response()->json('Successfully added new category', SELF::CREATED);
+        return $this->Created('Successfully added new category');
       } catch (\QueryException $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       } catch (Exception $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       }
     }
 
@@ -57,13 +57,13 @@ class CategoriesController extends ApiController
     {
       try {
         $unit = $this->service->findCategory($id);
-        return response()->json($unit, SELF::OK);
+        return $this->Ok($unit);
       } catch (EntityNotFoundException $e) {
         \Log::error($e->getMessage());
-        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+        return $this->NotFound($e->getMessage());
       } catch (Exception $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server error');
+        return $this->ServerError();
       }
     }
 
@@ -78,16 +78,16 @@ class CategoriesController extends ApiController
     {
       try {
         $this->service->updateCategory($request, $id);
-        return response()->json(null, SELF::NO_CONTENT);
+        return $this->NoContent();
       } catch (EntityNotFoundException $e) {
         \Log::error($e->getMessage());
-        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+        return $this->NotFound($e->getMessage());
       } catch(\QueryException $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       } catch(Exception $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       }
     }
 
@@ -101,16 +101,16 @@ class CategoriesController extends ApiController
     {
       try {
         $this->service->deleteCategory($id);
-        return response()->json(null, SELF::NO_CONTENT);
+        return $this->NoContent();
       } catch (EntityNotFoundException $e) {
         \Log::error($e->getMessage());
-        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+        return $this->NotFound($e->getMessage());
       } catch(\QueryException $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       } catch(Exception $e) {
         \Log::error($e->getMessage());
-        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+        return $this->ServerError();
       }
     }
 }

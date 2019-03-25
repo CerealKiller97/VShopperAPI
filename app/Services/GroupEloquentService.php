@@ -12,7 +12,7 @@ use App\Http\Requests\PagedRequest;
 
 class GroupEloquentService extends BaseService implements GroupContract
 {
-  public function getGroups(PagedRequest $request) // : PagedResponse
+  public function getGroups(PagedRequest $request) : PagedResponse
   {
     $page = $request->getPaging()->page;
     $perPage = $request->getPaging()->perPage;

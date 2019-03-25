@@ -15,3 +15,4 @@ interface UnitContract
   public function updateUnit(UnitRequest $request, int $id);
   public function deleteUnit(int $id);
 }
+

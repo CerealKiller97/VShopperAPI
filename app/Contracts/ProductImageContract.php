@@ -10,3 +10,4 @@ interface ProductImageContract
   public function addPicturesToProduct(ImageRequest $request, int $id); // product id
   public function deletePicturesFromProduct(ImageBatchRequest $request, int $id); // product id
 }
+

@@ -18,6 +18,7 @@ use App\Services\GroupEloquentService;
 use Illuminate\Support\Facades\Schema;
 use App\Contracts\ProductImageContract;
 use App\Contracts\ProductPriceContract;
+use App\Contracts\StorageImageContract;
 use App\Services\VendorEloquentService;
 use Illuminate\Support\ServiceProvider;
 use App\Services\AccountEloquentService;
@@ -30,6 +31,7 @@ use App\Services\ProductTypeEloquentService;
 use App\Services\StorageTypeEloquentService;
 use App\Services\ProductImageEloquentService;
 use App\Services\ProductPriceEloquentService;
+use App\Services\StorageImageEloquentService;
 use App\Services\ProductStorageEloquentService;
 use App\Services\ProductDiscountEloquentService;
 
@@ -53,6 +55,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(GroupContract::class, GroupEloquentService::class);
         $this->app->bind(ProductTypeContract::class, ProductTypeEloquentService::class);
         $this->app->bind(StorageTypeContract::class, StorageTypeEloquentService::class);
+        $this->app->bind(StorageImageContract::class, StorageImageEloquentService::class);
         $this->app->bind(ProductStorageContract::class, ProductStorageEloquentService::class);
         $this->app->bind(ProductImageContract::class, ProductImageEloquentService::class);
         $this->app->bind(ProductPriceContract::class, ProductPriceEloquentService::class);
