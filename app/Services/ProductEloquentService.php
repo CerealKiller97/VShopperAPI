@@ -47,8 +47,6 @@ class ProductEloquentService extends BaseService implements ProductContract
     $product = new Product;
     $account_id =  auth()->user()->id;
 
-    dd(auth()->user()->products);
-
     $acc = $product->where('account_id', $account_id)->get();
 
     $productArr = [];
@@ -60,115 +58,146 @@ class ProductEloquentService extends BaseService implements ProductContract
       $productDTO->id = $product->id;
       $productDTO->name = $product->name;
       $productDTO->description = $product->description;
+      $productDTO->brand = $product->brand->name;
 
-      // $productDTO->brand = $product->brand->name;
+      $tmpCategories = $product->categories;
 
-      // Brand packing
-      $tmpBrand = $product->brand;
-      $brandObj = new \StdClass;
-      $brandObj->id = $tmpBrand->id;
-      $brandObj->name = $tmpBrand->name;
+      $categoryInfo = $tmpCategories->map(function ($category) {
+        $categoryObj = new \StdClass;
+        $categoryObj->id = $category->id;
+        $categoryObj->name = $category->name;
 
-      $productDTO->brand = $brandObj;
-
-      // unit packing
-      $tmpUnit = $product->unit;
-      $unitObj = new \StdClass;
-      $unitObj->id = $tmpUnit->id;
-      $unitObj->unit = $tmpUnit->name;
-
-      $productDTO->unit = $unitObj;
-
-      // images
-      $tmpImages = $product->images;
-      $images = $tmpImages->map(function ($item) {
-        $image = new \StdClass;
-
-        $image->id = $item->id;
-        $image->src = $item->src;
-
-        return $image;
+        return $categoryObj;
       });
 
-      // storages
+      $productDTO->categories = $categoryInfo;
+
+      $tmpPrices = $product->prices;
+
+      $pricesPerGroups = $tmpPrices->map(function ($pricesPerGroup) {
+        $group = new \StdClass;
+
+        if ($pricesPerGroup->group_id === null) {
+            $group->name = 'Everyone';
+            $group->price = $pricesPerGroup->amount;
+        } else {
+          $groupTmp = Group::find($pricesPerGroup->group_id);
+          $group->name = $groupTmp->name;
+          $group->price = $pricesPerGroup->amount;
+        }
+
+        return $group;
+      });
+
+      $productDTO->prices = $pricesPerGroups;
 
       $tmpStorages = $product->storages;
 
-      $arrayStorages = [];
-
-      $temporaryStorages = $tmpStorages->map(function ($item) use ($product) {
-        $storage = new \StdClass;
-        $storage->name = $item->address;
-        $storage->type = $item->type->name;
-
-        // $tmp = ProductStorage::where([
-        //   ['product_id', $product->id]
-        // ])->get()
-        //   ->toArray();
-        $queryBuilderTmp = \DB::table('product_storage')
-                              ->select('quantity')
-                              ->where([
-                                ['product_id', $product->id]
-                              ])
-                              ->get();
-
-          foreach($queryBuilderTmp as $x)
-          {
-            $storage->quantity = $x;
-            continue;
-          }
-
-        return $storage;
+      $storageInfo = $tmpStorages->map(function ($storage) use ($product) {
+        $storageObj = new \StdClass;
+        $storageObj->type = $storage->type->name;
+        $storageObj->address = $storage->address;
+        $tmpQuantity = ProductStorage::where([
+          ['storage_id', $storage->id],
+          ['product_id', $product->id]
+        ])->first();
+        $storageObj->quantity = $tmpQuantity->quantity;
+        $storageObj->unit = $product->unit->abbr;
+        return $storageObj;
       });
 
-      dd($temporaryStorages);
+      $productDTO->storages = $storageInfo;
 
-      // foreach($tmpStorages as $item)
-      // {
-      //   $storage = new \StdClass;
-      //   $storage->name = $item->address;
+      $tmpImages = $product->images;
 
-      //   $pivot = ProductStorage::where([
-      //     ['product_id', $product->id]
-      //   ])->get();
-      //   dd($pivot);
-      //   $storage->quantity = $pivot->quantity;
-      //   $arrayStorages[] = $storage;
-      // }
+      $imageInfo = $tmpImages->map(function ($image) use ($product) {
+        $imageObj = new \StdClass;
 
-      // dd($arrayStorages);
+        $imageObj->id = $image->id;
+        $imageObj->src = $image->src;
 
-      // $storages = $tmpStorages->map(function ($item) use ($product) {
-      //   $array = [];
-      //   $storage = new \StdClass;
-      //   $storage->name = $item->address;
+        return $imageObj;
+      });
 
-      //   $pivot = ProductStorage::where([
-      //     ['product_id', $product->id]
-      //   ])->get();
+      $tmpDiscounts = $product->discounts;
+
+      $discountInfo = $tmpDiscounts->map(function ($discount) use ($product) {
+        $discountObj = new \StdClass;
+
+        $discountsForProduct = Discount::where('product_id', $product->id)->select('id')->get()->toArray();
+        $isOk = DiscountGroup::whereIn('discount_id', $discountsForProduct)->select('discount_id')->get()->toArray();
+
+        $whereNotIn = [];
+        foreach($isOk as $key => $x)
+        {
+          $whereNotIn[] = $x['discount_id'];
+        }
+
+        $group = new \StdClass;
+        $tmpPivot = DiscountGroup::whereIn(
+          'discount_id', $whereNotIn
+        )->select('group_id')
+         ->get()
+         ->toArray();
+
+        foreach($tmpPivot as $x)
+        {
+          $g = Group::find($x['group_id']); // ->orderBy('created_at', 'ASC')->first()->discounts[0];
+
+          // $tmp = Group::find($x['group_id']);
+          // $g->sort(function ($a, $b) {
+          //   return $b->created_at < $a->created_at;
+          // });
+          dd($g);
+
+          $discountObj->name = $g->name;
+        }
+        $discountObj->discount = $discount->amount;
+        $discountObj->valid_until = $discount->valid_until;
 
 
 
-      //   // $x = $pivot->map(function ($i) use ($storage, $item) {
-      //   //   $storage = new \StdClass;
-      //   //   $storage->name = $item->address;
-      //   //   $storage->quantity = $i->quantity;
-      //   //   return $storage;
-      //   // });
+        // Default discount
+        $discountsForProduct = Discount::where('product_id', $product->id)->select('id')->get()->toArray();
+        $isOk = DiscountGroup::whereIn('discount_id', $discountsForProduct)->select('discount_id')->get()->toArray();
+        $whereNotIn = [];
+        foreach($isOk as $key => $x)
+        {
+          $whereNotIn[] = $x['discount_id'];
+        }
 
-      //   // dd($pivot);
+        $discountExcludingGroupDiscount = \DB::table('discounts')
+                                             ->whereNotIn('id', $whereNotIn)
+                                             ->get();
 
-      //   // $quantity = $pivot->quantity;
+        $wantedDiscount = $discountExcludingGroupDiscount->filter(function ($item) use ($product) {
+          return $item->product_id === $product->id;
+        })->values()[0];
 
-      //   // $storage->quantity = $quantity;
+        $finallyDiscount = Discount::find($wantedDiscount->id);
 
-      //   // return $storage;
-      // });
+        // if ($tmpPivot->group_id) {
+        //   $tmpG = Group::find($tmpPivot->group_id);
+        //   $group->name = $tmpG->name;
+        //   $group->discount = $discount->amount;
+        // } elseif ($tmpPivot->group_id === null) {
+        //   dd('mozda svi cena');
+        // }
 
+        // if ($pricesPerGroup->group_id === null) {
+        //     $group->name = 'Everyone';
+        //     $group->price = $pricesPerGroup->amount;
+        // } else {
+        //   $groupTmp = Group::find($pricesPerGroup->group_id);
+        //   $group->name = $groupTmp->name;
+        //   $group->price = $pricesPerGroup->amount;
+        // }
+        return $discountObj;
+      });
 
-      $productDTO->storages = $tmpStorages;
+      $productDTO->discounts = $discountInfo;
 
-      $productDTO->images = $images;
+      $productDTO->images = $imageInfo;
 
       $productArr[] = $productDTO;
     }
@@ -178,10 +207,159 @@ class ProductEloquentService extends BaseService implements ProductContract
 
   public function findProduct(int $id) : ProductDTO
   {
-     // $group_id = $request->validated()['group_id'] ?? null;
-    // $product = Product::find($id);
+    $product = Product::find($id);
 
-    //  dd($product->prices->where('group_id', $group_id)->first());
+    if (!$product) {
+      throw new EntityNotFoundException('Product not found');
+    }
+
+    $account_id = auth()->user()->id;
+
+    if ($product->account_id !== $account_id) {
+      throw new EntityNotFoundException('Product not found');
+    }
+
+    $productDTO = new ProductDTO;
+
+    $productDTO->id = $product->id;
+    $productDTO->name = $product->name;
+    $productDTO->description = $product->description;
+    $productDTO->brand = $product->brand->name;
+
+    $tmpCategories = $product->categories;
+
+    $categoryInfo = $tmpCategories->map(function ($category) {
+      $categoryObj = new \StdClass;
+      $categoryObj->id = $category->id;
+      $categoryObj->name = $category->name;
+
+      return $categoryObj;
+    });
+
+    $productDTO->categories = $categoryInfo;
+
+    $tmpPrices = $product->prices;
+
+    $pricesPerGroups = $tmpPrices->map(function ($pricesPerGroup) {
+      $group = new \StdClass;
+
+      if ($pricesPerGroup->group_id === null) {
+          $group->name = 'Everyone';
+          $group->price = $pricesPerGroup->amount;
+      } else {
+        $groupTmp = Group::find($pricesPerGroup->group_id);
+        $group->name = $groupTmp->name;
+        $group->price = $pricesPerGroup->amount;
+      }
+
+      return $group;
+    });
+
+    $productDTO->prices = $pricesPerGroups;
+
+    $tmpStorages = $product->storages;
+
+    $storageInfo = $tmpStorages->map(function ($storage) use ($product) {
+      $storageObj = new \StdClass;
+      $storageObj->type = $storage->type->name;
+      $storageObj->address = $storage->address;
+      $tmpQuantity = ProductStorage::where([
+        ['storage_id', $storage->id],
+        ['product_id', $product->id]
+      ])->first();
+      $storageObj->quantity = $tmpQuantity->quantity;
+      $storageObj->unit = $product->unit->abbr;
+      return $storageObj;
+    });
+
+    $productDTO->storages = $storageInfo;
+
+    $tmpImages = $product->images;
+
+    $imageInfo = $tmpImages->map(function ($image) use ($product) {
+      $imageObj = new \StdClass;
+
+      $imageObj->id = $image->id;
+      $imageObj->src = $image->src;
+
+      return $imageObj;
+    });
+
+    $tmpDiscounts = $product->discounts;
+
+    $discountInfo = $tmpDiscounts->map(function ($discount) use ($product) {
+      $discountObj = new \StdClass;
+
+
+      $discountsForProduct = Discount::where('product_id', $product->id)->select('id')->get()->toArray();
+      $isOk = DiscountGroup::whereIn('discount_id', $discountsForProduct)->select('discount_id')->get()->toArray();
+
+      $whereNotIn = [];
+      foreach($isOk as $key => $x)
+      {
+        $whereNotIn[] = $x['discount_id'];
+      }
+
+      $group = new \StdClass;
+      $tmpPivot = DiscountGroup::whereIn(
+        'discount_id', $whereNotIn
+      )->select('group_id')
+       ->get()
+       ->toArray();
+
+      foreach($tmpPivot as $x)
+      {
+        $g = Group::find($x['group_id']);
+        $discountObj->name = $g->name;
+      }
+
+
+      $discountObj->discount = $discount->amount;
+      $discountObj->valid_until = $discount->valid_until;
+
+      // Default discount
+      $discountsForProduct = Discount::where('product_id', $product->id)->select('id')->get()->toArray();
+      $isOk = DiscountGroup::whereIn('discount_id', $discountsForProduct)->select('discount_id')->get()->toArray();
+      $whereNotIn = [];
+      foreach($isOk as $key => $x)
+      {
+        $whereNotIn[] = $x['discount_id'];
+      }
+
+      $discountExcludingGroupDiscount = \DB::table('discounts')
+                                           ->whereNotIn('id', $whereNotIn)
+                                           ->get();
+
+      $wantedDiscount = $discountExcludingGroupDiscount->filter(function ($item) use ($product) {
+        return $item->product_id === $product->id;
+      })->values()[0];
+
+      $finallyDiscount = Discount::find($wantedDiscount->id);
+
+      // if ($tmpPivot->group_id) {
+      //   $tmpG = Group::find($tmpPivot->group_id);
+      //   $group->name = $tmpG->name;
+      //   $group->discount = $discount->amount;
+      // } elseif ($tmpPivot->group_id === null) {
+      //   dd('mozda svi cena');
+      // }
+
+      // if ($pricesPerGroup->group_id === null) {
+      //     $group->name = 'Everyone';
+      //     $group->price = $pricesPerGroup->amount;
+      // } else {
+      //   $groupTmp = Group::find($pricesPerGroup->group_id);
+      //   $group->name = $groupTmp->name;
+      //   $group->price = $pricesPerGroup->amount;
+      // }
+      return $discountObj;
+    });
+
+    $productDTO->discounts = $discountInfo;
+
+    $productDTO->images = $imageInfo;
+
+    return $productDTO;
   }
 
   public function addProduct(ProductRequest $request)
@@ -292,12 +470,23 @@ class ProductEloquentService extends BaseService implements ProductContract
 
   public function updateProduct(ProductRequest $request, int $id)
   {
+    $acc = auth()->user()->products;
+    $product = Product::find($id);
 
+    $this->policy->can($acc, $product, 'Product');
+
+    $product->fill($request->validated());
+    $product->save();
   }
 
-  public function removeProduct(int $id)
+  public function deleteProduct(int $id)
   {
+    $acc = auth()->user()->products;
+    $product = Product::find($id);
 
+    $this->policy->can($acc, $product, 'Product');
+
+    $product->delete();
   }
 
   public function addPicturesToProduct(ImageRequest $request, int $id)
@@ -390,6 +579,7 @@ class ProductEloquentService extends BaseService implements ProductContract
 
     $data = $request->validated()['products'];
 
+
     $products = ProductStorage::whereIn('product_id', $data)
                               ->where('storage_id', $id)
                               ->count();
@@ -401,6 +591,7 @@ class ProductEloquentService extends BaseService implements ProductContract
       throw new BatchDeleteException('One of ids is not valid');
     }
   }
+
   public function addNewPriceToProduct(ProductPriceRequest $request , int $id)
   {
     $product = Product::find($id);
@@ -444,6 +635,7 @@ class ProductEloquentService extends BaseService implements ProductContract
       ]);
     }
   }
+
   public function updatePriceToProduct(ProductPriceRequest $request , int $id)
   {
     $product = Product::find($id);

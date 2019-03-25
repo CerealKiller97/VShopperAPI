@@ -20,7 +20,8 @@ class CreateDiscountGroupTable extends Migration
 
             $table->foreign('discount_id')
                   ->references('id')
-                  ->on('discounts');
+                  ->on('discounts')
+                  ->onDelete('cascade');
 
             $table->foreign('group_id')
                   ->references('id')

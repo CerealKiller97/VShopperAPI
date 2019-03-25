@@ -59,18 +59,16 @@ class ProductsController extends ApiController
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+      try {
+        $storage = $this->service->findProduct($id);
+        return response()->json($storage, SELF::OK);
+      } catch (EntityNotFoundException $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Product not found', SELF::NOT_FOUND);
+      } catch (Exception $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server error');
+      }
     }
 
     /**
@@ -80,9 +78,21 @@ class ProductsController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
-        //
+      try {
+        $this->service->updateProduct ($request, $id);
+        return response()->json(null, SELF::NO_CONTENT);
+      } catch (EntityNotFoundException $e) {
+        \Log::error($e->getMessage());
+        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+      } catch(\QueryException $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      } catch(Exception $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      }
     }
 
     /**
@@ -93,6 +103,18 @@ class ProductsController extends ApiController
      */
     public function destroy($id)
     {
-        //
+      try {
+        $this->service->deleteProduct($id);
+        return response()->json(null, SELF::NO_CONTENT);
+      } catch (EntityNotFoundException $e) {
+        \Log::error($e->getMessage());
+        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+      } catch(\QueryException $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      } catch(Exception $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      }
     }
 }

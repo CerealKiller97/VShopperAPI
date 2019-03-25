@@ -19,7 +19,7 @@ interface ProductContract
   public function findProduct(int $id) : ProductDTO;
   public function addProduct(ProductRequest $request);
   public function updateProduct(ProductRequest $request, int $id);
-  public function removeProduct(int $id);
+  public function deleteProduct(int $id);
   public function addPicturesToProduct(ImageRequest $request, int $id); // product id
   public function deletePicturesFromProduct(ImageBatchRequest $request, int $id); // product id
   public function addProductToStorage(ProductStorageRequest $request , int $id);

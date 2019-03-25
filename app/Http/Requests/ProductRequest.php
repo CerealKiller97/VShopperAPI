@@ -33,4 +33,16 @@ class ProductRequest extends FormRequest
             'categories'      => 'required|array'
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'unit_id.required'         => 'Unit is required',
+            'brand_id.required'        => 'Brand is required',
+            'vendor_id.required'       => 'Vendor is required',
+            'product_type_id.required' => 'Product type is required',
+
+
+        ];
+    }
 }

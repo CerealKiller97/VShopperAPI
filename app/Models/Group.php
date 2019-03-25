@@ -18,7 +18,7 @@ class Group extends Model
 
   public function discounts()
   {
-    return $this->belongsToMany(Discount::class);
+    return $this->belongsToMany(Discount::class)->latest();
   }
 
   public function scopeDefault($query)
