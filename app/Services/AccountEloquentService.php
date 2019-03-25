@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\AccountRequest;
 use Illuminate\Database\QueryException;
 use App\Exceptions\NotVerifiedException;
+use App\Http\Requests\UpdateAccountRequest;
+use App\Http\Requests\ChangeAccountPasswordRequest;
 
 class AccountEloquentService extends BaseService implements AccountContract
 {
@@ -59,17 +61,23 @@ class AccountEloquentService extends BaseService implements AccountContract
      ]);
   }
 
-  public function deactivateAccount($id)
+  public function deactivateAccount()
   {
-
+    /*
+     $acc = auth()->user();
+     $acc->update([
+       'deactivate' => true
+     ])
+    */
   }
 
-  public function updateAccount(AccountRequest $request, int $id)
+  public function updateAccount(UpdateAccountRequest $request, int $id)
   {
-    $acc = auth()->user()->id;
-    dd($acc);
+    $acc = auth()->user();
+    $acc->fill($request->validated());
 
-    // $acc->fill()
+    $acc->save();
+
   }
 
   public function findAccount(int $id) : AccountDTO
@@ -102,9 +110,10 @@ class AccountEloquentService extends BaseService implements AccountContract
     return true;
   }
 
-  public function changePassword(int $id, string $password)
+  public function changePassword(ChangeAccountPasswordRequest $request)
   {
     $user = auth()->user();
-    $user->update(['password' => Hash::make($password)]);
+    $user->update(['password' => Hash::make($request->password)]);
   }
+
 }

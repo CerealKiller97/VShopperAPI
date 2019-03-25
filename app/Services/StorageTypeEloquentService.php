@@ -25,28 +25,26 @@ class StorageTypeEloquentService extends BaseService implements StorageTypeContr
     $items = $this->generatePagedResponse($acc, $perPage, $page, $name)->toArray();
     $storageTypesCount = auth()->user()->storageTypes->count();
 
-    dd($items);
 
-    $categoriesArr = [];
-    // $default = StorageType::default()->get()->toArray();
-    // $acc = auth()->user()->storageTypes->toArray();
-    // $storageTypes = array_merge($default, $acc);
-    // $storageTypesTotal = count($storageTypes);
+    $default = StorageType::default()->get()->toArray();
+    $acc = auth()->user()->storageTypes->toArray();
+    $storageTypes = array_merge($default, $acc);
+    $storageTypesTotal = count($storageTypes);
 
     // dd($storageTypes);
 
-    // $storageTypesArr = [];
-    // foreach($storageTypes as $storageType)
-    // {
-    //   $storageTypeDTO = new StorageTypeDTO;
+    $storageTypesArr = [];
+    foreach($storageTypes as $storageType)
+    {
+      $storageTypeDTO = new StorageTypeDTO;
 
-    //   $storageTypeDTO->id = $storageType['id'];
-    //   $storageTypeDTO->name = $storageType['name'];
+      $storageTypeDTO->id = $storageType['id'];
+      $storageTypeDTO->name = $storageType['name'];
 
-    //   $storageTypesArr[] = $storageTypeDTO;
-    // }
+      $storageTypesArr[] = $storageTypeDTO;
+    }
 
-    // return ['data' => $storageTypesArr];
+    return new PagedResponse($storageTypesArr, $storageTypesTotal, $page);
   }
 
   public function findStorageType(int $id): StorageTypeDTO

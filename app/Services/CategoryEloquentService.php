@@ -109,4 +109,5 @@ class CategoryEloquentService extends BaseService implements CategoryContract
     $category->delete();
     Image::destroy($category->image_id);
   }
+
 }

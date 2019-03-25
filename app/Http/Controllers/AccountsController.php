@@ -12,6 +12,8 @@ use App\Http\Requests\AccountRequest;
 use App\Http\Controllers\ApiController;
 use App\Http\Resources\AccountResource;
 use App\Exceptions\EntityNotFoundException;
+use App\Http\Requests\UpdateAccountRequest;
+use App\Http\Requests\ChangeAccountPasswordRequest;
 
 
 class AccountsController extends ApiController
@@ -77,21 +79,21 @@ class AccountsController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateAccountRequest $request, $id)
     {
-      // try {
-      //   $this->service->updateAccount($request, $id);
-      //   return response()->json(null, SELF::NO_CONTENT);
-      // } catch (EntityNotFoundException $e) {
-      //   \Log::error($e->getMessage());
-      //   return response()->json($e->getMessage(), SELF::NOT_FOUND);
-      // } catch(\QueryException $e) {
-      //   \Log::error($e->getMessage());
-      //   return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
-      // } catch(Exception $e) {
-      //   \Log::error($e->getMessage());
-      //   return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
-      // }
+      try {
+        $this->service->updateAccount($request, $id);
+        return response()->json(null, SELF::NO_CONTENT);
+      } catch (EntityNotFoundException $e) {
+        \Log::error($e->getMessage());
+        return response()->json($e->getMessage(), SELF::NOT_FOUND);
+      } catch(\QueryException $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      } catch(Exception $e) {
+        \Log::error($e->getMessage());
+        return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+      }
     }
 
     /**
@@ -100,7 +102,7 @@ class AccountsController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Account $account)
+    public function destroy(int $id)
     {
       try {
         $account->delete();
@@ -108,6 +110,20 @@ class AccountsController extends ApiController
       } catch (Exception $e) {
         \Log::error($e->getMessage());
         return response()->json('Server error!', 400);
+      }
+    }
+
+    public function changePasswrod(ChangeAccountPasswordRequest $request)
+    {
+      try {
+        $this->service->changePassword($request);
+        return response()->json(null, SELF::NO_CONTENT);
+      }  catch(\QueryException $e) {
+        \Log::error($e->getMessage());
+        return response()->json($e->getMessage(), SELF::INTERNAL_SERVER_ERROR);
+      } catch(Exception $e) {
+        \Log::error($e->getMessage());
+        return response()->json($e->getMessage(), SELF::INTERNAL_SERVER_ERROR);
       }
     }
 }

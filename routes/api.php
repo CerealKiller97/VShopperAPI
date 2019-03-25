@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 // Routes require passport token
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/me', 'AccountsController@index');
+    Route::patch('/profile/change-password/', 'AccountsController@changePasswrod');
     Route::apiResources([
         'accounts'      => 'AccountsController',
         'products'      => 'ProductsController',

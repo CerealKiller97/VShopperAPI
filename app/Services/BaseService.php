@@ -14,8 +14,6 @@ abstract class BaseService
     $this->policy =  $policy;
   }
 
-  // FIX: Fix name response count back to front
-
   public function generatePagedResponse(Model $model, $perPage, $page, $name = null)
   {
     if ($perPage) {
@@ -33,4 +31,5 @@ abstract class BaseService
 
     return $model->get();
   }
+
 }
