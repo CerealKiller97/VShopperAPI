@@ -29,4 +29,44 @@ abstract class ApiController extends Controller
       $this->service = $service;
    }
 
+   // Success response methods
+
+   protected function Ok($message)
+   {
+      return response()->json($message, SELF::OK);
+   }
+
+   protected function Created($message)
+   {
+      return response()->json(['message' => $message], SELF::CREATED);
+   }
+
+   protected function NoContent()
+   {
+      return response()->json(null, SELF::NO_CONTENT);
+   }
+
+    // Client response methods
+   protected function BadRequest($error)
+   {
+      return response()->json(['error' => $error], SELF::BAD_REQUEST);
+   }
+
+   protected function Conflitct($error)
+   {
+      return response()->json(['error' => $error], SELF::CONFLICT);
+   }
+
+   protected function NotFound($error)
+   {
+      return response()->json(['error' => $error], SELF::NOT_FOUND);
+   }
+
+   // Server response methods
+
+   protected function ServerError($error)
+   {
+      return response()->json(['error' => $error], SELF::INTERNAL_SERVER_ERROR);
+   }
+
 }

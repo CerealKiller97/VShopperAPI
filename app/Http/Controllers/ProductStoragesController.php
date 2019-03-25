@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Contracts\ProductContract;
 use App\Http\Controllers\ApiController;
 use App\Exceptions\BatchDeleteException;
+use App\Contracts\ProductStorageContract;
 use App\Exceptions\EntityNotFoundException;
 use App\Http\Requests\ProductStorageRequest;
 use App\Http\Requests\BatchProductStorageRequest;
 
 class ProductStoragesController extends ApiController
 {
-    public function __construct(ProductContract $service)
+    public function __construct(ProductStorageContract $service)
     {
         parent::__construct($service);
         $this->service = $service;

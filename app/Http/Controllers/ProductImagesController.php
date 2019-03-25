@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Contracts\ProductContract;
 use App\Http\Requests\ImageRequest;
+use App\Contracts\ProductImageContract;
 use App\Http\Controllers\ApiController;
 use App\Exceptions\BatchDeleteException;
 use App\Http\Requests\ImageBatchRequest;
@@ -13,7 +13,7 @@ use App\Exceptions\EntityNotFoundException;
 
 class ProductImagesController extends ApiController
 {
-    public function __construct(ProductContract $service)
+    public function __construct(ProductImageContract $service)
     {
         parent::__construct($service);
         $this->service = $service;

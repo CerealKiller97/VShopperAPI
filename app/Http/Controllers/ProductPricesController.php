@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Contracts\ProductContract;
+use App\Contracts\ProductPriceContract;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\ProductPriceRequest;
 use App\Exceptions\EntityNotFoundException;
 
 class ProductPricesController extends ApiController
 {
-    public function __construct(ProductContract $service)
+    public function __construct(ProductPriceContract $service)
     {
         parent::__construct($service);
         $this->service = $service;

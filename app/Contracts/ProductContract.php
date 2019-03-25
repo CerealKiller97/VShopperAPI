@@ -20,10 +20,7 @@ interface ProductContract
   public function addProduct(ProductRequest $request);
   public function updateProduct(ProductRequest $request, int $id);
   public function deleteProduct(int $id);
-  public function addPicturesToProduct(ImageRequest $request, int $id); // product id
-  public function deletePicturesFromProduct(ImageBatchRequest $request, int $id); // product id
-  public function addProductToStorage(ProductStorageRequest $request , int $id);
-  public function deleteProductFromStorage(BatchProductStorageRequest $request , int $id);
+
   public function addNewPriceToProduct(ProductPriceRequest $request , int $id); // product_id
   public function updatePriceToProduct(ProductPriceRequest $request , int $id);
   public function addDiscountToProduct(DiscountRequest $request, int $id);

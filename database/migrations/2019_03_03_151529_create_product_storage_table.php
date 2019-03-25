@@ -25,8 +25,7 @@ class CreateProductStorageTable extends Migration
 
             $table->foreign('storage_id')
                   ->references('id')
-                  ->on('storages')
-                  ->onDelete('cascade');
+                  ->on('storages');
 
 
             $table->integer('quantity');

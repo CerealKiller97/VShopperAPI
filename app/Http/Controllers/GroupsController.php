@@ -23,7 +23,7 @@ class GroupsController extends ApiController
      */
     public function index(PagedRequest $request)
     {
-      return response()->json($this->service->getGroups($request), SELF::OK);
+      return $this->Ok($this->service->getGroups($request));
     }
 
     /**
@@ -36,13 +36,13 @@ class GroupsController extends ApiController
     {
         try {
             $this->service->addGroup($request);
-            return response()->json('Successfully added new group', SELF::CREATED);
+            return $this->created('Successfully added new group');
           } catch (\QueryException $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError('Server Error');
           } catch (Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError('Server Error');
           }
     }
 
@@ -54,16 +54,16 @@ class GroupsController extends ApiController
      */
     public function show($id)
     {
-        try {
-            $group = $this->service->findGroup($id);
-            return response()->json($group, SELF::OK);
-          } catch (EntityNotFoundException $e) {
-            \Log::error($e->getMessage());
-            return response()->json('No group found', SELF::NOT_FOUND);
-          } catch (Exception $e) {
-            \Log::error($e->getMessage());
-            return response()->json('Server error');
-          }
+      try {
+        $group = $this->service->findGroup($id);
+        return $this->Ok($group);
+      } catch (EntityNotFoundException $e) {
+        \Log::error($e->getMessage());
+        return $this->NotFound('No group found');
+      } catch (Exception $e) {
+        \Log::error($e->getMessage());
+        return $this->ServerError('Server Error');
+      }
     }
 
     /**
@@ -77,16 +77,16 @@ class GroupsController extends ApiController
     {
         try {
             $this->service->updateGroup($request, $id);
-            return response()->json(null, SELF::NO_CONTENT);
+            return $this->NoContent();
           } catch (EntityNotFoundException $e) {
             \Log::error($e->getMessage());
-            return response()->json($e->getMessage(), SELF::NOT_FOUND);
+            return $this->NotFound('No group found');
           } catch(\QueryException $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError('Server Error');
           } catch(Exception $e) {
             \Log::error($e->getMessage());
-            return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+            return $this->ServerError('Server Error');
           }
     }
 
@@ -100,16 +100,16 @@ class GroupsController extends ApiController
     {
       try {
           $this->service->deleteGroup($id);
-          return response()->json(null, SELF::NO_CONTENT);
+          return $this->NoContent();
         } catch (EntityNotFoundException $e) {
           \Log::error($e->getMessage());
-          return response()->json($e->getMessage(), SELF::NOT_FOUND);
+          return $this->NotFound('No group found');
         } catch(\QueryException $e) {
           \Log::error($e->getMessage());
-          return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+          return $this->ServerError('Server Error');
         } catch(Exception $e) {
           \Log::error($e->getMessage());
-          return response()->json('Server Error', SELF::INTERNAL_SERVER_ERROR);
+          return $this->ServerError('Server Error');
         }
     }
 }
