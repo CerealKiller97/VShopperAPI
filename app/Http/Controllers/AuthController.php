@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Contracts\AccountContract;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Crypt;
 use App\Http\Controllers\ApiController;
 use App\Exceptions\NotVerifiedException;
 
@@ -48,6 +49,9 @@ class AuthController extends ApiController
                     'password' => $request->password,
                 ]
             ]);
+            $cookie_name = 'token';
+            $groupToken = Crypt::encrypt('1');
+            setcookie($cookie_name, $groupToken, time() + (86400 * 30), "/"); // 86400 = 1 day
             return $response->getBody();
         } catch (\GuzzleHttp\Exception\BadResponseException $e) {
             if ($e->getCode() === 400) {

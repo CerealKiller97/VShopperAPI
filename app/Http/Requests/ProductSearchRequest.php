@@ -25,7 +25,6 @@ class ProductSearchRequest extends PagedRequest
     public function rules()
     {
         return array_merge(parent::rules(), [
-            'name'      => 'nullable|max:255',
             'minPrice'  => 'nullable|numeric',
             'maxPrice'  => 'nullable|numeric',
             'brand'     => 'nullable|numeric',

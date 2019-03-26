@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Group;
 use App\Models\Product;
 use App\Models\Discount;
 use App\Models\DiscountGroup;
@@ -38,7 +39,8 @@ class ProductDiscountEloquentService extends BaseService implements ProductDisco
         throw new EntityNotFoundException('Group not found');
       }
 
-      $productCurrentPrice = $product->prices->where('group_id', $group_id)->first()->amount;
+      // $productCurrentPrice = $product->prices->where('group_id', $group_id)->first()->amount;
+      $productCurrentPrice = $product->prices->where('group_id', $group_id)->sortByDesc('created_at')->first()->amount;
 
       if ($data['amount'] > $productCurrentPrice) {
         throw new InvalidDiscountException('Discount must be lower than current price');

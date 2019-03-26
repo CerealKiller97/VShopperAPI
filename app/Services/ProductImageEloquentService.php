@@ -17,21 +17,12 @@ class ProductImageEloquentService extends BaseService implements ProductImageCon
 {
   public function addPicturesToProduct(ImageRequest $request, int $id)
   {
+    $acc = auth()->user()->products;
     $product = Product::find($id);
 
-    if (!$product) {
-      throw new EntityNotFoundException('Product not found');
-    }
-
-    $user_id = auth()->user()->id;
-
-    // Storage doesn't belong to auth user, but exist in DB
-    if ($user_id !== $product->account->id) {
-      throw new EntityNotFoundException('Product not found');
-    }
+    $this->policy->can($acc, $product, 'Product');
 
     $images = $request->validated()['images'];
-
     foreach ($images as $image)
     {
       $src = UploadFile::move($image);
@@ -45,6 +36,11 @@ class ProductImageEloquentService extends BaseService implements ProductImageCon
 
   public function deletePicturesFromProduct(ImageBatchRequest $request, int $id)
   {
+    $acc = auth()->user()->products;
+    $product = Product::find($id);
+
+    $this->policy->can($acc, $product, 'Product');
+
     $imageIDS = $request->validated()['images'];
 
     ImagePivotTableRemover::remove('image_product', $imageIDS, $id);

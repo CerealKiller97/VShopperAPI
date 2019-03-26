@@ -23,12 +23,12 @@ class Product extends Model
 
   public function prices()
   {
-    return $this->hasMany(Price::class)->latest();
+    return $this->hasMany(Price::class);
   }
 
   public function discounts()
   {
-    return $this->hasMany(Discount::class)->latest();
+    return $this->hasMany(Discount::class);
   }
 
   public function storages()

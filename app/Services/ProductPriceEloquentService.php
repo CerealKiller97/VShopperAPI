@@ -14,18 +14,11 @@ class ProductPriceEloquentService extends BaseService implements ProductPriceCon
 {
   public function addNewPriceToProduct(ProductPriceRequest $request , int $id)
   {
+    $acc = auth()->user()->products;
+    $account_id = auth()->user()->id;
     $product = Product::find($id);
 
-    if (!$product) {
-      throw new EntityNotFoundException('Product not found');
-    }
-
-    $account_id = auth()->user()->id;
-
-    // Product doesn't belong to auth user
-    if ($product->account->id !== $account_id) {
-      throw new EntityNotFoundException('Product not found');
-    }
+    $this->policy->can($acc, $product, 'Product');
 
     $data = $request->validated();
     $group_id = $data['group_id'] ?? null;
@@ -51,7 +44,7 @@ class ProductPriceEloquentService extends BaseService implements ProductPriceCon
       Price::create([
         'product_id' => $id,
         'amount'     => $amount,
-        'group_id'   => $group_id
+        'group_id'   => null
       ]);
     }
   }
