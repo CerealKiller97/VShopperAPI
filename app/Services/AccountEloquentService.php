@@ -110,6 +110,12 @@ class AccountEloquentService extends BaseService implements AccountContract
     return true;
   }
 
+  public function verifyAccountByToken(string $token)
+  {
+    dd($token);
+  }
+
+
   public function changePassword(ChangeAccountPasswordRequest $request)
   {
     $user = auth()->user();

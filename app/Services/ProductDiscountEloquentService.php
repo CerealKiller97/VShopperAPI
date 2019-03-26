@@ -133,9 +133,6 @@ class ProductDiscountEloquentService extends BaseService implements ProductDisco
         'valid_until'  => $data['valid_until']
       ]);
     }
-    // dd($dicount);
-    // $dt = Carbon::now();
-
   }
-
 }
+

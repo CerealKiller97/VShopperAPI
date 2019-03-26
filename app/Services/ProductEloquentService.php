@@ -4,7 +4,6 @@ namespace App\Services;
 
 use Carbon\Carbon;
 use App\Models\Unit;
-use App\Helpers\Hash;
 use App\Models\Brand;
 use App\Models\Group;
 use App\Models\Image;
@@ -24,7 +23,6 @@ use App\Helpers\PagedResponse;
 use App\Models\ProductStorage;
 use App\Models\CategoryProduct;
 use App\Helpers\DiscountChecker;
-use App\Contracts\ProductContract;
 use App\Http\Requests\ImageRequest;
 use App\Http\Requests\ProductRequest;
 use Illuminate\Support\Facades\Crypt;
@@ -46,6 +44,16 @@ class ProductEloquentService extends BaseService implements ProductContract
     $page = $request->getPaging()->page;
     $perPage = $request->getPaging()->perPage;
     $name = $request->getPaging()->name;
+
+
+    $eagerLoadingTest = Product::with([
+      'storages',
+      'prices',
+      'discounts',
+      'brand'
+    ])->get();
+
+    // dd($eagerLoadingTest);
 
     $product = new Product;
     $account_id =  auth()->user()->id;
@@ -925,5 +933,4 @@ class ProductEloquentService extends BaseService implements ProductContract
   //   // $dt = Carbon::now();
 
   // }
-
 }

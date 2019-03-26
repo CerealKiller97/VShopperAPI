@@ -17,5 +17,6 @@ interface AccountContract
   public function deactivateAccount();
   public function updateAccount(UpdateAccountRequest $request, int $id);
   public function verified(string $email) : bool;
+  public function verifyAccountByToken(string $token);
   public function changePassword(ChangeAccountPasswordRequest $request);
 }

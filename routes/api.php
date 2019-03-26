@@ -43,3 +43,6 @@ Route::group(['middleware' => ['auth:api']], function () {
 // Non auth routes
 Route::post('/login', 'AuthController@login');
 Route::post('/register', 'AccountsController@store');
+
+// Route for handling account verification
+Route::get('/verification/{token}', 'VerificationController');
