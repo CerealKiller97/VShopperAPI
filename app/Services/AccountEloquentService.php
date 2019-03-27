@@ -63,12 +63,12 @@ class AccountEloquentService extends BaseService implements AccountContract
 
   public function deactivateAccount()
   {
-    /*
+
      $acc = auth()->user();
      $acc->update([
        'deactivate' => true
-     ])
-    */
+     ]);
+
   }
 
   public function updateAccount(UpdateAccountRequest $request, int $id)

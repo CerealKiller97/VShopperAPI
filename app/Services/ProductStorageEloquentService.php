@@ -16,30 +16,15 @@ class ProductStorageEloquentService extends BaseService implements ProductStorag
 {
   public function addProductToStorage(ProductStorageRequest $request , int $id)
   {
+    // Storage check
+    $acc = auth()->user()->storages;
     $storage = Storage::find($id);
-    $account_id = auth()->user()->id;
+    $this->policy->can($acc, $storage, 'Storage');
 
-    // Storage doesn't exist in DB
-    if (!$storage) {
-      throw new EntityNotFoundException('Storage not found');
-    }
-
-      // Storage doesn't belong to auth user
-    if ($storage->account_id !== $account_id) {
-      throw new EntityNotFoundException('Storage not found');
-    }
-
+    // Product check
+    $acc = auth()->user()->products;
     $product = Product::find($request->product_id);
-
-    // Product doesn't exist in DB
-    if (!$product) {
-      throw new EntityNotFoundException('Product not found');
-    }
-
-    // Product doesn't belong to auth user
-    if ($product->account->id !== $account_id) {
-      throw new EntityNotFoundException('Product not found');
-    }
+    $this->policy->can($acc, $product, 'Product');
 
     $data = $request->validated();
 
@@ -48,38 +33,28 @@ class ProductStorageEloquentService extends BaseService implements ProductStorag
       'storage_id' => $id,
       'quantity'   => $data['quantity']
     ]);
-
   }
 
   public function deleteProductFromStorage(BatchProductStorageRequest $request , int $id)
   {
+    $acc = auth()->user()->storages;
     $storage = Storage::find($id);
 
-    // Storage doesn't exist in DB
-    if (!$storage) {
-      throw new EntityNotFoundException('Storage not found');
-    }
+    //$eager = Storage::with(['products'])->where('id', $id)->first();
 
-    $account_id = auth()->user()->id;
-
-      // Storage doesn't belong to auth user
-    if ($storage->account_id !== $account_id) {
-      throw new EntityNotFoundException('Storage not found');
-    }
+    $this->policy->can($acc, $storage, 'Storage');
 
     $data = $request->validated()['products'];
-
 
     $products = ProductStorage::whereIn('product_id', $data)
                               ->where('storage_id', $id)
                               ->count();
 
     if ($products === count($data)) {
-      ProductStorage::whereIn('product_id', $data)
-                    ->delete();
+      $storage->products()->detach($data);
     } else {
       throw new BatchDeleteException('One of ids is not valid');
     }
   }
-
 }
+

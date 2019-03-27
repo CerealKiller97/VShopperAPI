@@ -16,18 +16,22 @@ class ProductDiscountEloquentService extends BaseService implements ProductDisco
 {
   public function addDiscountToProduct(DiscountRequest $request, int $id)
   {
+    $acc = auth()->user()->products;
     $product = Product::find($id);
 
-    if (!$product) {
-      throw new EntityNotFoundException('Product not found');
-    }
+    $this->policy->can($acc, $product, 'Product');
+    // $product = Product::find($id);
 
-    $account_id = auth()->user()->id;
+    // if (!$product) {
+    //   throw new EntityNotFoundException('Product not found');
+    // }
 
-    // Product doesn't belong to auth user
-    if ($product->account->id !== $account_id) {
-      throw new EntityNotFoundException('Product not found');
-    }
+    // $account_id = auth()->user()->id;
+
+    // // Product doesn't belong to auth user
+    // if ($product->account->id !== $account_id) {
+    //   throw new EntityNotFoundException('Product not found');
+    // }
 
     $data = $request->validated();
     $group_id = $data['group_id'] ?? null;
@@ -69,18 +73,23 @@ class ProductDiscountEloquentService extends BaseService implements ProductDisco
 
   public function upateDiscountFromProduct(DiscountRequest $request, int $id)
   {
+    $acc = auth()->user()->products;
     $product = Product::find($id);
 
-    if (!$product) {
-      throw new EntityNotFoundException('Product not found');
-    }
+    $this->policy->can($acc, $product, 'Product');
 
-    $account_id = auth()->user()->id;
+    // $product = Product::find($id);
 
-    // Product doesn't belong to auth user
-    if ($product->account->id !== $account_id) {
-      throw new EntityNotFoundException('Product not found');
-    }
+    // if (!$product) {
+    //   throw new EntityNotFoundException('Product not found');
+    // }
+
+    // $account_id = auth()->user()->id;
+
+    // // Product doesn't belong to auth user
+    // if ($product->account->id !== $account_id) {
+    //   throw new EntityNotFoundException('Product not found');
+    // }
 
     $data = $request->validated();
     $group_id = $data['group_id'] ?? null;

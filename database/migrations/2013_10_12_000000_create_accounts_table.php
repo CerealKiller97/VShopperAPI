@@ -20,14 +20,16 @@ class CreateAccountsTable extends Migration
             $table->string('password');
             $table->string('address');
             $table->string('token')->default(bin2hex(random_bytes(60)));
-            $table->timestamps();
             $table->timestamp('email_verified_at')->nullable()->default(null);
+            $table->string('apiKey')->default(bin2hex(random_bytes(64)));
+            $table->boolean('deactivated')->default(false);
             $table->unsignedInteger('image_id');
 
             $table->foreign('image_id')
-                  ->references('id')
-                  ->on('images');
+            ->references('id')
+            ->on('images');
 
+            $table->timestamps();
         });
     }
 

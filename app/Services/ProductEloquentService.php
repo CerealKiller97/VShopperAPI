@@ -23,6 +23,7 @@ use App\Helpers\PagedResponse;
 use App\Models\ProductStorage;
 use App\Models\CategoryProduct;
 use App\Helpers\DiscountChecker;
+use App\Contracts\ProductContract;
 use App\Http\Requests\ImageRequest;
 use App\Http\Requests\ProductRequest;
 use Illuminate\Support\Facades\Crypt;
@@ -45,8 +46,7 @@ class ProductEloquentService extends BaseService implements ProductContract
     $perPage = $request->getPaging()->perPage;
     $name = $request->getPaging()->name;
 
-
-    $eagerLoadingTest = Product::with([
+    $productTest = Product::with([
       'storages',
       'prices',
       'discounts',
@@ -63,9 +63,12 @@ class ProductEloquentService extends BaseService implements ProductContract
 
     $acc = $product->where('account_id', $account_id);
 
-    $x = $this->generatePagedResponse($acc, $perPage, $page, $name);
 
-    $a =(auth()->user()->products);
+    $totalProductsInDB =auth()->user()->products;
+
+    $totalCount = $totalProductsInDB->count();
+
+    $x = $this->generatePagedResponse($acc, $perPage, $page, $name);
 
     if ($request->minPrice || $request->maxPrice) {
       $acc->join('prices', 'products.id', '=', 'prices.product_id');
@@ -86,15 +89,9 @@ class ProductEloquentService extends BaseService implements ProductContract
     //dd($x);
     //dd(Crypt::decrypt($x));
 
-
-    // $x = $product->prices;
-
-    // dd($x);
-
-
     $productArr = [];
 
-    foreach($a as $product)
+    foreach($totalProductsInDB as $product)
     {
       $productDTO = new ProductDTO;
 
@@ -108,9 +105,9 @@ class ProductEloquentService extends BaseService implements ProductContract
       if ($groupID) {
         $group = Group::find($groupID);
         if ($group === null) {
-          $price = $product->prices->where('group_id', null)->sortByDesc('created_at')->first()->amount;
+          $price = $product->prices->where('group_id', null)->sortByDesc('created_at')->first()->amount ?? null;
         } else {
-          $price = $product->prices->where('group_id', $groupID)->sortByDesc('created_at')->first()->amount;
+          $price = $product->prices->where('group_id', $groupID)->sortByDesc('created_at')->first()->amount ?? null;
 
           // if ($price === null) {
           //   $price = $product->prices->where('group_id', null)->sortByDesc('created_at')->first()->amount;
@@ -134,6 +131,8 @@ class ProductEloquentService extends BaseService implements ProductContract
         // dd($discountForGroup);
         if ($discountForGroup) {
           $discount = DiscountChecker::valid($discountForGroup, $groupID);
+        } else {
+          $discount = null;
         }
       } else {
         // proveriti da li postoji popust za sve?
@@ -304,25 +303,23 @@ class ProductEloquentService extends BaseService implements ProductContract
       $productArr[] = $productDTO;
     }
 
-    return new PagedResponse($productArr, 5, $page);
+    return new PagedResponse($productArr, $totalCount, $page);
   }
 
   public function findProduct(int $id) : ProductDTO
   {
-    $product = Product::find($id);
+    $product = Product::with([
+      'prices',
+      'categories',
+      'storages',
+      'images'
+    ])->find($id);
 
-    if (!$product) {
-      throw new EntityNotFoundException('Product not found');
-    }
+    $acc = auth()->user()->products;
 
-    $account_id = auth()->user()->id;
-
-    if ($product->account_id !== $account_id) {
-      throw new EntityNotFoundException('Product not found');
-    }
+    $this->policy->can($acc, $product, 'Product');
 
     $groupID = request()->header('group');
-
 
     $x = $product->prices->where('group_id', $groupID)->sortByDesc('created_at')->first();
 
@@ -333,7 +330,7 @@ class ProductEloquentService extends BaseService implements ProductContract
       if($group === null) {
         $price = $product->prices->where('group_id', null)->sortByDesc('created_at')->first()->amount;
       } else {
-        $price = $product->prices->where('group_id', $groupID)->sortByDesc('created_at')->first()->amount;
+        $price = $product->prices->where('group_id', $groupID)->sortByDesc('created_at')->first()->amount ?? null;
       }
     } else {
       $price = $product->prices->where('group_id', null)->sortByDesc('created_at')->first()->amount;
@@ -537,9 +534,6 @@ class ProductEloquentService extends BaseService implements ProductContract
       }
     }
 
-
-
-
     $categoriesArr = $data['categories'];
     $count = 0;
     $defaultCategories = Category::DEFAULT_CATEGORY_IDS;
@@ -597,8 +591,22 @@ class ProductEloquentService extends BaseService implements ProductContract
 
     $this->policy->can($acc, $product, 'Product');
 
-    $product->fill($request->validated());
-    $product->save();
+    $data = $request->validated();
+
+    $product->update([
+      'unit_id'         => $data['unit_id'],
+      'brand_id'        => $data['brand_id'],
+      'vendor_id'       => $data['vendor_id'],
+      'product_type_id' => $data['product_type_id'],
+      'name'            => $data['name'],
+      'description'     => $data['description']
+    ]);
+
+    $categories = $data['categories'];
+
+    Product::find($id)
+           ->categories()
+           ->sync($categories);
   }
 
   public function deleteProduct(int $id)
@@ -611,326 +619,4 @@ class ProductEloquentService extends BaseService implements ProductContract
     $product->delete();
   }
 
-  // public function addPicturesToProduct(ImageRequest $request, int $id)
-  // {
-  //   $product = Product::find($id);
-
-  //   if (!$product) {
-  //     throw new EntityNotFoundException('Product not found');
-  //   }
-
-  //   $user_id = auth()->user()->id;
-
-  //   // Storage doesn't belong to auth user, but exist in DB
-  //   if ($user_id !== $product->account->id) {
-  //     throw new EntityNotFoundException('Product not found');
-  //   }
-
-  //   $images = $request->validated()['images'];
-
-  //   foreach ($images as $image)
-  //   {
-  //     $src = UploadFile::move($image);
-  //     $image_id = Image::create($src)->id;
-  //     $storageImage = ProductImage::create([
-  //       'product_id' => $id,
-  //       'image_id'   => $image_id
-  //     ]);
-  //   }
-  // }
-
-  // public function deletePicturesFromProduct(ImageBatchRequest $request, int $id)
-  // {
-  //   $imageIDS = $request->validated()['images'];
-
-  //   ImagePivotTableRemover::remove('image_product', $imageIDS, $id);
-  // }
-
-  // public function addProductToStorage(ProductStorageRequest $request , int $id)
-  // {
-  //   $storage = Storage::find($id);
-  //   $account_id = auth()->user()->id;
-
-  //   // Storage doesn't exist in DB
-  //   if (!$storage) {
-  //     throw new EntityNotFoundException('Storage not found');
-  //   }
-
-  //     // Storage doesn't belong to auth user
-  //   if ($storage->account_id !== $account_id) {
-  //     throw new EntityNotFoundException('Storage not found');
-  //   }
-
-  //   $product = Product::find($request->product_id);
-
-  //   // Product doesn't exist in DB
-  //   if (!$product) {
-  //     throw new EntityNotFoundException('Product not found');
-  //   }
-
-  //   // Product doesn't belong to auth user
-  //   if ($product->account->id !== $account_id) {
-  //     throw new EntityNotFoundException('Product not found');
-  //   }
-
-  //   $data = $request->validated();
-
-  //   ProductStorage::create([
-  //     'product_id' => $data['product_id'],
-  //     'storage_id' => $id,
-  //     'quantity'   => $data['quantity']
-  //   ]);
-
-  // }
-
-  // public function deleteProductFromStorage(BatchProductStorageRequest $request , int $id)
-  // {
-  //   $storage = Storage::find($id);
-
-  //   // Storage doesn't exist in DB
-  //   if (!$storage) {
-  //     throw new EntityNotFoundException('Storage not found');
-  //   }
-
-  //   $account_id = auth()->user()->id;
-
-  //     // Storage doesn't belong to auth user
-  //   if ($storage->account_id !== $account_id) {
-  //     throw new EntityNotFoundException('Storage not found');
-  //   }
-
-  //   $data = $request->validated()['products'];
-
-
-  //   $products = ProductStorage::whereIn('product_id', $data)
-  //                             ->where('storage_id', $id)
-  //                             ->count();
-
-  //   if ($products === count($data)) {
-  //     ProductStorage::whereIn('product_id', $data)
-  //                   ->delete();
-  //   } else {
-  //     throw new BatchDeleteException('One of ids is not valid');
-  //   }
-  // }
-
-  // public function addNewPriceToProduct(ProductPriceRequest $request , int $id)
-  // {
-  //   $product = Product::find($id);
-
-  //   if (!$product) {
-  //     throw new EntityNotFoundException('Product not found');
-  //   }
-
-  //   $account_id = auth()->user()->id;
-
-  //   // Product doesn't belong to auth user
-  //   if ($product->account->id !== $account_id) {
-  //     throw new EntityNotFoundException('Product not found');
-  //   }
-
-  //   $data = $request->validated();
-  //   $group_id = $data['group_id'] ?? null;
-  //   $amount = $data['amount'];
-
-  //   // group id has been passed
-  //   if ($group_id) {
-  //     $group = Group::find($group_id);
-
-  //     if (!$group) {
-  //       throw new EntityNotFoundException('Group not found');
-  //     }
-
-
-  //     if (($group->account_id === null) || ($group->account_id === $account_id)) {
-  //       Price::create([
-  //         'product_id' => $id,
-  //         'amount'     => $amount,
-  //         'group_id'   => $group_id
-  //       ]);
-  //     }
-  //   } else { // price is for everyone not specific price for group
-  //     Price::create([
-  //       'product_id' => $id,
-  //       'amount'     => $amount,
-  //       'group_id'   => $group_id
-  //     ]);
-  //   }
-  // }
-
-  // public function updatePriceToProduct(ProductPriceRequest $request , int $id)
-  // {
-  //   $product = Product::find($id);
-
-  //   if (!$product) {
-  //     throw new EntityNotFoundException('Product not found');
-  //   }
-
-  //   $account_id = auth()->user()->id;
-
-  //   // Product doesn't belong to auth user
-  //   if ($product->account->id !== $account_id) {
-  //     throw new EntityNotFoundException('Product not found');
-  //   }
-
-  //   $data = $request->validated();
-  //   $group_id = $data['group_id'] ?? null;
-  //   $amount = $data['amount'];
-
-  //   if ($group_id) {
-
-  //     $group = Group::find($group_id);
-
-  //     if (!$group) {
-  //       throw new EntityNotFoundException('Group not found');
-  //     }
-
-  //     $productPrice = Price::where([
-  //       ['product_id', $id],
-  //       ['group_id', $group_id]
-  //     ])
-  //     ->latest()->first();
-  //     $productPrice->update([
-  //       'amount'     => $amount,
-  //       'product_id' => $id,
-  //       'group_id'   => $group_id
-  //     ]);
-
-  //   } else {
-  //     // group_id not passed for all users
-
-  //     $productPrice = Price::where([
-  //       ['product_id', $id],
-  //       ['group_id', null]
-  //     ])
-  //     ->latest()->first();
-  //     $productPrice->update([
-  //       'amount'     => $amount,
-  //       'product_id' => $id
-  //     ]);
-  //   }
-  // }
-
-  // public function addDiscountToProduct(DiscountRequest $request, int $id)
-  // {
-  //   $product = Product::find($id);
-
-  //   if (!$product) {
-  //     throw new EntityNotFoundException('Product not found');
-  //   }
-
-  //   $account_id = auth()->user()->id;
-
-  //   // Product doesn't belong to auth user
-  //   if ($product->account->id !== $account_id) {
-  //     throw new EntityNotFoundException('Product not found');
-  //   }
-
-  //   $data = $request->validated();
-  //   $group_id = $data['group_id'] ?? null;
-
-  //   if ($group_id) {
-  //     $group = Group::find($group_id);
-
-  //     if (!$group) {
-  //       throw new EntityNotFoundException('Group not found');
-  //     }
-
-  //     $productCurrentPrice = $product->prices->where('group_id', $group_id)->first()->amount;
-
-  //     if ($data['amount'] > $productCurrentPrice) {
-  //       throw new InvalidDiscountException('Discount must be lower than current price');
-  //     }
-
-  //     $discount_id = Discount::create([
-  //       'product_id'  => $id,
-  //       'amount'      => $data['amount'],
-  //       'valid_from'  => $data['valid_from'],
-  //       'valid_until' => $data['valid_until']
-  //     ])->id;
-
-  //     DiscountGroup::create([
-  //       'discount_id' => $discount_id,
-  //       'group_id'    => $group_id
-  //     ]);
-  //   } else {
-  //     Discount::create([
-  //       'product_id'  => $id,
-  //       'amount'      => $data['amount'],
-  //       'valid_from'  => $data['valid_from'],
-  //       'valid_until' => $data['valid_until']
-  //     ]);
-  //   }
-  // }
-
-  // public function upateDiscountFromProduct(DiscountRequest $request, int $id)
-  // {
-  //   $product = Product::find($id);
-
-  //   if (!$product) {
-  //     throw new EntityNotFoundException('Product not found');
-  //   }
-
-  //   $account_id = auth()->user()->id;
-
-  //   // Product doesn't belong to auth user
-  //   if ($product->account->id !== $account_id) {
-  //     throw new EntityNotFoundException('Product not found');
-  //   }
-
-  //   $data = $request->validated();
-  //   $group_id = $data['group_id'] ?? null;
-
-  //   if ($group_id) {
-  //     $group = Group::find($group_id);
-
-  //     if (!$group) {
-  //       throw new EntityNotFoundException('Group not found');
-  //     }
-
-  //     $tmp = DiscountGroup::where([
-  //       ['group_id', $group_id]
-  //     ])->latest()->first();
-
-  //     $discount = Discount::where([
-  //       ['product_id', $id],
-  //       ['id', $tmp->discount_id ?? null]
-  //     ])->first();
-
-  //     $discount->update([
-  //       'product_id'   => $id,
-  //       'amount'       => $data['amount'],
-  //       'valid_from'   => $data['valid_from'],
-  //       'valid_until'  => $data['valid_until']
-  //     ]);
-  //   } else {
-  //     $discountsForProduct = Discount::where('product_id', $id)->select('id')->get()->toArray();
-  //     $isOk = DiscountGroup::whereIn('discount_id', $discountsForProduct)->select('discount_id')->get()->toArray();
-  //     $whereNotIn = [];
-  //     foreach($isOk as $key => $x)
-  //     {
-  //       $whereNotIn[] = $x['discount_id'];
-  //     }
-
-  //     $discountExcludingGroupDiscount = \DB::table('discounts')
-  //                                          ->whereNotIn('id', $whereNotIn)
-  //                                          ->get();
-
-  //     $wantedDiscount = $discountExcludingGroupDiscount->filter(function ($item) use ($id) {
-  //       return $item->product_id === $id;
-  //     })->values()[0];
-
-  //     $finallyDiscount = Discount::find($wantedDiscount->id);
-
-  //     $finallyDiscount->update([
-  //       'product_id'   => $id,
-  //       'amount'       => $data['amount'],
-  //       'valid_from'   => $data['valid_from'],
-  //       'valid_until'  => $data['valid_until']
-  //     ]);
-  //   }
-  //   // dd($dicount);
-  //   // $dt = Carbon::now();
-
-  // }
 }

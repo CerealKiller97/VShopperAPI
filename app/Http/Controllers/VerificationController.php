@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Account;
-use Illuminate\Http\Request;
 
 class VerificationController extends Controller
 {
@@ -22,6 +20,7 @@ class VerificationController extends Controller
                           ->update([
                             'email_verified_at' => Carbon::createFromFormat('Y-m-d H:i:s',Carbon::now())
                           ]);
+                          // return redirect('http://localhost:8080/login', 301);
             // dd($account);
             // if ($account) {
             //
