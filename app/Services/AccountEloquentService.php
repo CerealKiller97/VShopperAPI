@@ -104,9 +104,9 @@ class AccountEloquentService extends BaseService implements AccountContract
       ['email_verified_at', '!=', null]
     ])->first();
 
-    if (!$auth)
+    if (!$auth) {
       throw new NotVerifiedException('Your account is not verified!');
-
+    }
     return true;
   }
 

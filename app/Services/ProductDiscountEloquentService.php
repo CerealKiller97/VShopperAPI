@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Discount;
 use App\Models\DiscountGroup;
 use App\Services\BaseService;
+use App\Exceptions\DiscountHasNoPriceException;
 use App\Http\Requests\DiscountRequest;
 use App\Contracts\ProductDiscountContract;
 use App\Exceptions\EntityNotFoundException;
@@ -16,22 +17,10 @@ class ProductDiscountEloquentService extends BaseService implements ProductDisco
 {
   public function addDiscountToProduct(DiscountRequest $request, int $id)
   {
+    // Product check
     $acc = auth()->user()->products;
     $product = Product::find($id);
-
     $this->policy->can($acc, $product, 'Product');
-    // $product = Product::find($id);
-
-    // if (!$product) {
-    //   throw new EntityNotFoundException('Product not found');
-    // }
-
-    // $account_id = auth()->user()->id;
-
-    // // Product doesn't belong to auth user
-    // if ($product->account->id !== $account_id) {
-    //   throw new EntityNotFoundException('Product not found');
-    // }
 
     $data = $request->validated();
     $group_id = $data['group_id'] ?? null;
@@ -44,7 +33,11 @@ class ProductDiscountEloquentService extends BaseService implements ProductDisco
       }
 
       // $productCurrentPrice = $product->prices->where('group_id', $group_id)->first()->amount;
-      $productCurrentPrice = $product->prices->where('group_id', $group_id)->sortByDesc('created_at')->first()->amount;
+      $productCurrentPrice = $product->prices->where('group_id', $group_id)->sortByDesc('created_at')->first()->amount ?? null;
+
+      if ($productCurrentPrice === null) {
+        throw new DiscountHasNoPriceException('Product doesnt have initial price');
+      }
 
       if ($data['amount'] > $productCurrentPrice) {
         throw new InvalidDiscountException('Discount must be lower than current price');
@@ -78,44 +71,54 @@ class ProductDiscountEloquentService extends BaseService implements ProductDisco
 
     $this->policy->can($acc, $product, 'Product');
 
-    // $product = Product::find($id);
-
-    // if (!$product) {
-    //   throw new EntityNotFoundException('Product not found');
-    // }
-
-    // $account_id = auth()->user()->id;
-
-    // // Product doesn't belong to auth user
-    // if ($product->account->id !== $account_id) {
-    //   throw new EntityNotFoundException('Product not found');
-    // }
-
     $data = $request->validated();
     $group_id = $data['group_id'] ?? null;
 
-    if ($group_id) {
-      $group = Group::find($group_id);
+    $amount = $data['amount'];
 
+    if ($group_id) {
+      $group = Group::with(['discounts'])->find($group_id) ?? null;
       if (!$group) {
         throw new EntityNotFoundException('Group not found');
       }
 
-      $tmp = DiscountGroup::where([
-        ['group_id', $group_id]
-      ])->latest()->first();
+      $productCurrentPrice = $product->prices->where('group_id', $group_id)->sortByDesc('created_at')->first()->amount ?? null;
+      if ($amount > $productCurrentPrice) {
+        throw new InvalidDiscountException('Discount must be lower than current price');
+      }
 
-      $discount = Discount::where([
-        ['product_id', $id],
-        ['id', $tmp->discount_id ?? null]
-      ])->first();
+      if ($group) {
+        $discount = $group->discounts->filter(function ($item) use ($product) {
+          return $item->product_id === $product->id;
+        })[0] ?? null;
 
-      $discount->update([
-        'product_id'   => $id,
-        'amount'       => $data['amount'],
-        'valid_from'   => $data['valid_from'],
-        'valid_until'  => $data['valid_until']
-      ]);
+        // dd($discount);
+
+        $discount->update([
+          'product_id'   => $id,
+          'amount'       => $data['amount'],
+          'valid_from'   => $data['valid_from'],
+          'valid_until'  => $data['valid_until']
+        ]);
+      }
+
+      // $tmp = DiscountGroup::where([
+      //   ['group_id', $group_id]
+      // ])->latest()->first();
+
+      // // dd($tmp);
+
+      // $discount = Discount::where([
+      //   ['product_id', $id],
+      //   ['id', $tmp->discount_id ?? null]
+      // ])->first();
+
+      // $discount->update([
+      //   'product_id'   => $id,
+      //   'amount'       => $data['amount'],
+      //   'valid_from'   => $data['valid_from'],
+      //   'valid_until'  => $data['valid_until']
+      // ]);
     } else {
       $discountsForProduct = Discount::where('product_id', $id)->select('id')->get()->toArray();
       $isOk = DiscountGroup::whereIn('discount_id', $discountsForProduct)->select('discount_id')->get()->toArray();

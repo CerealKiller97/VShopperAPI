@@ -8,7 +8,7 @@ use App\Models\DiscountGroup;
 
 class DiscountChecker
 {
-  public static function valid($disocuntModel, int $groupID)
+  public static function valid($disocuntModel, int $groupID = null)
   {
     $validFrom = $disocuntModel->valid_from;
     $validFromDayOfYear = Carbon::parse($validFrom)->dayOfYear;

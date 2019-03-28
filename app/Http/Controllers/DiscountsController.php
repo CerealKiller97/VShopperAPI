@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Exceptions\DiscountHasNoPrice;
 use App\Http\Requests\DiscountRequest;
 use App\Http\Controllers\ApiController;
 use App\Contracts\ProductDiscountContract;
@@ -21,8 +22,11 @@ class DiscountsController extends ApiController
     {
         try {
             $this->service->addDiscountToProduct($request, $id);
-            return $this->Created('Successfully added new price to product');
+            return $this->Created('Successfully added new discount to product');
         } catch(EntityNotFoundException $e) {
+            \Log::error($e->getMessage());
+            return $this->NotFound($e->getMessage());
+          } catch(DiscountHasNoPrice $e) {
             \Log::error($e->getMessage());
             return $this->NotFound($e->getMessage());
           } catch(InvalidDiscountException $e) {
@@ -43,6 +47,9 @@ class DiscountsController extends ApiController
         $this->service->upateDiscountFromProduct($request, $id);
         return $this->NoContent();
       } catch(EntityNotFoundException $e) {
+        \Log::error($e->getMessage());
+        return $this->NotFound($e->getMessage());
+      }  catch(InvalidDiscountException $e) {
         \Log::error($e->getMessage());
         return $this->NotFound($e->getMessage());
       } catch(\QueryException $e) {

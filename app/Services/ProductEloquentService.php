@@ -20,6 +20,7 @@ use App\Models\ProductImage;
 use App\Models\DiscountGroup;
 use App\Services\BaseService;
 use App\Helpers\PagedResponse;
+use App\Helpers\ProductMapper;
 use App\Models\ProductStorage;
 use App\Models\CategoryProduct;
 use App\Helpers\DiscountChecker;
@@ -46,45 +47,44 @@ class ProductEloquentService extends BaseService implements ProductContract
     $perPage = $request->getPaging()->perPage;
     $name = $request->getPaging()->name;
 
-    $productTest = Product::with([
+    $account_id =  auth()->user()->id;
+
+
+    $product = Product::with([
       'storages',
       'prices',
       'discounts',
       'brand'
-    ])->get();
+    ])->where('account_id', $account_id);
 
-    // dd($eagerLoadingTest);
-
-    $product = new Product;
-    $account_id =  auth()->user()->id;
+    // $product = new Product;
 
     // Getting group id from request
     $groupID = request()->header('group');
-
-    $acc = $product->where('account_id', $account_id);
-
 
     $totalProductsInDB =auth()->user()->products;
 
     $totalCount = $totalProductsInDB->count();
 
-    $x = $this->generatePagedResponse($acc, $perPage, $page, $name);
+    // $x = $this->generatePagedResponse($acc, $perPage, $page, $name);
 
-    if ($request->minPrice || $request->maxPrice) {
-      $acc->join('prices', 'products.id', '=', 'prices.product_id');
-    }
+    // if ($request->minPrice ) {
+    //   $product->join('prices', 'products.id', '=', 'prices.product_id');
+    // }
 
-    if ($request->minPrice) {
-      // $acc->join('prices', 'products.id', '=', 'prices.product_id')
-      $acc->where('amount', '>' , $request->minPrice)
-          ->where('group_id', '=', $groupID);
+    // dd($product->prices);
 
-          dd($acc->get());
-    }
+    // if ($request->minPrice) {
+    //   // $acc->join('prices', 'products.id', '=', 'prices.product_id')
+    //   $product->prices->where('amount', '>' , $request->minPrice)
+    //       ->where('group_id', '=', $groupID);
 
-    if ($request->maxPrice) {
-      dd($request->maxPrice);
-    }
+    //       dd($product->get());
+    // }
+
+    // if ($request->maxPrice) {
+    //   dd($request->maxPrice);
+    // }
     // $group = Crypt::decrypt($groupID);
     //dd($x);
     //dd(Crypt::decrypt($x));
@@ -93,212 +93,7 @@ class ProductEloquentService extends BaseService implements ProductContract
 
     foreach($totalProductsInDB as $product)
     {
-      $productDTO = new ProductDTO;
-
-      $productDTO->id = $product->id;
-      $productDTO->name = $product->name;
-      $productDTO->description = $product->description;
-      $productDTO->brand = $product->brand->name;
-
-      $price = null;
-
-      if ($groupID) {
-        $group = Group::find($groupID);
-        if ($group === null) {
-          $price = $product->prices->where('group_id', null)->sortByDesc('created_at')->first()->amount ?? null;
-        } else {
-          $price = $product->prices->where('group_id', $groupID)->sortByDesc('created_at')->first()->amount ?? null;
-
-          // if ($price === null) {
-          //   $price = $product->prices->where('group_id', null)->sortByDesc('created_at')->first()->amount;
-          // } else {
-          // }
-        }
-      } else {
-        $price = $product->prices->where('group_id', null)->sortByDesc('created_at')->first()->amount;
-      }
-
-      $productDTO->price = $price;
-
-      $discountTable = Discount::where('product_id', $product->id)->get();
-
-      $discount = null;
-
-      $groupDiscounts = Group::find($groupID); //->discounts
-
-      if ($groupDiscounts) {
-        $discountForGroup = $groupDiscounts->discounts->sortByDesc('created_at')->first();
-        // dd($discountForGroup);
-        if ($discountForGroup) {
-          $discount = DiscountChecker::valid($discountForGroup, $groupID);
-        } else {
-          $discount = null;
-        }
-      } else {
-        // proveriti da li postoji popust za sve?
-        $discount = null;
-        //dd('group doesnt exist');
-        // look for everyone's discount
-      }
-
-      $productDTO->discount = $discount;
-
-      // dd($discountTable);
-
-      // $discounts = DiscountGroup::where([
-      //   ['group_id', $groupID]
-      // ])->get();
-
-      // dd($discounts);
-
-      // DiscountChecker::valid($discountTable, $groupID);
-
-      // dd($product->prices->where('group_id', $groupID));
-
-      // $productDTO->price = $product->prices->where('group_id', $groupID)->sortByDesc('created_at')->first()->amount;
-
-      $tmpCategories = $product->categories;
-
-      $categoryInfo = $tmpCategories->map(function ($category) {
-        $categoryObj = new \StdClass;
-        $categoryObj->id = $category->id;
-        $categoryObj->name = $category->name;
-
-        return $categoryObj;
-      });
-
-      $productDTO->categories = $categoryInfo;
-
-
-      // dd($tmpPrices);
-
-      // $pricesPerGroups = $tmpPrices->map(function ($pricesPerGroup) {
-      //   $group = new \StdClass;
-
-
-      //   if ($pricesPerGroup->group_id === null) {
-      //       $group->name = 'Everyone';
-      //       $group->price = $pricesPerGroup->amount;
-      //   } else {
-      //     $groupTmp = Group::find($pricesPerGroup->group_id);
-      //     $group->name = $groupTmp->name;
-      //     $group->price = $pricesPerGroup->amount;
-      //   }
-
-      //   return $group;
-      // });
-
-      // $productDTO->prices = $pricesPerGroups;
-
-      $tmpStorages = $product->storages;
-
-      $storageInfo = $tmpStorages->map(function ($storage) use ($product) {
-        $storageObj = new \StdClass;
-        $storageObj->type = $storage->type->name;
-        $storageObj->address = $storage->address;
-        $tmpQuantity = ProductStorage::where([
-          ['storage_id', $storage->id],
-          ['product_id', $product->id]
-        ])->first();
-        $storageObj->quantity = $tmpQuantity->quantity;
-        $storageObj->unit = $product->unit->abbr;
-        return $storageObj;
-      });
-
-      $productDTO->storages = $storageInfo;
-
-      $tmpImages = $product->images;
-
-      $imageInfo = $tmpImages->map(function ($image) use ($product) {
-        $imageObj = new \StdClass;
-
-        $imageObj->id = $image->id;
-        $imageObj->src = $image->src;
-
-        return $imageObj;
-      });
-
-      $tmpDiscounts = $product->discounts;
-
-      $discountInfo = $tmpDiscounts->map(function ($discount) use ($product) {
-        $discountObj = new \StdClass;
-
-        // dd($discount);
-
-        $discountsForProduct = Discount::where('product_id', $product->id)->select('id')->get()->toArray();
-        $isOk = DiscountGroup::whereIn('discount_id', $discountsForProduct)->select('discount_id')->get()->toArray();
-
-        $whereNotIn = [];
-        foreach($isOk as $key => $x)
-        {
-          $whereNotIn[] = $x['discount_id'];
-        }
-
-        $group = new \StdClass;
-        $tmpPivot = DiscountGroup::whereIn(
-          'discount_id', $whereNotIn
-        )->select('group_id')
-         ->get()
-         ->toArray();
-
-        foreach($tmpPivot as $x)
-        {
-          $g = Group::find($x['group_id']); // ->orderBy('created_at', 'ASC')->first()->discounts[0];
-
-          // $tmp = Group::find($x['group_id']);
-          // $g->sort(function ($a, $b) {
-          //   return $b->created_at < $a->created_at;
-          // });
-          // dd($g);
-
-          $discountObj->name = $g->name;
-        }
-        $discountObj->discount = $discount->amount;
-        $discountObj->valid_until = $discount->valid_until;
-
-
-
-        // Default discount
-        $discountsForProduct = Discount::where('product_id', $product->id)->select('id')->get()->toArray();
-        $isOk = DiscountGroup::whereIn('discount_id', $discountsForProduct)->select('discount_id')->get()->toArray();
-        $whereNotIn = [];
-        foreach($isOk as $key => $x)
-        {
-          $whereNotIn[] = $x['discount_id'];
-        }
-
-        $discountExcludingGroupDiscount = \DB::table('discounts')
-                                             ->whereNotIn('id', $whereNotIn)
-                                             ->get();
-
-        $wantedDiscount = $discountExcludingGroupDiscount->filter(function ($item) use ($product) {
-          return $item->product_id === $product->id;
-        })->values()[0];
-
-        $finallyDiscount = Discount::find($wantedDiscount->id);
-
-        // if ($tmpPivot->group_id) {
-        //   $tmpG = Group::find($tmpPivot->group_id);
-        //   $group->name = $tmpG->name;
-        //   $group->discount = $discount->amount;
-        // } elseif ($tmpPivot->group_id === null) {
-        //   dd('mozda svi cena');
-        // }
-
-        // if ($pricesPerGroup->group_id === null) {
-        //     $group->name = 'Everyone';
-        //     $group->price = $pricesPerGroup->amount;
-        // } else {
-        //   $groupTmp = Group::find($pricesPerGroup->group_id);
-        //   $group->name = $groupTmp->name;
-        //   $group->price = $pricesPerGroup->amount;
-        // }
-        return $discountObj;
-      });
-
-      // $productDTO->discounts = $discountInfo;
-
-      $productDTO->images = $imageInfo;
+      $productDTO = ProductMapper::generateClientProductResponse($groupID, $product);
 
       $productArr[] = $productDTO;
     }
@@ -323,162 +118,7 @@ class ProductEloquentService extends BaseService implements ProductContract
 
     $x = $product->prices->where('group_id', $groupID)->sortByDesc('created_at')->first();
 
-    $price = null;
-
-    if ($groupID) {
-      $group = Group::find($groupID);
-      if($group === null) {
-        $price = $product->prices->where('group_id', null)->sortByDesc('created_at')->first()->amount;
-      } else {
-        $price = $product->prices->where('group_id', $groupID)->sortByDesc('created_at')->first()->amount ?? null;
-      }
-    } else {
-      $price = $product->prices->where('group_id', null)->sortByDesc('created_at')->first()->amount;
-    }
-
-    $productDTO = new ProductDTO;
-
-    $productDTO->id = $product->id;
-    $productDTO->name = $product->name;
-    $productDTO->description = $product->description;
-    $productDTO->brand = $product->brand->name;
-
-    $tmpCategories = $product->categories;
-
-    $categoryInfo = $tmpCategories->map(function ($category) {
-      $categoryObj = new \StdClass;
-      $categoryObj->id = $category->id;
-      $categoryObj->name = $category->name;
-
-      return $categoryObj;
-    });
-
-    $productDTO->categories = $categoryInfo;
-
-    $tmpPrices = $product->prices;
-
-    $pricesPerGroups = $tmpPrices->map(function ($pricesPerGroup) {
-      $group = new \StdClass;
-      // dd($pricesPerGroup);
-      if ($pricesPerGroup->group_id === null) {
-          $group->name = 'Everyone';
-          $group->price = $pricesPerGroup->amount;
-      } else {
-        $groupTmp = Group::find($pricesPerGroup->group_id);
-        $group->name = $groupTmp->name;
-        $group->price = $pricesPerGroup->amount;
-      }
-
-      return $group;
-    });
-
-    //$productDTO->prices = $pricesPerGroups;
-
-    $productDTO->price = $price;
-
-    $tmpStorages = $product->storages;
-
-    $storageInfo = $tmpStorages->map(function ($storage) use ($product) {
-      $storageObj = new \StdClass;
-      $storageObj->type = $storage->type->name;
-      $storageObj->address = $storage->address;
-      $tmpQuantity = ProductStorage::where([
-        ['storage_id', $storage->id],
-        ['product_id', $product->id]
-      ])->first();
-      $storageObj->quantity = $tmpQuantity->quantity;
-      $storageObj->unit = $product->unit->abbr;
-      return $storageObj;
-    });
-
-    $productDTO->storages = $storageInfo;
-
-    $tmpImages = $product->images;
-
-    $imageInfo = $tmpImages->map(function ($image) use ($product) {
-      $imageObj = new \StdClass;
-
-      $imageObj->id = $image->id;
-      $imageObj->src = $image->src;
-
-      return $imageObj;
-    });
-
-    $tmpDiscounts = $product->discounts;
-
-    $discountInfo = $tmpDiscounts->map(function ($discount) use ($product) {
-      $discountObj = new \StdClass;
-
-
-      $discountsForProduct = Discount::where('product_id', $product->id)->select('id')->get()->toArray();
-      $isOk = DiscountGroup::whereIn('discount_id', $discountsForProduct)->select('discount_id')->get()->toArray();
-
-      $whereNotIn = [];
-      foreach($isOk as $key => $x)
-      {
-        $whereNotIn[] = $x['discount_id'];
-      }
-
-      $group = new \StdClass;
-      $tmpPivot = DiscountGroup::whereIn(
-        'discount_id', $whereNotIn
-      )->select('group_id')
-       ->get()
-       ->toArray();
-
-      foreach($tmpPivot as $x)
-      {
-        $g = Group::find($x['group_id']);
-        $discountObj->name = $g->name;
-      }
-
-
-      $discountObj->discount = $discount->amount;
-      $discountObj->valid_until = $discount->valid_until;
-
-      // Default discount
-      $discountsForProduct = Discount::where('product_id', $product->id)->select('id')->get()->toArray();
-      $isOk = DiscountGroup::whereIn('discount_id', $discountsForProduct)->select('discount_id')->get()->toArray();
-      $whereNotIn = [];
-      foreach($isOk as $key => $x)
-      {
-        $whereNotIn[] = $x['discount_id'];
-      }
-
-      $discountExcludingGroupDiscount = \DB::table('discounts')
-                                           ->whereNotIn('id', $whereNotIn)
-                                           ->get();
-
-      $wantedDiscount = $discountExcludingGroupDiscount->filter(function ($item) use ($product) {
-        return $item->product_id === $product->id;
-      })->values()[0];
-
-      $finallyDiscount = Discount::find($wantedDiscount->id);
-
-      // if ($tmpPivot->group_id) {
-      //   $tmpG = Group::find($tmpPivot->group_id);
-      //   $group->name = $tmpG->name;
-      //   $group->discount = $discount->amount;
-      // } elseif ($tmpPivot->group_id === null) {
-      //   dd('mozda svi cena');
-      // }
-
-      // if ($pricesPerGroup->group_id === null) {
-      //     $group->name = 'Everyone';
-      //     $group->price = $pricesPerGroup->amount;
-      // } else {
-      //   $groupTmp = Group::find($pricesPerGroup->group_id);
-      //   $group->name = $groupTmp->name;
-      //   $group->price = $pricesPerGroup->amount;
-      // }
-      return $discountObj;
-    });
-
-    $productDTO->discounts = $discountInfo;
-
-    $productDTO->images = $imageInfo;
-
-    return $productDTO;
+    return ProductMapper::generateClientProductResponse($groupID, $product);
   }
 
   public function addProduct(ProductRequest $request)
@@ -498,29 +138,18 @@ class ProductEloquentService extends BaseService implements ProductContract
       dd('unit id not ok');
     }
 
+    // Brand check
+    $acc = auth()->user()->brands;
     $brand = Brand::find($data['brand_id']);
 
-    if (!$brand) {
-      throw new EntityNotFoundException('Brand not found');
-    }
+    $this->policy->can($acc, $brand, 'Brand');
 
-    $account_id = auth()->user()->id;
-
-    if ($brand->account_id !== $account_id) {
-      throw new EntityNotFoundException('Brand not found');
-    }
-
+    // Vendor check
+    $acc = auth()->user()->vendors;
     $vendor = Vendor::find($data['vendor_id']);
 
-    if (!$vendor) {
-      throw new EntityNotFoundException('Vendor not found');
-    }
+    $this->policy->can($acc, $vendor, 'Vendor');
 
-    $account_id = auth()->user()->id;
-
-    if ($vendor->account_id !== $account_id) {
-      throw new EntityNotFoundException('Vendor not found');
-    }
 
     $productType = ProductType::find($data['product_type_id']);
 
@@ -618,5 +247,4 @@ class ProductEloquentService extends BaseService implements ProductContract
 
     $product->delete();
   }
-
 }

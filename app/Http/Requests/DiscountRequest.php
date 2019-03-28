@@ -25,8 +25,10 @@ class DiscountRequest extends FormRequest
     {
         return [
             'amount'      => 'required|numeric',
-            'valid_from'  => 'required|date',
-            'valid_until' => 'required|date',
+            'valid_from'  => 'required|date|after_or_equal:today',
+            'valid_until' => 'required|date|after:valid_from',
+            // 'valid_from'  => 'required|date',
+            // 'valid_until' => 'required|date',
             'group_id'    => 'nullable|numeric'
         ];
     }

@@ -18,7 +18,7 @@ class CreatePricesTable extends Migration
             $table->unsignedInteger('product_id');
             $table->unsignedInteger('group_id')->nullable();
 
-            $table->integer('amount');
+            $table->float('amount');
 
             $table->foreign('product_id')
                   ->references('id')
