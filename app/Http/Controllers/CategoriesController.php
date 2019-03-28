@@ -18,9 +18,24 @@ class CategoriesController extends ApiController
     }
 
     /**
-     * Display a listing of the resource.
+     *  Get all categories for authenticated user. There are some default categories. Default per page is 50
      *
-     * @return \Illuminate\Http\Response
+     *  @queryParam name string optional The name of the categories.
+     *  @queryParam perPage int optional Total number of categories per page.
+     *  @queryParam page int optional Parameter page represents that page you want to see categories.
+    *   @response 200 {
+    *  "data": [
+       {
+        "id": 1,
+        "name": "Category",
+        "subcategory_id": null,
+        "image": null || full path
+      }
+  ],
+  "total": 1,
+  "currentPage": 1
+    *
+    * }
      */
     public function index(PagedRequest $request)
     {
@@ -28,10 +43,20 @@ class CategoriesController extends ApiController
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Add a new category.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     *  @bodyParam name string required Represents category name.
+     *  @bodyParam subcategory_id int optional Represents category subcategory_id.
+     *  @bodyParam image string optional Represents category image.
+     *
+     * @response 201 {
+     *   "message": "Successfully added new category"
+     * }
+     *
+     * @response 500 {
+     *   "error" : "Server error, please try later."
+     * }
+     *
      */
     public function store(CategoryRequest $request)
     {
@@ -48,10 +73,21 @@ class CategoriesController extends ApiController
     }
 
     /**
-     * Display the specified resource.
+     * Get the specified category details.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @queryParam id int optional Represents category id.
+     *
+     * @response 200 {
+     *    {
+          "id": 1,
+          "name": "Category",
+          "subcategory_id": null,
+          "image": null || full path
+         }
+     * }
+     * @response 404 {
+     *    "error": "Category not found"
+     * }
      */
     public function show(int $id)
     {
@@ -68,11 +104,24 @@ class CategoriesController extends ApiController
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified category.
      *
-     * @param  \Illuminate\Http\CategoryRequest  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     *  @bodyParam name string required Represents category name.
+     *  @bodyParam subcategory_id int optional Represents category subcategory_id.
+     *  @bodyParam image string optional Represents category image.
+     *
+     * @response 204 {
+     *
+     * }
+     *
+     * @response 404 {
+     *    "error": "Category not found"
+     * }
+     *
+     * @response 500 {
+     *   "error" : "Server error, please try later."
+     * }
+     *
      */
     public function update(CategoryRequest $request, int $id)
     {
@@ -92,10 +141,16 @@ class CategoriesController extends ApiController
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specific category.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @queryParam  int id integer required Represents category id.
+     * @response 204 {
+     *
+     * }
+     *
+     * @response 404 {
+     *    "error": "Category not found"
+     * }
      */
     public function destroy($id)
     {

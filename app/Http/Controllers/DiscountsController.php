@@ -18,6 +18,33 @@ class DiscountsController extends ApiController
         $this->service = $service;
     }
 
+     /**
+     * Add a discount to specific product.
+     *
+     *  @queryParam id int required Represents an id of a product
+     *  @bodyParam amount int required Represents an amount of discount
+     *  @bodyParam valid_from date required Represents start date of discount
+     *  @bodyParam valid_until date required Represents end date of discount
+     *  @bodyParam group_id int  Represents an id of group that you will assign this discount to
+     *
+     *
+     * @response 201 {
+     *   "message": "Successfully added new discount to product"
+     * }
+     *
+     * @response 404 {
+     *   "error" : "Product not found."
+     * }
+     *
+     * @response 409 {
+     *   "error" : "Product doesn't have initial price."
+     * }
+     *
+     * @response 500 {
+     *   "error" : "Server error, please try later."
+     * }
+     *
+     */
     public function add(DiscountRequest $request, int $id)
     {
         try {
@@ -41,6 +68,37 @@ class DiscountsController extends ApiController
           }
     }
 
+     /**
+     * Update a discount to specific product.
+     *
+     *  @queryParam id int required Represents an id of a product
+     *  @bodyParam amount int required Represents an amount of discount
+     *  @bodyParam valid_from date required Represents start date of discount
+     *  @bodyParam valid_until date required Represents end date of discount
+     *  @bodyParam group_id int  Represents an id of group that you will assign this discount to
+     *
+     *
+     * @response 204 {
+     *
+     * }
+     *
+     * @response 404 {
+     *   "error" : "Product not found."
+     * }
+     *
+     * @response 409 {
+     *   "error" : "Product doesn't have initial price."
+     * }
+     *
+     * @response 409 {
+     *   "error" : "Discount must be lower than current price."
+     * }
+     *
+     * @response 500 {
+     *   "error" : "Server error, please try later."
+     * }
+     *
+     */
     public function update(DiscountRequest $request, int $id)
     {
       try {

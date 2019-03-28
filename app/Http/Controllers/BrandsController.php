@@ -18,21 +18,40 @@ class BrandsController extends ApiController
       $this->service = $service;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+  /**
+   * Get all brands
+   *
+   * @bodyParam name string optional The name of the brand.
+   * @bodyParam perPage int optional Total number of brands per page.
+   * @bodyParam page int Parameter page represents that page you want to see brands.
+    * @response 200 {
+    *  "data": [
+    {
+      "id": 1,
+      "name": "Brand name"
+    }
+  ],
+  "total": 1,
+  "currentPage": 1
+    *
+    * }
+
+   */
     public function index(PagedRequest $request)
     {
         return $this->Ok($this->service->getBrands($request));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Add a new brand.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @bodyParam  name string required Represents name of brand
+     * @response 201 {
+     *   "message": "Successfully added new brand."
+     * }
+     * @response 500 {
+     *   "error": "Server error please try again."
+     * }
      */
     public function store(BrandRequest $request)
     {
@@ -49,10 +68,16 @@ class BrandsController extends ApiController
     }
 
     /**
-     * Display the specified resource.
+     * Get the specified brand.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @queryParam id required The id of the brand
+     * @response 200 {
+     *   "id": 1,
+     *   "name": "Brand name"
+     * }
+     * @response 404 {
+     *   "error": "Brand not found"
+     * }
      */
     public function show($id)
     {
@@ -69,11 +94,21 @@ class BrandsController extends ApiController
     }
 
     /**
-     * Update the specified resource in storage.
+      * Update a specific brand.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @queryParam id required The id of the brand
+     * @bodyParam  name string required Represents name of brand
+     * @response 204 {
+     *
+     * }
+     *
+     * @response 404 {
+     *   "error": "Brand not found"
+     * }
+     *
+     * @response 500 {
+     *   "error": "Server error please try again."
+     * }
      */
     public function update(BrandRequest $request, $id)
     {
@@ -93,10 +128,20 @@ class BrandsController extends ApiController
     }
 
     /**
-     * Remove the specified resource from storage.
+      * Delete a specific brand.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @queryParam id required The id of the brand
+     * @response 204 {
+     *
+     * }
+     *
+     * @response 404 {
+     *   "error": "Brand not found"
+     * }
+     *
+     * @response 500 {
+     *   "error": "Server error please try again."
+     * }
      */
     public function destroy($id)
     {

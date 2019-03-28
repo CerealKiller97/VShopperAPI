@@ -49,7 +49,6 @@ class ProductEloquentService extends BaseService implements ProductContract
 
     $account_id =  auth()->user()->id;
 
-
     $product = Product::with([
       'storages',
       'prices',
@@ -57,7 +56,14 @@ class ProductEloquentService extends BaseService implements ProductContract
       'brand'
     ])->where('account_id', $account_id);
 
-    // $product = new Product;
+    // dd($product);
+
+    $x = $this->generatePagedResponse($product, $perPage, $page, $name);
+
+    dd($x);
+    // if ($request->minPrice ) {
+    //   $product->join('prices', 'products.id', '=', 'prices.product_id');
+    // }
 
     // Getting group id from request
     $groupID = request()->header('group');
@@ -66,25 +72,22 @@ class ProductEloquentService extends BaseService implements ProductContract
 
     $totalCount = $totalProductsInDB->count();
 
-    // $x = $this->generatePagedResponse($acc, $perPage, $page, $name);
-
-    // if ($request->minPrice ) {
-    //   $product->join('prices', 'products.id', '=', 'prices.product_id');
-    // }
-
     // dd($product->prices);
 
-    // if ($request->minPrice) {
-    //   // $acc->join('prices', 'products.id', '=', 'prices.product_id')
-    //   $product->prices->where('amount', '>' , $request->minPrice)
-    //       ->where('group_id', '=', $groupID);
+    if ($request->minPrice) {
+      // $acc->join('prices', 'products.id', '=', 'prices.product_id')
+      dd($product->prices);
+           $product->prices->where('amount', '>' , $request->minPrice)
+                           ->where('group_id', '=', $groupID);
 
-    //       dd($product->get());
-    // }
+          dd($product);
+    }
 
-    // if ($request->maxPrice) {
-    //   dd($request->maxPrice);
-    // }
+// $x = $this->generatePagedResponse($acc, $perPage, $page, $name);
+
+    if ($request->maxPrice) {
+      dd($request->maxPrice);
+    }
     // $group = Crypt::decrypt($groupID);
     //dd($x);
     //dd(Crypt::decrypt($x));

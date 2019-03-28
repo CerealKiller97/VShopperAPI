@@ -25,20 +25,36 @@ class AccountsController extends ApiController
   }
 
     /**
-     * Display a listing of the resource.
+     * Get authenticated user's info
      *
-     * @return \Illuminate\Http\Response
+     * @response 200 {
+     *  "id": 6,
+        "name": "Test Test",
+        "email": "test@test.com",
+        "address": "adress"
+     * }
      */
     public function index()
     {
       return $this->Ok($this->service->getAccount());
     }
 
-    /**
-     * Store a newly created resource in storage.
+   /**
+     * Add new account
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @bodyParam name string required Represents name of a account
+     * @bodyParam email string required Represents email of a account
+     * @bodyParam password string required Represents password of a account
+     * @bodyParam address string required Represents address of a account
+     * @bodyParam image image required Represents an image of a account
+     *
+     *
+     * @response 201 {
+         "message": "Successfully registered!"
+     * }
+     * @response 500 {
+     *    "error": "Server error please try again"
+     * }
      */
     public function store(AccountRequest $request)
     {
@@ -56,10 +72,22 @@ class AccountsController extends ApiController
     }
 
     /**
-     * Display the specified resource.
+     * Get specific account info
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @queryParam id required The id of the account
+     *
+     * @response 200 {
+     *  "id": 6,
+        "name": "Test Test",
+        "email": "test@test.com",
+        "address": "adress"
+     * }
+     * @response 404 {
+     *   "message": "Account not found"
+     * }
+     * @response 500 {
+     *   "error": "Server error, plase try again"
+     * }
      */
     public function show(int $id)
     {
@@ -76,11 +104,21 @@ class AccountsController extends ApiController
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the authenticated user's account
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @bodyParam name string required Represents name of a account
+     * @bodyParam address string required Represents address of a account
+     * @bodyParam image Formdata required Represents image file of a account
+     *
+     * @response  204{
+     *
+     * }
+     *  @response 404 {
+     *   "message": "Account not found"
+     * }
+     * @response 500 {
+     *   "error": "Server error, plase try again"
+     * }
      */
     public function update(UpdateAccountRequest $request, $id)
     {
@@ -100,10 +138,17 @@ class AccountsController extends ApiController
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Deactivate authenticated user's account
+     * @response 204 {
+     * }
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * }
+     *  @response 404 {
+     *   "message": "Account not found"
+     * }
+     * @response 500 {
+     *   "error": "Server error, plase try again"
+     * }
      */
 
     public function destroy(int $id)
@@ -118,10 +163,15 @@ class AccountsController extends ApiController
     }
 
     /**
-     * Change account's password.
+     * Change account password
      *
-     * @param  ChangeAccountPasswordRequest  $request
-     * @return void
+      * @response  204{
+     *
+     * }
+     *
+     * @response 500 {
+     *   "error": "Server error, plase try again"
+     * }
      */
 
     public function changePasswrod(ChangeAccountPasswordRequest $request)

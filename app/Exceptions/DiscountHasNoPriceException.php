@@ -6,7 +6,7 @@ use Exception;
 
 class DiscountHasNoPrice extends Exception
 {
-  public function __construct($message, $code = 404, Exception $previous = null)
+  public function __construct($message, $code = 409, Exception $previous = null)
   {
     parent::__construct($message, $code, $previous);
   }
