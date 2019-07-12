@@ -4,17 +4,29 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Exceptions\EntityNotFoundException;
 use App\Models\Image;
 use App\DTO\CategoryDTO;
 use App\Models\Category;
-use App\Helpers\UploadFile;
-use App\Helpers\PagedResponse;
+use App\Helpers\{
+    UploadFile,
+    PagedResponse
+
+};
 use App\Contracts\CategoryContract;
-use App\Http\Requests\PagedRequest;
-use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\{
+    PagedRequest,
+    CategoryRequest
+
+};
 
 class CategoryEloquentService extends BaseService implements CategoryContract
 {
+    /**
+     * @param PagedRequest $request
+     *
+     * @return PagedResponse
+     */
     public function getCategories(PagedRequest $request): PagedResponse
     {
         $page = $request->getPaging()->page;
@@ -33,6 +45,8 @@ class CategoryEloquentService extends BaseService implements CategoryContract
 
         $categoriesCount = $final->count();
 
+        $pagesCount = (int) ceil($categoriesCount / $perPage);
+
         $categoriesArr = [];
 
         foreach ($final as $category) {
@@ -46,9 +60,15 @@ class CategoryEloquentService extends BaseService implements CategoryContract
             $categoriesArr[] = $categoryDTO;
         }
 
-        return new PagedResponse($categoriesArr, $categoriesCount, $page);
+        return new PagedResponse($categoriesArr, $categoriesCount, $page, $pagesCount);
     }
 
+    /**
+     * @param int $id
+     *
+     * @return CategoryDTO
+     * @throws EntityNotFoundException
+     */
     public function findCategory(int $id): CategoryDTO
     {
         $acc = auth()->user()->categories;
@@ -62,13 +82,14 @@ class CategoryEloquentService extends BaseService implements CategoryContract
         $categoryDTO->name = $category->name;
         $categoryDTO->subcategory_id = $category->subcategory_id;
         // Check if category has an image
-        ($category->image)
-            ? $categoryDTO->image = $category->image->src
-            : $categoryDTO->image = $category->image;
+        ($category->image) ? $categoryDTO->image = $category->image->src : $categoryDTO->image = $category->image;
 
         return $categoryDTO;
     }
 
+    /**
+     * @param CategoryRequest $request
+     */
     public function addCategory(CategoryRequest $request): void
     {
         if ($request->image) {
@@ -76,15 +97,16 @@ class CategoryEloquentService extends BaseService implements CategoryContract
             $image_id = Image::create($src)->id;
         }
 
-        $category = Category::create([
-            'name' => $request->name,
-            'account_id' => auth()->user()->id,
-            'subcategory_id' => $request->subcategory_id ?? null,
-            'image_id' => $image_id ?? null
-        ]);
+        $category = Category::create(['name' => $request->name, 'account_id' => auth()->user()->id, 'subcategory_id' => $request->subcategory_id ?? null, 'image_id' => $image_id ?? null]);
 
     }
 
+    /**
+     * @param CategoryRequest $request
+     * @param int             $id
+     *
+     * @throws EntityNotFoundException
+     */
     public function updateCategory(CategoryRequest $request, int $id): void
     {
         $acc = auth()->user()->categories;
@@ -96,6 +118,11 @@ class CategoryEloquentService extends BaseService implements CategoryContract
         $category->save();
     }
 
+    /**
+     * @param int $id
+     *
+     * @throws EntityNotFoundException
+     */
     public function deleteCategory(int $id): void
     {
         $acc = auth()->user()->categories;

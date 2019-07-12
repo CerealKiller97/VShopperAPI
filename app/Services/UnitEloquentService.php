@@ -5,14 +5,23 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\DTO\UnitDTO;
+use App\Exceptions\EntityNotFoundException;
 use App\Models\Unit;
 use App\Helpers\PagedResponse;
 use App\Contracts\UnitContract;
-use App\Http\Requests\UnitRequest;
-use App\Http\Requests\PagedRequest;
+use App\Http\Requests\{
+    UnitRequest,
+    PagedRequest
+
+};
 
 class UnitEloquentService extends BaseService implements UnitContract
 {
+    /**
+     * @param PagedRequest $request
+     *
+     * @return PagedResponse
+     */
     public function getUnits(PagedRequest $request): PagedResponse
     {
         $page = $request->getPaging()->page;
@@ -31,7 +40,7 @@ class UnitEloquentService extends BaseService implements UnitContract
 
         $unitsCount = $final->count();
 
-        $pagesCount = (int)ceil($unitsCount / $perPage);
+        $pagesCount = (int) ceil($unitsCount / $perPage);
 
         $unitsArr = [];
 
@@ -48,6 +57,12 @@ class UnitEloquentService extends BaseService implements UnitContract
         return new PagedResponse($unitsArr, $unitsCount, $page, $pagesCount);
     }
 
+    /**
+     * @param int $id
+     *
+     * @return UnitDTO
+     * @throws EntityNotFoundException
+     */
     public function findUnit(int $id): UnitDTO
     {
         $acc = auth()->user()->units;
@@ -64,12 +79,21 @@ class UnitEloquentService extends BaseService implements UnitContract
         return $unitDTO;
     }
 
+    /**
+     * @param UnitRequest $request
+     */
     public function addUnit(UnitRequest $request): void
     {
         $unit = Unit::create($request->validated());
         auth()->user()->units()->save($unit);
     }
 
+    /**
+     * @param UnitRequest $request
+     * @param int         $id
+     *
+     * @throws EntityNotFoundException
+     */
     public function updateUnit(UnitRequest $request, int $id): void
     {
         $acc = auth()->user()->units;
@@ -81,6 +105,11 @@ class UnitEloquentService extends BaseService implements UnitContract
         $unit->save();
     }
 
+    /**
+     * @param int $id
+     *
+     * @throws EntityNotFoundException
+     */
     public function deleteUnit(int $id): void
     {
         $acc = auth()->user()->units;

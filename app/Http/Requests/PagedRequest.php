@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use stdClass;
 
 
 class PagedRequest extends FormRequest
@@ -23,7 +24,7 @@ class PagedRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'perPage' => 'nullable|numeric',
@@ -32,13 +33,12 @@ class PagedRequest extends FormRequest
         ];
     }
 
-    public function getPaging()
+    public function getPaging(): stdClass
     {
-        $obj = new \stdClass;
-        $obj->page = $this->page ?? 1;
-        $obj->perPage = $this->perPage ?? 50;
+        $obj = new stdClass;
+        $obj->page = (int) $this->page ?? 1;
+        $obj->perPage = (int) $this->perPage ?? 50;
         $obj->name = $this->name ?? null;
         return $obj;
     }
-
 }

@@ -1,17 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\DTO\StorageDTO;
+use App\Exceptions\EntityNotFoundException;
 use App\Models\Storage;
 use App\Helpers\PagedResponse;
 use App\Contracts\StorageContract;
-use App\Http\Requests\StorageRequest;
-use App\Http\Requests\StorageSearchRequest;
+use App\Http\Requests\{
+    StorageRequest,
+    StorageSearchRequest
+
+};
 use StdClass;
 
 class StorageEloquentService extends BaseService implements StorageContract
 {
+    /**
+     * @param StorageSearchRequest $request
+     *
+     * @return PagedResponse
+     */
     public function getStorages(StorageSearchRequest $request): PagedResponse
     {
         $page = $request->getPaging()->page;
@@ -50,6 +61,12 @@ class StorageEloquentService extends BaseService implements StorageContract
         return new PagedResponse($storagesArr, $storagesCount, $page);
     }
 
+    /**
+     * @param int $id
+     *
+     * @return StorageDTO
+     * @throws EntityNotFoundException
+     */
     public function findStorage(int $id): StorageDTO
     {
         $acc = auth()->user()->storages;
@@ -79,12 +96,21 @@ class StorageEloquentService extends BaseService implements StorageContract
         return $storageDTO;
     }
 
-    public function addStorage(StorageRequest $request)
+    /**
+     * @param StorageRequest $request
+     */
+    public function addStorage(StorageRequest $request): void
     {
         auth()->user()->storages()->create($request->validated());
     }
 
-    public function updateStorage(StorageRequest $request, int $id)
+    /**
+     * @param StorageRequest $request
+     * @param int            $id
+     *
+     * @throws EntityNotFoundException
+     */
+    public function updateStorage(StorageRequest $request, int $id): void
     {
         $acc = auth()->user()->storages;
         $storage = Storage::find($id);
@@ -95,7 +121,12 @@ class StorageEloquentService extends BaseService implements StorageContract
         $storage->save();
     }
 
-    public function deleteStorage(int $id)
+    /**
+     * @param int $id
+     *
+     * @throws EntityNotFoundException
+     */
+    public function deleteStorage(int $id): void
     {
         $acc = auth()->user()->storages;
         $storage = Storage::find($id);
@@ -104,5 +135,4 @@ class StorageEloquentService extends BaseService implements StorageContract
 
         $storage->delete();
     }
-
 }

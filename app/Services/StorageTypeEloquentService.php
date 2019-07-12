@@ -5,14 +5,23 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\DTO\StorageTypeDTO;
+use App\Exceptions\EntityNotFoundException;
 use App\Models\StorageType;
 use App\Helpers\PagedResponse;
-use App\Http\Requests\PagedRequest;
+use App\Http\Requests\{
+    PagedRequest,
+    StorageTypeRequest
+
+};
 use App\Contracts\StorageTypeContract;
-use App\Http\Requests\StorageTypeRequest;
 
 class StorageTypeEloquentService extends BaseService implements StorageTypeContract
 {
+    /**
+     * @param PagedRequest $request
+     *
+     * @return PagedResponse
+     */
     public function getStorageTypes(PagedRequest $request): PagedResponse
     {
         $page = $request->getPaging()->page;
@@ -44,6 +53,12 @@ class StorageTypeEloquentService extends BaseService implements StorageTypeContr
         return new PagedResponse($storageTypesArr, $storageTypesTotal, $page);
     }
 
+    /**
+     * @param int $id
+     *
+     * @return StorageTypeDTO
+     * @throws EntityNotFoundException
+     */
     public function findStorageType(int $id): StorageTypeDTO
     {
         $acc = auth()->user()->storageTypes;
@@ -59,13 +74,22 @@ class StorageTypeEloquentService extends BaseService implements StorageTypeContr
         return $storageTypeDTO;
     }
 
+    /**
+     * @param StorageTypeRequest $request
+     */
     public function addStorageType(StorageTypeRequest $request): void
     {
         $storageType = StorageType::create($request->validated());
         auth()->user()->storageTypes()->save($storageType);
     }
 
-    public function updateStorageType(StorageTypeRequest $request, int $id)
+    /**
+     * @param StorageTypeRequest $request
+     * @param int                $id
+     *
+     * @throws EntityNotFoundException
+     */
+    public function updateStorageType(StorageTypeRequest $request, int $id): void
     {
         $acc = auth()->user()->storageTypes;
         $storageType = StorageType::find($id);
@@ -76,7 +100,12 @@ class StorageTypeEloquentService extends BaseService implements StorageTypeContr
         $storageType->save();
     }
 
-    public function deleteStorageType(int $id)
+    /**
+     * @param int $id
+     *
+     * @throws EntityNotFoundException
+     */
+    public function deleteStorageType(int $id): void
     {
         $acc = auth()->user()->storageTypes;
         $storageType = StorageType::find($id);

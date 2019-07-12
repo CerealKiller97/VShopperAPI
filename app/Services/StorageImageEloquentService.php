@@ -1,20 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
-use App\Models\Image;
-use App\Models\Storage;
-use App\Helpers\UploadFile;
-use App\Models\StorageImage;
-use App\Http\Requests\ImageRequest;
+use App\Models\{
+    Image,
+    Storage,
+    StorageImage
+
+};
+use App\Helpers\{
+    UploadFile,
+    ImagePivotTableRemover
+
+};
+use App\Http\Requests\{
+    ImageRequest,
+    ImageBatchRequest
+
+};
 use App\Contracts\StorageImageContract;
-use App\Helpers\ImagePivotTableRemover;
-use App\Http\Requests\ImageBatchRequest;
-use App\Exceptions\EntityNotFoundException;
+use App\Exceptions\{
+    EntityNotFoundException,
+    BatchDeleteException
+
+};
 
 class StorageImageEloquentService extends BaseService implements StorageImageContract
 {
-    public function addPicturesToStorage(ImageRequest $request, int $id)
+    /**
+     * @param ImageRequest $request
+     * @param int          $id
+     *
+     * @throws EntityNotFoundException
+     */
+    public function addPicturesToStorage(ImageRequest $request, int $id): void
     {
         $storage = Storage::find($id);
 
@@ -34,14 +55,17 @@ class StorageImageEloquentService extends BaseService implements StorageImageCon
         foreach ($images as $image) {
             $src = UploadFile::move($image);
             $image_id = Image::create($src)->id;
-            $storageImage = StorageImage::create([
-                'storage_id' => $id,
-                'image_id' => $image_id
-            ]);
+            $storageImage = StorageImage::create(['storage_id' => $id, 'image_id' => $image_id]);
         }
     }
 
-    public function deletePicturesToStorage(ImageBatchRequest $request, int $id)
+    /**
+     * @param ImageBatchRequest $request
+     * @param int               $id
+     *
+     * @throws BatchDeleteException
+     */
+    public function deletePicturesToStorage(ImageBatchRequest $request, int $id): void
     {
         $imageIDS = $request->validated()['images'];
 

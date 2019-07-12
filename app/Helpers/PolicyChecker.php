@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Helpers;
 
 use App\Exceptions\EntityNotFoundException;
@@ -19,7 +21,7 @@ class PolicyChecker // a.k.a PolicyChecker
    */
   // brands auth()->user->[brands]
 
-  public function can($acc, $entityModel, $error = 'Resource')
+  public function can($acc, $entityModel, string $error = 'Resource')
   {
     $allowedToSee = $acc->filter(function ($value, $key) use ($entityModel) {
       if ($entityModel === null) {
@@ -29,11 +31,11 @@ class PolicyChecker // a.k.a PolicyChecker
     });
 
     if (!$entityModel) {
-      throw new EntityNotFoundException("$error not found");
+      throw new EntityNotFoundException($error);
     }
     // Resource doesn't belong to auth user account but exists in DB
     if ((count($allowedToSee) === 0) ) {
-      throw new EntityNotFoundException("$error not found");
+      throw new EntityNotFoundException($error);
     }
   }
 
@@ -46,13 +48,17 @@ class PolicyChecker // a.k.a PolicyChecker
    * @return { bool} {bool / Exception }
    */
 
-   /**
-    * @function canDeleteFromPivotTable
-      @param mixed $name
-      @throws Exception
-    */
+    /**
+     * @function canDeleteFromPivotTable
+     * @param mixed $name
+     * @throws Exception
+     * @param string $tableName
+     * @param array $ids
+     * @param int $id
+     * @param string $entityIdentifierColumn
+     */
 
-  public static function canDeleteFromPivotTable(string $tableName, array $ids,int $id, string $entityIdentifierColumn)
+  public static function canDeleteFromPivotTable(string $tableName = "", array $ids = [],int $id, string $entityIdentifierColumn = "")
   {
     $countRow = \DB::table($tableName)
                           ->whereIn('image_id',  $ids)

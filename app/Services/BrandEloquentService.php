@@ -5,14 +5,23 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\DTO\BrandDTO;
+use App\Exceptions\EntityNotFoundException;
 use App\Models\Brand;
 use App\Helpers\PagedResponse;
 use App\Contracts\BrandContract;
-use App\Http\Requests\BrandRequest;
-use App\Http\Requests\PagedRequest;
+use App\Http\Requests\{
+    BrandRequest,
+    PagedRequest
+
+};
 
 class BrandEloquentService extends BaseService implements BrandContract
 {
+    /**
+     * @param PagedRequest $request
+     *
+     * @return PagedResponse
+     */
     public function getBrands(PagedRequest $request): PagedResponse
     {
         $page = $request->getPaging()->page;
@@ -26,6 +35,8 @@ class BrandEloquentService extends BaseService implements BrandContract
         $items = $this->generatePagedResponse($acc, $perPage, $page, $name);
         $brandsCount = auth()->user()->brands->count();
 
+        $pagesCount = (int) ceil($brandsCount / $perPage);
+
         $brandsArr = [];
 
         foreach ($items as $brand) {
@@ -37,9 +48,15 @@ class BrandEloquentService extends BaseService implements BrandContract
             $brandsArr[] = $brandDTO;
         }
 
-        return new PagedResponse($brandsArr, $brandsCount, $page);
+        return new PagedResponse($brandsArr, $brandsCount, $page, $pagesCount);
     }
 
+    /**
+     * @param int $id
+     *
+     * @return BrandDTO
+     * @throws EntityNotFoundException
+     */
     public function findBrand(int $id): BrandDTO
     {
         $acc = auth()->user()->brands;
@@ -55,11 +72,20 @@ class BrandEloquentService extends BaseService implements BrandContract
         return $brandDTO;
     }
 
+    /**
+     * @param BrandRequest $request
+     */
     public function addBrand(BrandRequest $request): void
     {
         auth()->user()->brands()->create($request->validated());
     }
 
+    /**
+     * @param BrandRequest $request
+     * @param int          $id
+     *
+     * @throws EntityNotFoundException
+     */
     public function updateBrand(BrandRequest $request, int $id): void
     {
         $acc = auth()->user()->brands;
@@ -71,6 +97,11 @@ class BrandEloquentService extends BaseService implements BrandContract
         $brand->save();
     }
 
+    /**
+     * @param int $id
+     *
+     * @throws EntityNotFoundException
+     */
     public function deleteBrand(int $id): void
     {
         $acc = auth()->user()->brands;

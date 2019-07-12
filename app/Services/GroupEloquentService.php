@@ -5,14 +5,23 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\DTO\GroupDTO;
+use App\Exceptions\EntityNotFoundException;
 use App\Models\Group;
 use App\Helpers\PagedResponse;
 use App\Contracts\GroupContract;
-use App\Http\Requests\GroupRequest;
-use App\Http\Requests\PagedRequest;
+use App\Http\Requests\{
+    PagedRequest,
+    GroupRequest
+
+};
 
 class GroupEloquentService extends BaseService implements GroupContract
 {
+    /**
+     * @param PagedRequest $request
+     *
+     * @return PagedResponse
+     */
     public function getGroups(PagedRequest $request): PagedResponse
     {
         $page = $request->getPaging()->page;
@@ -45,6 +54,12 @@ class GroupEloquentService extends BaseService implements GroupContract
         return new PagedResponse($groupsArr, $groupCount, $page);
     }
 
+    /**
+     * @param int $id
+     *
+     * @return GroupDTO
+     * @throws EntityNotFoundException
+     */
     public function findGroup(int $id): GroupDTO
     {
         $acc = auth()->user()->groups;
@@ -60,13 +75,22 @@ class GroupEloquentService extends BaseService implements GroupContract
         return $groupDTO;
     }
 
-    public function addGroup(GroupRequest $request)
+    /**
+     * @param GroupRequest $request
+     */
+    public function addGroup(GroupRequest $request): void
     {
         $group = Group::create($request->validated());
         auth()->user()->groups()->save($group);
     }
 
-    public function updateGroup(GroupRequest $request, int $id)
+    /**
+     * @param GroupRequest $request
+     * @param int          $id
+     *
+     * @throws EntityNotFoundException
+     */
+    public function updateGroup(GroupRequest $request, int $id): void
     {
         $acc = auth()->user()->groups;
         $group = Group::find($id);
@@ -77,7 +101,12 @@ class GroupEloquentService extends BaseService implements GroupContract
         $group->save();
     }
 
-    public function deleteGroup(int $id)
+    /**
+     * @param int $id
+     *
+     * @throws EntityNotFoundException
+     */
+    public function deleteGroup(int $id): void
     {
         $acc = auth()->user()->groups;
         $group = Group::find($id);

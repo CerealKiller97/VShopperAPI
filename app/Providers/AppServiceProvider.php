@@ -2,38 +2,46 @@
 
 namespace App\Providers;
 
-use App\Contracts\UnitContract;
-use App\Contracts\BrandContract;
-use App\Contracts\GroupContract;
-use App\Contracts\VendorContract;
-use App\Contracts\AccountContract;
-use App\Contracts\ProductContract;
-use App\Contracts\StorageContract;
-use App\Contracts\CategoryContract;
-use App\Services\UnitEloquentService;
-use App\Contracts\ProductTypeContract;
-use App\Contracts\StorageTypeContract;
-use App\Services\BrandEloquentService;
-use App\Services\GroupEloquentService;
+use App\Contracts\{
+    UnitContract,
+    BrandContract,
+    GroupContract,
+    VendorContract,
+    AccountContract,
+    ProductContract,
+    StorageContract,
+    CategoryContract,
+    ProductTypeContract,
+    StorageTypeContract,
+    ProductImageContract,
+    ProductPriceContract,
+    StorageImageContract,
+    ProductStorageContract,
+    ProductDiscountContract
+
+};
+
+use App\Services\{
+    UnitEloquentService,
+    BrandEloquentService,
+    GroupEloquentService,
+    VendorEloquentService,
+    AccountEloquentService,
+    ProductEloquentService,
+    ProductDiscountEloquentService,
+    ProductImageEloquentService,
+    ProductStorageEloquentService,
+    StorageImageEloquentService,
+    ProductPriceEloquentService,
+    StorageTypeEloquentService,
+    ProductTypeEloquentService,
+    CategoryEloquentService,
+    StorageEloquentService
+
+};
+
 use Illuminate\Support\Facades\Schema;
-use App\Contracts\ProductImageContract;
-use App\Contracts\ProductPriceContract;
-use App\Contracts\StorageImageContract;
-use App\Services\VendorEloquentService;
 use Illuminate\Support\ServiceProvider;
-use App\Services\AccountEloquentService;
-use App\Services\ProductEloquentService;
-use App\Services\StorageEloquentService;
-use App\Contracts\ProductStorageContract;
-use App\Services\CategoryEloquentService;
-use App\Contracts\ProductDiscountContract;
-use App\Services\ProductTypeEloquentService;
-use App\Services\StorageTypeEloquentService;
-use App\Services\ProductImageEloquentService;
-use App\Services\ProductPriceEloquentService;
-use App\Services\StorageImageEloquentService;
-use App\Services\ProductStorageEloquentService;
-use App\Services\ProductDiscountEloquentService;
 
 class AppServiceProvider extends ServiceProvider
 {

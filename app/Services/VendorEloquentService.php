@@ -5,14 +5,23 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\DTO\VendorDTO;
+use App\Exceptions\EntityNotFoundException;
 use App\Models\Vendor;
 use App\Helpers\PagedResponse;
 use App\Contracts\VendorContract;
-use App\Http\Requests\PagedRequest;
-use App\Http\Requests\VendorRequest;
+use App\Http\Requests\{
+    VendorRequest,
+    PagedRequest
+
+};
 
 class VendorEloquentService extends BaseService implements VendorContract
 {
+    /**
+     * @param PagedRequest $request
+     *
+     * @return PagedResponse
+     */
     public function getVendors(PagedRequest $request): PagedResponse
     {
         $page = $request->getPaging()->page;
@@ -45,6 +54,12 @@ class VendorEloquentService extends BaseService implements VendorContract
         return new PagedResponse($vendorsArr, $vendorsCount, $page, $pagesCount);
     }
 
+    /**
+     * @param int $id
+     *
+     * @return VendorDTO
+     * @throws EntityNotFoundException
+     */
     public function findVendor(int $id): VendorDTO
     {
         $acc = auth()->user()->vendors;
@@ -64,11 +79,20 @@ class VendorEloquentService extends BaseService implements VendorContract
         return $vendorDTO;
     }
 
+    /**
+     * @param VendorRequest $request
+     */
     public function addVendor(VendorRequest $request): void
     {
         auth()->user()->vendors()->create($request->validated());
     }
 
+    /**
+     * @param VendorRequest $request
+     * @param int           $id
+     *
+     * @throws EntityNotFoundException
+     */
     public function updateVendor(VendorRequest $request, int $id): void
     {
         $acc = auth()->user()->vendors;
@@ -80,6 +104,11 @@ class VendorEloquentService extends BaseService implements VendorContract
         $vendor->save();
     }
 
+    /**
+     * @param int $id
+     *
+     * @throws EntityNotFoundException
+     */
     public function deleteVendor(int $id): void
     {
         $acc = auth()->user()->vendors;
