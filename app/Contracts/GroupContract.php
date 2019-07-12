@@ -6,8 +6,11 @@ namespace App\Contracts;
 
 use App\DTO\GroupDTO;
 use App\Helpers\PagedResponse;
-use App\Http\Requests\GroupRequest;
-use App\Http\Requests\PagedRequest;
+use App\Http\Requests\{
+    GroupRequest,
+    PagedRequest
+
+};
 
 interface GroupContract
 {

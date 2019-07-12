@@ -6,8 +6,11 @@ namespace App\Contracts;
 
 use App\DTO\VendorDTO;
 use App\Helpers\PagedResponse;
-use App\Http\Requests\PagedRequest;
-use App\Http\Requests\VendorRequest;
+use App\Http\Requests\{
+    PagedRequest,
+    VendorRequest
+
+};
 
 interface VendorContract
 {

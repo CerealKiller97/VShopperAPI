@@ -2,29 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e1b12144-d993-4dc8-a966-2814dc6db6e0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Contracts/ProductDiscountContract.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Contracts/ProductDiscountContract.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Exceptions/EntityNotFoundException.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Exceptions/EntityNotFoundException.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Helpers/PolicyChecker.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Helpers/PolicyChecker.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Requests/PagedRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Requests/PagedRequest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Providers/AppServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Providers/AppServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/AccountEloquentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/AccountEloquentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/BaseService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/BaseService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/BrandEloquentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/BrandEloquentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/CategoryEloquentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/CategoryEloquentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/GroupEloquentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/GroupEloquentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/ProductDiscountEloquentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/ProductDiscountEloquentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/ProductEloquentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/ProductEloquentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/ProductImageEloquentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/ProductImageEloquentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/ProductPriceEloquentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/ProductPriceEloquentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/ProductStorageEloquentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/ProductStorageEloquentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/ProductTypeEloquentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/ProductTypeEloquentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/StorageEloquentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/StorageEloquentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/StorageImageEloquentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/StorageImageEloquentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/StorageTypeEloquentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/StorageTypeEloquentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/UnitEloquentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/UnitEloquentService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Services/VendorEloquentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Services/VendorEloquentService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Contracts/AccountContract.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Contracts/AccountContract.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Contracts/BrandContract.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Contracts/BrandContract.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Contracts/CategoryContract.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Contracts/CategoryContract.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Contracts/GroupContract.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Contracts/GroupContract.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Contracts/ProductContract.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Contracts/ProductContract.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Contracts/ProductImageContract.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Contracts/ProductImageContract.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Contracts/ProductStorageContract.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Contracts/ProductStorageContract.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Contracts/ProductTypeContract.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Contracts/ProductTypeContract.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Contracts/StorageContract.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Contracts/StorageContract.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Contracts/StorageImageContract.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Contracts/StorageImageContract.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Contracts/StorageTypeContract.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Contracts/StorageTypeContract.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Contracts/UnitContract.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Contracts/UnitContract.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Contracts/VendorContract.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Contracts/VendorContract.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/seeds/DatabaseSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeds/DatabaseSeeder.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,126 +32,91 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Services/ProductEloquentService.php">
+        <entry file="file://$PROJECT_DIR$/app/Contracts/ProductDiscountContract.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="990">
-              <caret line="30" column="6" selection-start-line="30" selection-start-column="6" selection-end-line="30" selection-end-column="6" />
-              <folding>
-                <element signature="e#58#144#0#PHP" expanded="true" />
-                <element signature="e#535#2150#0#PHP" />
-                <element signature="e#2154#2634#0#PHP" />
-                <element signature="e#2934#5370#0#PHP" />
-                <element signature="e#5522#6125#0#PHP" />
-              </folding>
+            <state relative-caret-position="264">
+              <caret line="8" column="10" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Services/ProductDiscountEloquentService.php">
+        <entry file="file://$PROJECT_DIR$/app/Contracts/ProductImageContract.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="759">
-              <caret line="23" column="6" selection-start-line="23" selection-start-column="6" selection-end-line="23" selection-end-column="6" />
-              <folding>
-                <element signature="e#58#134#0#PHP" expanded="true" />
-              </folding>
+            <state relative-caret-position="330">
+              <caret line="10" selection-start-line="10" selection-end-line="10" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Services/GroupEloquentService.php">
+        <entry file="file://$PROJECT_DIR$/app/Contracts/ProductPriceContract.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="561">
-              <caret line="17" column="6" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
-              <folding>
-                <element signature="e#58#79#0#PHP" expanded="true" />
-              </folding>
+            <state relative-caret-position="396">
+              <caret line="12" column="85" selection-start-line="12" selection-start-column="85" selection-end-line="12" selection-end-column="85" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Services/CategoryEloquentService.php">
+        <entry file="file://$PROJECT_DIR$/app/Contracts/ProductStorageContract.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="726">
-              <caret line="22" column="6" selection-start-line="22" selection-start-column="6" selection-end-line="22" selection-end-column="6" />
-              <folding>
-                <element signature="e#58#101#0#PHP" expanded="true" />
-              </folding>
+            <state relative-caret-position="330">
+              <caret line="10" selection-start-line="10" selection-end-line="10" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Services/BrandEloquentService.php">
+        <entry file="file://$PROJECT_DIR$/app/Contracts/ProductTypeContract.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="561">
-              <caret line="17" column="6" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
-              <folding>
-                <element signature="e#58#79#0#PHP" expanded="true" />
-              </folding>
+            <state relative-caret-position="330">
+              <caret line="12" selection-start-line="12" selection-end-line="12" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Services/BaseService.php">
+        <entry file="file://$PROJECT_DIR$/app/Contracts/StorageContract.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1122">
-              <caret line="34" column="3" selection-start-line="34" selection-start-column="3" selection-end-line="34" selection-end-column="3" />
-              <folding>
-                <element signature="e#58#88#0#PHP" expanded="true" />
-              </folding>
+            <state relative-caret-position="330">
+              <caret line="12" selection-start-line="12" selection-end-line="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Contracts/StorageImageContract.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="330">
+              <caret line="10" selection-start-line="10" selection-end-line="10" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Contracts/StorageTypeContract.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="304">
+              <caret line="12" selection-start-line="12" selection-end-line="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Contracts/UnitContract.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="297">
+              <caret line="12" selection-start-line="12" selection-end-line="12" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/Services/AccountEloquentService.php">
+        <entry file="file://$PROJECT_DIR$/app/Contracts/VendorContract.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="429">
-              <caret line="13" column="33" lean-forward="true" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Services/ProductImageEloquentService.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="957">
-              <caret line="29" column="6" selection-start-line="29" selection-start-column="6" selection-end-line="29" selection-end-column="6" />
-              <folding>
-                <element signature="e#58#104#0#PHP" expanded="true" />
-                <element signature="e#546#1060#0#PHP" />
-                <element signature="e#1241#1601#0#PHP" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Services/ProductPriceEloquentService.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="528">
-              <caret line="16" column="6" selection-start-line="16" selection-start-column="6" selection-end-line="16" selection-end-column="6" />
-              <folding>
-                <element signature="e#58#97#0#PHP" expanded="true" />
-                <element signature="e#461#1449#0#PHP" />
-                <element signature="e#1598#2837#0#PHP" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Services/ProductStorageEloquentService.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="792">
-              <caret line="24" column="6" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
-              <folding>
-                <element signature="e#58#124#0#PHP" expanded="true" />
-              </folding>
+            <state relative-caret-position="238">
+              <caret line="12" selection-start-line="12" selection-end-line="12" />
             </state>
           </provider>
         </entry>
@@ -178,10 +134,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/Http/Controllers/ProductImagesController.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/ProductsController.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/ProductStoragesController.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/ProductTypesController.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/StorageImagesController.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/StorageTypesController.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/VerificationController.php" />
@@ -192,21 +144,11 @@
         <option value="$PROJECT_DIR$/app/Http/Controllers/DiscountsController.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/AccountsController.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/ApiController.php" />
-        <option value="$PROJECT_DIR$/app/Contracts/UnitContract.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/BrandsController.php" />
-        <option value="$PROJECT_DIR$/app/Contracts/VendorContract.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/VendorsController.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/CategoriesController.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/AuthController.php" />
-        <option value="$PROJECT_DIR$/app/Contracts/GroupContract.php" />
-        <option value="$PROJECT_DIR$/app/Contracts/ProductContract.php" />
-        <option value="$PROJECT_DIR$/app/Contracts/ProductImageContract.php" />
         <option value="$PROJECT_DIR$/app/Contracts/ProductPriceContract.php" />
-        <option value="$PROJECT_DIR$/app/Contracts/ProductStorageContract.php" />
-        <option value="$PROJECT_DIR$/app/Contracts/ProductTypeContract.php" />
-        <option value="$PROJECT_DIR$/app/Contracts/StorageContract.php" />
-        <option value="$PROJECT_DIR$/app/Contracts/StorageImageContract.php" />
-        <option value="$PROJECT_DIR$/app/Contracts/StorageTypeContract.php" />
         <option value="$PROJECT_DIR$/app/Exceptions/EntityNotFoundException.php" />
         <option value="$PROJECT_DIR$/app/Helpers/PagedResponse.php" />
         <option value="$PROJECT_DIR$/app/Services/BaseService.php" />
@@ -229,6 +171,20 @@
         <option value="$PROJECT_DIR$/app/Services/StorageTypeEloquentService.php" />
         <option value="$PROJECT_DIR$/app/Services/UnitEloquentService.php" />
         <option value="$PROJECT_DIR$/app/Services/VendorEloquentService.php" />
+        <option value="$PROJECT_DIR$/database/seeds/DatabaseSeeder.php" />
+        <option value="$PROJECT_DIR$/app/Contracts/AccountContract.php" />
+        <option value="$PROJECT_DIR$/app/Contracts/BrandContract.php" />
+        <option value="$PROJECT_DIR$/app/Contracts/CategoryContract.php" />
+        <option value="$PROJECT_DIR$/app/Contracts/GroupContract.php" />
+        <option value="$PROJECT_DIR$/app/Contracts/ProductContract.php" />
+        <option value="$PROJECT_DIR$/app/Contracts/ProductImageContract.php" />
+        <option value="$PROJECT_DIR$/app/Contracts/ProductStorageContract.php" />
+        <option value="$PROJECT_DIR$/app/Contracts/ProductTypeContract.php" />
+        <option value="$PROJECT_DIR$/app/Contracts/StorageContract.php" />
+        <option value="$PROJECT_DIR$/app/Contracts/StorageImageContract.php" />
+        <option value="$PROJECT_DIR$/app/Contracts/StorageTypeContract.php" />
+        <option value="$PROJECT_DIR$/app/Contracts/UnitContract.php" />
+        <option value="$PROJECT_DIR$/app/Contracts/VendorContract.php" />
       </list>
     </option>
   </component>
@@ -379,7 +335,7 @@
               <item name="VShopperAPI" type="b2602c69:ProjectViewProjectNode" />
               <item name="VShopperAPI" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="Services" type="462c0819:PsiDirectoryNode" />
+              <item name="Contracts" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -436,12 +392,12 @@
       <option name="presentableId" value="Default" />
       <updated>1562957942281</updated>
       <workItem from="1562957943726" duration="8130000" />
-      <workItem from="1562966180281" duration="7344000" />
+      <workItem from="1562966180281" duration="7747000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15474000" />
+    <option name="totallyTimeSpent" value="15877000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -473,27 +429,6 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/routes/api.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="45" column="16" lean-forward="true" selection-start-line="45" selection-start-column="16" selection-end-line="45" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Contracts/Routing/ResponseFactory.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="5" lean-forward="true" selection-start-column="5" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Http/JsonResponse.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2986">
-          <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Requests/BrandRequest.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="512">
@@ -569,126 +504,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/AccountContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="957">
-          <caret line="29" column="79" selection-start-line="29" selection-start-column="79" selection-end-line="29" selection-end-column="79" />
-          <folding>
-            <element signature="e#59#82#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/BrandContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="17" column="34" lean-forward="true" selection-start-line="17" selection-start-column="34" selection-end-line="17" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/CategoryContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="11" column="10" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/DiscountContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="8" column="10" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/GroupContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="21" column="46" selection-start-line="21" selection-start-column="46" selection-end-line="21" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/ProductContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="20" column="48" selection-start-line="20" selection-start-column="48" selection-end-line="20" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/ProductImageContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="9" column="10" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
-          <folding>
-            <element signature="e#33#68#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/ProductPriceContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="12" column="85" selection-start-line="12" selection-start-column="85" selection-end-line="12" selection-end-column="85" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/ProductStorageContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="429">
-          <caret line="13" column="96" selection-start-line="13" selection-start-column="96" selection-end-line="13" selection-end-column="96" />
-          <folding>
-            <element signature="e#33#77#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/ProductTypeContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/StorageContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="21" column="48" selection-start-line="21" selection-start-column="48" selection-end-line="21" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/StorageImageContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="9" column="10" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/StorageTypeContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="568">
-          <caret line="21" column="52" selection-start-line="21" selection-start-column="52" selection-end-line="21" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/UnitContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="363">
-          <caret line="11" column="5" selection-start-line="11" selection-start-column="5" selection-end-line="11" selection-end-column="5" />
-          <folding>
-            <element signature="e#59#79#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/VendorContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-          <folding>
-            <element signature="e#59#81#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Exceptions/EntityNotFoundException.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="429">
@@ -727,13 +542,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="495">
           <caret line="15" column="35" lean-forward="true" selection-start-line="15" selection-start-column="35" selection-end-line="15" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Contracts/ProductDiscountContract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="6" column="38" selection-start-line="6" selection-start-column="38" selection-end-line="6" selection-end-column="38" />
         </state>
       </provider>
     </entry>
@@ -933,6 +741,147 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="429">
           <caret line="13" column="33" lean-forward="true" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/seeds/DatabaseSeeder.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="363">
+          <caret line="11" column="31" selection-start-line="11" selection-start-column="31" selection-end-line="11" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/seeds/AccountTableSeeder.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
+          <folding>
+            <element signature="e#7#30#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/factories/AccountFactory.php">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/AccountContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/BrandContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="429">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
+          <folding>
+            <element signature="e#59#80#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/CategoryContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/DiscountContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="8" column="10" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/GroupContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="429">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
+          <folding>
+            <element signature="e#59#80#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/ProductContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+          <folding>
+            <element signature="e#59#82#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/ProductDiscountContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="8" column="10" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/ProductImageContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/ProductPriceContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="12" column="85" selection-start-line="12" selection-start-column="85" selection-end-line="12" selection-end-column="85" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/ProductStorageContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/ProductTypeContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/StorageContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/StorageImageContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/StorageTypeContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/UnitContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Contracts/VendorContract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
         </state>
       </provider>
     </entry>

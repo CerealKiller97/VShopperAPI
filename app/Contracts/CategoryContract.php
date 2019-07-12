@@ -6,8 +6,11 @@ namespace App\Contracts;
 
 use App\DTO\CategoryDTO;
 use App\Helpers\PagedResponse;
-use App\Http\Requests\PagedRequest;
-use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\{
+    PagedRequest,
+    CategoryRequest
+
+};
 
 interface CategoryContract
 {

@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Contracts;
 
 use App\DTO\ProductDTO;
-use App\Http\Requests\ProductRequest;
-use App\Http\Requests\ProductSearchRequest;
+use App\Http\Requests\{
+    ProductRequest,
+    ProductSearchRequest
+
+};
 
 interface ProductContract
 {

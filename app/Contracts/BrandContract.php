@@ -6,8 +6,11 @@ namespace App\Contracts;
 
 use App\DTO\BrandDTO;
 use App\Helpers\PagedResponse;
-use App\Http\Requests\BrandRequest;
-use App\Http\Requests\PagedRequest;
+use App\Http\Requests\{
+    BrandRequest,
+    PagedRequest
+
+};
 
 interface BrandContract
 {

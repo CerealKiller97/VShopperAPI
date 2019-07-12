@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Contracts;
 
-use App\Http\Requests\ImageRequest;
-use App\Http\Requests\ImageBatchRequest;
+use App\Http\Requests\{
+    ImageRequest,
+    ImageBatchRequest
+
+};
 
 interface ProductImageContract
 {

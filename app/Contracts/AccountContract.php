@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Contracts;
 
 use App\DTO\AccountDTO;
-use App\Http\Requests\AccountRequest;
-use App\Http\Requests\UpdateAccountRequest;
-use App\Http\Requests\ChangeAccountPasswordRequest;
+use App\Http\Requests\{
+    AccountRequest,
+    UpdateAccountRequest,
+    ChangeAccountPasswordRequest
+
+};
 
 interface AccountContract
 {

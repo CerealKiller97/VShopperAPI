@@ -6,8 +6,11 @@ namespace App\Contracts;
 
 use App\DTO\ProductTypeDTO;
 use App\Helpers\PagedResponse;
-use App\Http\Requests\PagedRequest;
-use App\Http\Requests\ProductTypeRequest;
+use App\Http\Requests\{
+    PagedRequest,
+    ProductTypeRequest
+
+};
 
 interface ProductTypeContract
 {

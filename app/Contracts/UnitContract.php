@@ -6,8 +6,11 @@ namespace App\Contracts;
 
 use App\DTO\UnitDTO;
 use App\Helpers\PagedResponse;
-use App\Http\Requests\UnitRequest;
-use App\Http\Requests\PagedRequest;
+use App\Http\Requests\{
+    UnitRequest,
+    PagedRequest
+
+};
 
 interface UnitContract
 {

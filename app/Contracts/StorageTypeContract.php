@@ -6,8 +6,11 @@ namespace App\Contracts;
 
 use App\DTO\StorageTypeDTO;
 use App\Helpers\PagedResponse;
-use App\Http\Requests\PagedRequest;
-use App\Http\Requests\StorageTypeRequest;
+use App\Http\Requests\{
+    PagedRequest,
+    StorageTypeRequest
+
+};
 
 interface StorageTypeContract
 {

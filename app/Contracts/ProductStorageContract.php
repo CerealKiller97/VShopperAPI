@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Contracts;
 
-use App\Http\Requests\ProductStorageRequest;
-use App\Http\Requests\BatchProductStorageRequest;
+use App\Http\Requests\{
+    ProductStorageRequest,
+    BatchProductStorageRequest
+
+};
 
 interface ProductStorageContract
 {
