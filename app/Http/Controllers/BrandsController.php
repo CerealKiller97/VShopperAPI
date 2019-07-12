@@ -38,6 +38,8 @@ class BrandsController extends ApiController
      * "currentPage": 1
      *
      * }
+     * @param PagedRequest $request
+     * @return Response
      */
     public function index(PagedRequest $request)
     {
@@ -55,6 +57,8 @@ class BrandsController extends ApiController
      * @response 500 {
      *   "error": "Server error please try again."
      * }
+     * @param BrandRequest $request
+     * @return Response
      */
     public function store(BrandRequest $request): Response
     {
@@ -81,6 +85,8 @@ class BrandsController extends ApiController
      * @response 404 {
      *   "error": "Brand not found"
      * }
+     * @param int $id
+     * @return Response
      */
     public function show(int $id)
     {
@@ -112,6 +118,9 @@ class BrandsController extends ApiController
      * @response 500 {
      *   "error": "Server error please try again."
      * }
+     * @param BrandRequest $request
+     * @param $id
+     * @return Response
      */
     public function update(BrandRequest $request, $id)
     {
@@ -145,8 +154,10 @@ class BrandsController extends ApiController
      * @response 500 {
      *   "error": "Server error please try again."
      * }
+     * @param int $id
+     * @return Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         try {
             $this->service->deleteBrand($id);

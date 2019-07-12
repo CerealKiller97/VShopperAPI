@@ -9,7 +9,7 @@ use App\Http\Requests\PagedRequest;
 use App\Http\Requests\VendorRequest;
 use App\Exceptions\EntityNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse as Response;
 use Log;
 use QueryException;
 
@@ -25,11 +25,13 @@ class VendorsController extends ApiController
     /**
      * Display a listing of the resource.
      *
+     * @param PagedRequest $request
      * @return Response
      */
-    public function index(PagedRequest $request)
+    public function index(PagedRequest $request): Response
     {
-        return $this->Ok($this->service->getVendors($request));
+        $vendors = $this->service->getVendors($request);
+        return $this->Ok($vendors);
     }
 
     /**
@@ -38,7 +40,7 @@ class VendorsController extends ApiController
      * @param Request $request
      * @return Response
      */
-    public function store(VendorRequest $request)
+    public function store(VendorRequest $request): Response
     {
         try {
             $this->service->addVendor($request);
@@ -58,7 +60,7 @@ class VendorsController extends ApiController
      * @param int $id
      * @return Response
      */
-    public function show($id)
+    public function show(int $id): Response
     {
         try {
             $vendor = $this->service->findVendor($id);
@@ -75,11 +77,11 @@ class VendorsController extends ApiController
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param VendorRequest $request
      * @param int $id
      * @return Response
      */
-    public function update(VendorRequest $request, $id)
+    public function update(VendorRequest $request, $id): Response
     {
         try {
             $this->service->updateVendor($request, $id);
@@ -102,7 +104,7 @@ class VendorsController extends ApiController
      * @param int $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(int $id): Response
     {
         try {
             $this->service->deleteVendor($id);

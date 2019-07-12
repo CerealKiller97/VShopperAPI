@@ -8,6 +8,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Http\Request;
 use App\Contracts\AccountContract;
+use Illuminate\Http\JsonResponse as Response;
 
 class AuthController extends ApiController
 {
@@ -50,7 +51,8 @@ class AuthController extends ApiController
             // $cookie_name = 'token';
             // $groupToken = Crypt::encrypt('1');
             // setcookie($cookie_name, $groupToken, time() + (86400 * 30), "/"); // 86400 = 1 day
-            return $response->getBody();
+            $data = $response->getBody();
+            dd($data);
         } catch (BadResponseException $e) {
             if ($e->getCode() === 400) {
                 return $this->BadRequest('Invalid Request. Please enter a username or a password.');
@@ -66,12 +68,13 @@ class AuthController extends ApiController
 
     }
 
-    public function logout()
+    public function logout(): Response
     {
         try {
             DB::table('oauth_access_tokens')
                 ->where('user_id', auth()->user()->id)
                 ->delete();
+
             return $this->Ok('Logged out successfully');
         } catch (Exception $e) {
             return $this->ServerError();

@@ -8,6 +8,7 @@ use App\Contracts\CategoryContract;
 use App\Http\Requests\PagedRequest;
 use App\Http\Requests\CategoryRequest;
 use App\Exceptions\EntityNotFoundException;
+use Illuminate\Http\JsonResponse as Response;
 use Log;
 use QueryException;
 
@@ -39,10 +40,13 @@ class CategoriesController extends ApiController
      * "currentPage": 1
      *
      * }
+     * @param PagedRequest $request
+     * @return Response
      */
-    public function index(PagedRequest $request)
+    public function index(PagedRequest $request): Response
     {
-        return $this->Ok($this->service->getCategories($request));
+        $categories = $this->service->getCategories($request);
+        return $this->Ok($categories);
     }
 
     /**
@@ -59,9 +63,10 @@ class CategoriesController extends ApiController
      * @response 500 {
      *   "error" : "Server error, please try later."
      * }
-     *
+     * @param CategoryRequest $request
+     * @return Response
      */
-    public function store(CategoryRequest $request)
+    public function store(CategoryRequest $request): Response
     {
         try {
             $this->service->addCategory($request);
@@ -91,8 +96,10 @@ class CategoriesController extends ApiController
      * @response 404 {
      *    "error": "Category not found"
      * }
+     * @param int $id
+     * @return Response
      */
-    public function show(int $id)
+    public function show(int $id): Response
     {
         try {
             $unit = $this->service->findCategory($id);
@@ -124,9 +131,11 @@ class CategoriesController extends ApiController
      * @response 500 {
      *   "error" : "Server error, please try later."
      * }
-     *
+     * @param CategoryRequest $request
+     * @param int $id
+     * @return Response
      */
-    public function update(CategoryRequest $request, int $id)
+    public function update(CategoryRequest $request, int $id): Response
     {
         try {
             $this->service->updateCategory($request, $id);
@@ -154,8 +163,10 @@ class CategoriesController extends ApiController
      * @response 404 {
      *    "error": "Category not found"
      * }
+     * @param int $id
+     * @return Response
      */
-    public function destroy($id)
+    public function destroy(int $id): Response
     {
         try {
             $this->service->deleteCategory($id);
