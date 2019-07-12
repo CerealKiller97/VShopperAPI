@@ -4,11 +4,9 @@ namespace App\Services;
 
 use App\Models\Product;
 use App\Models\Storage;
-use App\Services\BaseService;
 use App\Models\ProductStorage;
 use App\Exceptions\BatchDeleteException;
 use App\Contracts\ProductStorageContract;
-use App\Exceptions\EntityNotFoundException;
 use App\Http\Requests\ProductStorageRequest;
 use App\Http\Requests\BatchProductStorageRequest;
 

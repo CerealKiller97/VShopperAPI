@@ -2,16 +2,13 @@
 
 namespace App\Services;
 
-use Exception;
 use App\Models\Image;
 use App\DTO\AccountDTO;
 use App\Models\Account;
 use App\Helpers\UploadFile;
-use App\Services\BaseService;
 use App\Contracts\AccountContract;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\AccountRequest;
-use Illuminate\Database\QueryException;
 use App\Exceptions\NotVerifiedException;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Http\Requests\ChangeAccountPasswordRequest;
@@ -22,7 +19,7 @@ class AccountEloquentService extends BaseService implements AccountContract
   {
     $acc = auth()->user();
 
-    //Creating AccountDTO and filling it with data
+    // Creating AccountDTO and filling it with data
 
     $accountDTO = new AccountDTO;
     $accountDTO->id = $acc->id;
@@ -33,7 +30,7 @@ class AccountEloquentService extends BaseService implements AccountContract
     return $accountDTO;
   }
 
-  public function getAccountByEmailAndPassword($email, $password) : AccountDTO
+  public function getAccountByEmailAndPassword(string $email, string $password) : AccountDTO
   {
     $user = Account::where([
       ['email', $email],
@@ -43,11 +40,11 @@ class AccountEloquentService extends BaseService implements AccountContract
     if (!$user) {
       throw new EntityNotFoundException('No Account found');
     }
-    return $user;
 
+    return $user;
   }
 
-  public function registerAccount(AccountRequest $request)
+  public function registerAccount(AccountRequest $request): void
   {
     $src = UploadFile::move($request->image);
     $image_id = Image::create($src)->id;
@@ -61,23 +58,21 @@ class AccountEloquentService extends BaseService implements AccountContract
      ]);
   }
 
-  public function deactivateAccount()
+  public function deactivateAccount(): void
   {
-
      $acc = auth()->user();
+
      $acc->update([
        'deactivate' => true
      ]);
-
   }
 
-  public function updateAccount(UpdateAccountRequest $request, int $id)
+  public function updateAccount(UpdateAccountRequest $request, int $id): void
   {
     $acc = auth()->user();
     $acc->fill($request->validated());
 
     $acc->save();
-
   }
 
   public function findAccount(int $id) : AccountDTO
@@ -107,19 +102,19 @@ class AccountEloquentService extends BaseService implements AccountContract
     if (!$auth) {
       throw new NotVerifiedException('Your account is not verified!');
     }
+
     return true;
   }
 
-  public function verifyAccountByToken(string $token)
+  public function verifyAccountByToken(string $token): void
   {
     dd($token);
   }
 
 
-  public function changePassword(ChangeAccountPasswordRequest $request)
+  public function changePassword(ChangeAccountPasswordRequest $request): void
   {
     $user = auth()->user();
     $user->update(['password' => Hash::make($request->password)]);
   }
-
 }

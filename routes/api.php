@@ -1,6 +1,7 @@
 <?php
 
 // Routes require passport token
+
 Route::group(['middleware' => ['auth:api']], function () {
     Route::apiResources([
         'accounts'      => 'AccountsController',
@@ -14,6 +15,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         'units'         => 'UnitsController',
         'product-types' => 'ProductTypesController'
     ]);
+
     // Route for changing account password
     Route::patch('/accounts', 'AccountsController@changePasswrod');
 

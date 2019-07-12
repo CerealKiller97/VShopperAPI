@@ -45,23 +45,22 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        $this->app->bind(AccountContract::class, AccountEloquentService::class);
-        $this->app->bind(ProductContract::class, ProductEloquentService::class);
-        $this->app->bind(CategoryContract::class, CategoryEloquentService::class);
-        $this->app->bind(BrandContract::class, BrandEloquentService::class);
-        $this->app->bind(VendorContract::class, VendorEloquentService::class);
-        $this->app->bind(StorageContract::class, StorageEloquentService::class);
-        $this->app->bind(UnitContract::class, UnitEloquentService::class);
-        $this->app->bind(GroupContract::class, GroupEloquentService::class);
-        $this->app->bind(ProductTypeContract::class, ProductTypeEloquentService::class);
-        $this->app->bind(StorageTypeContract::class, StorageTypeEloquentService::class);
-        $this->app->bind(StorageImageContract::class, StorageImageEloquentService::class);
-        $this->app->bind(ProductStorageContract::class, ProductStorageEloquentService::class);
-        $this->app->bind(ProductImageContract::class, ProductImageEloquentService::class);
-        $this->app->bind(ProductPriceContract::class, ProductPriceEloquentService::class);
-        $this->app->bind(ProductDiscountContract::class, ProductDiscountEloquentService::class);
 
-
+        $this->app->singleton(AccountContract::class, AccountEloquentService::class);
+        $this->app->singleton(ProductContract::class, ProductEloquentService::class);
+        $this->app->singleton(CategoryContract::class, CategoryEloquentService::class);
+        $this->app->singleton(BrandContract::class, BrandEloquentService::class);
+        $this->app->singleton(VendorContract::class, VendorEloquentService::class);
+        $this->app->singleton(StorageContract::class, StorageEloquentService::class);
+        $this->app->singleton(UnitContract::class, UnitEloquentService::class);
+        $this->app->singleton(GroupContract::class, GroupEloquentService::class);
+        $this->app->singleton(ProductTypeContract::class, ProductTypeEloquentService::class);
+        $this->app->singleton(StorageTypeContract::class, StorageTypeEloquentService::class);
+        $this->app->singleton(StorageImageContract::class, StorageImageEloquentService::class);
+        $this->app->singleton(ProductStorageContract::class, ProductStorageEloquentService::class);
+        $this->app->singleton(ProductImageContract::class, ProductImageEloquentService::class);
+        $this->app->singleton(ProductPriceContract::class, ProductPriceEloquentService::class);
+        $this->app->singleton(ProductDiscountContract::class, ProductDiscountEloquentService::class);
     }
 
     /**

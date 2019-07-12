@@ -1,45 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use Exception;
-use App\DTO\AccountDTO;
-use App\Models\Account;
-use Illuminate\Http\Request;
-use App\Mail\AccountVerification;
 use App\Contracts\AccountContract;
 use App\Http\Requests\AccountRequest;
-use App\Http\Controllers\ApiController;
-use App\Http\Resources\AccountResource;
 use App\Exceptions\EntityNotFoundException;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Http\Requests\ChangeAccountPasswordRequest;
-
+use Log;
+use QueryException;
 
 class AccountsController extends ApiController
 {
-  public function __construct(AccountContract $service)
-  {
-    parent::__construct($service);
-    $this->service = $service;
-  }
+    private $service;
+
+    public function __construct(AccountContract $service)
+    {
+        $this->service = $service;
+    }
 
     /**
      * Get authenticated user's info
      *
      * @response 200 {
      *  "id": 6,
-        "name": "Test Test",
-        "email": "test@test.com",
-        "address": "adress"
+     * "name": "Test Test",
+     * "email": "test@test.com",
+     * "address": "adress"
      * }
      */
     public function index()
     {
-      return $this->Ok($this->service->getAccount());
+        return $this->Ok($this->service->getAccount());
     }
 
-   /**
+    /**
      * Add new account
      *
      * @bodyParam name string required Represents name of a account
@@ -50,7 +48,7 @@ class AccountsController extends ApiController
      *
      *
      * @response 201 {
-         "message": "Successfully registered!"
+     * "message": "Successfully registered!"
      * }
      * @response 500 {
      *    "error": "Server error please try again"
@@ -58,17 +56,17 @@ class AccountsController extends ApiController
      */
     public function store(AccountRequest $request)
     {
-      try {
-        $this->service->registerAccount($request);
-        // \Mail::to($request->email)->queue(new AccountVerification($account));
-        return $this->Created('Successfully registered!');
-      } catch (\QueryException $e) {
-        \Log::error($e);
-        return $this->ServerError();
-      } catch(Exception $e) {
-        \Log::error($e->getMessage());
-        return $this->ServerError();
-      }
+        try {
+            $this->service->registerAccount($request);
+            // \Mail::to($request->email)->queue(new AccountVerification($account));
+            return $this->Created('Successfully registered!');
+        } catch (QueryException $e) {
+            Log::error($e);
+            return $this->ServerError();
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return $this->ServerError();
+        }
     }
 
     /**
@@ -78,9 +76,9 @@ class AccountsController extends ApiController
      *
      * @response 200 {
      *  "id": 6,
-        "name": "Test Test",
-        "email": "test@test.com",
-        "address": "adress"
+     * "name": "Test Test",
+     * "email": "test@test.com",
+     * "address": "adress"
      * }
      * @response 404 {
      *   "message": "Account not found"
@@ -91,16 +89,16 @@ class AccountsController extends ApiController
      */
     public function show(int $id)
     {
-      try {
-        $user = $this->service->findAccount($id);
-        return $this->Ok($user);
-      } catch (EntityNotFoundException $e) {
-        \Log::error($e->getMessage());
-        return $this->NotFound($e->getMessage());
-      } catch (Exception $e) {
-        \Log::error($e->getMessage());
-        return $this->ServerError();
-      }
+        try {
+            $user = $this->service->findAccount($id);
+            return $this->Ok($user);
+        } catch (EntityNotFoundException $e) {
+            Log::error($e->getMessage());
+            return $this->NotFound($e->getMessage());
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return $this->ServerError();
+        }
     }
 
     /**
@@ -113,7 +111,7 @@ class AccountsController extends ApiController
      * @response  204{
      *
      * }
-     *  @response 404 {
+     * @response 404 {
      *   "message": "Account not found"
      * }
      * @response 500 {
@@ -122,19 +120,19 @@ class AccountsController extends ApiController
      */
     public function update(UpdateAccountRequest $request, $id)
     {
-      try {
-        $this->service->updateAccount($request, $id);
-        return $this->NoContent();
-      } catch (EntityNotFoundException $e) {
-        \Log::error($e->getMessage());
-        return $this->NotFound($e->getMessage());
-      } catch(\QueryException $e) {
-        \Log::error($e->getMessage());
-        return $this->ServerError();
-      } catch(Exception $e) {
-        \Log::error($e->getMessage());
-        return $this->ServerError();
-      }
+        try {
+            $this->service->updateAccount($request, $id);
+            return $this->NoContent();
+        } catch (EntityNotFoundException $e) {
+            Log::error($e->getMessage());
+            return $this->NotFound($e->getMessage());
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            return $this->ServerError();
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return $this->ServerError();
+        }
     }
 
     /**
@@ -143,7 +141,7 @@ class AccountsController extends ApiController
      * }
      *
      * }
-     *  @response 404 {
+     * @response 404 {
      *   "message": "Account not found"
      * }
      * @response 500 {
@@ -153,19 +151,19 @@ class AccountsController extends ApiController
 
     public function destroy(int $id)
     {
-      try {
-        $account->delete();
-        return $this->NoContent();
-      } catch (Exception $e) {
-        \Log::error($e->getMessage());
-        return $this->ServerError();
-      }
+        try {
+            $account->delete();
+            return $this->NoContent();
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return $this->ServerError();
+        }
     }
 
     /**
      * Change account password
      *
-      * @response  204{
+     * @response  204{
      *
      * }
      *
@@ -176,15 +174,15 @@ class AccountsController extends ApiController
 
     public function changePasswrod(ChangeAccountPasswordRequest $request)
     {
-      try {
-        $this->service->changePassword($request);
-        return $this->NoContent();
-      }  catch(\QueryException $e) {
-        \Log::error($e->getMessage());
-        return $this->ServerError();
-      } catch(Exception $e) {
-        \Log::error($e->getMessage());
-        return $this->ServerError();
-      }
+        try {
+            $this->service->changePassword($request);
+            return $this->NoContent();
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            return $this->ServerError();
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return $this->ServerError();
+        }
     }
 }

@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Contracts\ProductPriceContract;
-use App\Http\Controllers\ApiController;
 use App\Http\Requests\ProductPriceRequest;
 use App\Exceptions\EntityNotFoundException;
+use Log;
+use QueryException;
 
 class ProductPricesController extends ApiController
 {
+    private $service;
+
     public function __construct(ProductPriceContract $service)
     {
-        parent::__construct($service);
         $this->service = $service;
     }
 
@@ -21,16 +24,16 @@ class ProductPricesController extends ApiController
         try {
             $this->service->addNewPriceToProduct($request, $id);
             return $this->Created('Successfully added new price to product');
-        } catch(EntityNotFoundException $e) {
-            \Log::error($e->getMessage());
+        } catch (EntityNotFoundException $e) {
+            Log::error($e->getMessage());
             return $this->NotFound($e->getMessage());
-          } catch(\QueryException $e) {
-            \Log::error($e->getMessage());
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
             return $this->ServerError();
-          } catch(Exception $e) {
-            \Log::error($e->getMessage());
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
             return $this->ServerError();
-          }
+        }
     }
 
     public function update(ProductPriceRequest $request, int $id)
@@ -38,15 +41,15 @@ class ProductPricesController extends ApiController
         try {
             $this->service->updatePriceToProduct($request, $id);
             return $this->NoContent();
-        } catch(EntityNotFoundException $e) {
-            \Log::error($e->getMessage());
+        } catch (EntityNotFoundException $e) {
+            Log::error($e->getMessage());
             return $this->NotFound($e->getMessage());
-          } catch(\QueryException $e) {
-            \Log::error($e->getMessage());
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
             return $this->ServerError();
-          } catch(Exception $e) {
-            \Log::error($e->getMessage());
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
             return $this->ServerError();
-          }
+        }
     }
 }

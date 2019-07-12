@@ -32,7 +32,7 @@ class PolicyChecker // a.k.a PolicyChecker
       throw new EntityNotFoundException("$error not found");
     }
     // Resource doesn't belong to auth user account but exists in DB
-    if ((count($allowedToSee)=== 0) ) {
+    if ((count($allowedToSee) === 0) ) {
       throw new EntityNotFoundException("$error not found");
     }
   }

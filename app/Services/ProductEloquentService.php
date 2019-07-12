@@ -2,42 +2,20 @@
 
 namespace App\Services;
 
-use Carbon\Carbon;
 use App\Models\Unit;
 use App\Models\Brand;
-use App\Models\Group;
-use App\Models\Image;
-use App\Models\Price;
 use App\Models\Vendor;
 use App\DTO\ProductDTO;
 use App\Models\Product;
-use App\Models\Storage;
 use App\Models\Category;
-use App\Models\Discount;
-use App\Helpers\UploadFile;
 use App\Models\ProductType;
-use App\Models\ProductImage;
-use App\Models\DiscountGroup;
-use App\Services\BaseService;
 use App\Helpers\PagedResponse;
 use App\Helpers\ProductMapper;
-use App\Models\ProductStorage;
 use App\Models\CategoryProduct;
-use App\Helpers\DiscountChecker;
 use App\Contracts\ProductContract;
-use App\Http\Requests\ImageRequest;
 use App\Http\Requests\ProductRequest;
-use Illuminate\Support\Facades\Crypt;
-use App\Http\Requests\DiscountRequest;
-use App\Helpers\ImagePivotTableRemover;
-use App\Exceptions\BatchDeleteException;
-use App\Http\Requests\ImageBatchRequest;
-use App\Http\Requests\ProductPriceRequest;
 use App\Exceptions\EntityNotFoundException;
 use App\Http\Requests\ProductSearchRequest;
-use App\Exceptions\InvalidDiscountException;
-use App\Http\Requests\ProductStorageRequest;
-use App\Http\Requests\BatchProductStorageRequest;
 
 class ProductEloquentService extends BaseService implements ProductContract
 {

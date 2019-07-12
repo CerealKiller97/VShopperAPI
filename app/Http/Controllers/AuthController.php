@@ -2,21 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Account;
+use DB;
+use Exception;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Http\Request;
 use App\Contracts\AccountContract;
-use Illuminate\Support\Facades\DB;
-use App\Http\Requests\LoginRequest;
-use Illuminate\Support\Facades\Crypt;
-use App\Http\Controllers\ApiController;
-use App\Exceptions\NotVerifiedException;
 
 class AuthController extends ApiController
 {
+    private $service;
 
     public function __construct(AccountContract $service)
     {
-        parent::__construct($service);
         $this->service = $service;
     }
 
@@ -28,17 +26,17 @@ class AuthController extends ApiController
         //     return response()->json($e->getMessage());
         // }
 
-            // $auth = \DB::table('accounts')->where([
-            //     ['email', '=', $request->username],
-            //     ['email_verified_at', '!=', null]
-            // ])->first();
+        // $auth = \DB::table('accounts')->where([
+        //     ['email', '=', $request->username],
+        //     ['email_verified_at', '!=', null]
+        // ])->first();
 
-            // if (!$auth) {
-            //     return response()->json('Your account is not verified!', 500);
-            // }
+        // if (!$auth) {
+        //     return response()->json('Your account is not verified!', 500);
+        // }
 
 
-        $http = new \GuzzleHttp\Client();
+        $http = new Client();
         try {
             $response = $http->post(config('services.passport.login_endpoint'), [
                 'form_params' => [
@@ -53,7 +51,7 @@ class AuthController extends ApiController
             // $groupToken = Crypt::encrypt('1');
             // setcookie($cookie_name, $groupToken, time() + (86400 * 30), "/"); // 86400 = 1 day
             return $response->getBody();
-        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (BadResponseException $e) {
             if ($e->getCode() === 400) {
                 return $this->BadRequest('Invalid Request. Please enter a username or a password.');
             } else if ($e->getCode() === 401) {
@@ -71,11 +69,11 @@ class AuthController extends ApiController
     public function logout()
     {
         try {
-            \DB::table('oauth_access_tokens')
-            ->where('user_id', auth()->user()->id)
-            ->delete();
+            DB::table('oauth_access_tokens')
+                ->where('user_id', auth()->user()->id)
+                ->delete();
             return $this->Ok('Logged out successfully');
-        } catch(\Exception $e) {
+        } catch (Exception $e) {
             return $this->ServerError();
         }
     }

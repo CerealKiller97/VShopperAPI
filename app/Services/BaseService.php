@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Helpers\PolicyChecker;
@@ -14,7 +16,7 @@ abstract class BaseService
     $this->policy =  $policy;
   }
 
-  public function generatePagedResponse(Model $model, $perPage, $page, $name = null)
+  public function generatePagedResponse(Model $model, int $perPage, int $page, string $name = null)
   {
     if ($perPage) {
       $model->limit($perPage);

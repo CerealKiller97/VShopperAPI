@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Group;
 use App\Models\Price;
 use App\Models\Product;
-use App\Services\BaseService;
 use App\Contracts\ProductPriceContract;
 use App\Http\Requests\ProductPriceRequest;
 use App\Exceptions\EntityNotFoundException;
@@ -31,7 +30,6 @@ class ProductPriceEloquentService extends BaseService implements ProductPriceCon
       if (!$group) {
         throw new EntityNotFoundException('Group not found');
       }
-
 
       if (($group->account_id === null) || ($group->account_id === $account_id)) {
         Price::create([
@@ -69,7 +67,6 @@ class ProductPriceEloquentService extends BaseService implements ProductPriceCon
     $amount = $data['amount'];
 
     if ($group_id) {
-
       $group = Group::find($group_id);
 
       if (!$group) {
@@ -79,22 +76,21 @@ class ProductPriceEloquentService extends BaseService implements ProductPriceCon
       $productPrice = Price::where([
         ['product_id', $id],
         ['group_id', $group_id]
-      ])
-      ->latest()->first();
+      ])->latest()->first();
+
       $productPrice->update([
         'amount'     => $amount,
         'product_id' => $id,
         'group_id'   => $group_id
       ]);
-
     } else {
       // group_id not passed for all users
 
       $productPrice = Price::where([
         ['product_id', $id],
         ['group_id', null]
-      ])
-      ->latest()->first();
+      ])->latest()->first();
+
       $productPrice->update([
         'amount'     => $amount,
         'product_id' => $id

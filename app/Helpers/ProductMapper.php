@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Helpers;
 
 use App\Models\Group;
 use App\DTO\ProductDTO;
 use App\Models\ProductStorage;
-use App\Helpers\DiscountChecker;
 
 class ProductMapper
 {
 
-  public static function generateClientProductResponse(int $groupID, $product)
+  public static function generateClientProductResponse(int $groupID, $product): ProductDTO
   {
     $productDTO = new ProductDTO;
     $productDTO->id = $product->id;
