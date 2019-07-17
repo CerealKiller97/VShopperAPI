@@ -26,5 +26,4 @@ class UploadFile  // add to base service as dependency ?
 
         return ['src' => $path];
     }
-
 }

@@ -7,17 +7,17 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse as Response;
 
 class VerificationController extends Controller
 {
     /**
      * Handle the incoming request.
      *
-     * @param Request $request
+     * @param string $token
      * @return Response
      */
-    public function __invoke(string $token)
+    public function __invoke(string $token): Response
     {
         if (strlen($token) === 120) {
             $account = DB::table('accounts')

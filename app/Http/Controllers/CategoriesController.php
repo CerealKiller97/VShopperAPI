@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Contracts\CategoryContract;
-use App\Http\Requests\PagedRequest;
-use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\{
+    PagedRequest,
+    CategoryRequest
+
+};
 use App\Exceptions\EntityNotFoundException;
 use Illuminate\Http\JsonResponse as Response;
 use Log;
@@ -16,6 +19,11 @@ class CategoriesController extends ApiController
 {
     private $service;
 
+    /**
+     * CategoriesController constructor.
+     *
+     * @param CategoryContract $service
+     */
     public function __construct(CategoryContract $service)
     {
         $this->service = $service;
@@ -27,7 +35,7 @@ class CategoriesController extends ApiController
      * @queryParam name string optional The name of the categories.
      * @queryParam perPage int optional Total number of categories per page.
      * @queryParam page int optional Parameter page represents that page you want to see categories.
-     * @response 200 {
+     * @response   200 {
      *  "data": [
      * {
      * "id": 1,
@@ -41,6 +49,7 @@ class CategoriesController extends ApiController
      *
      * }
      * @param PagedRequest $request
+     *
      * @return Response
      */
     public function index(PagedRequest $request): Response
@@ -56,14 +65,16 @@ class CategoriesController extends ApiController
      * @bodyParam subcategory_id int optional Represents category subcategory_id.
      * @bodyParam image string optional Represents category image.
      *
-     * @response 201 {
+     * @response  201 {
      *   "message": "Successfully added new category"
      * }
      *
-     * @response 500 {
+     * @response  500 {
      *   "error" : "Server error, please try later."
      * }
+     *
      * @param CategoryRequest $request
+     *
      * @return Response
      */
     public function store(CategoryRequest $request): Response
@@ -85,7 +96,7 @@ class CategoriesController extends ApiController
      *
      * @queryParam id int optional Represents category id.
      *
-     * @response 200 {
+     * @response   200 {
      *    {
      * "id": 1,
      * "name": "Category",
@@ -93,10 +104,12 @@ class CategoriesController extends ApiController
      * "image": null || full path
      * }
      * }
-     * @response 404 {
+     * @response   404 {
      *    "error": "Category not found"
      * }
+     *
      * @param int $id
+     *
      * @return Response
      */
     public function show(int $id): Response
@@ -120,19 +133,21 @@ class CategoriesController extends ApiController
      * @bodyParam subcategory_id int optional Represents category subcategory_id.
      * @bodyParam image string optional Represents category image.
      *
-     * @response 204 {
+     * @response  204 {
      *
      * }
      *
-     * @response 404 {
+     * @response  404 {
      *    "error": "Category not found"
      * }
      *
-     * @response 500 {
+     * @response  500 {
      *   "error" : "Server error, please try later."
      * }
+     *
      * @param CategoryRequest $request
-     * @param int $id
+     * @param int             $id
+     *
      * @return Response
      */
     public function update(CategoryRequest $request, int $id): Response
@@ -156,14 +171,16 @@ class CategoriesController extends ApiController
      * Remove the specific category.
      *
      * @queryParam  int id integer required Represents category id.
-     * @response 204 {
+     * @response    204 {
      *
      * }
      *
-     * @response 404 {
+     * @response    404 {
      *    "error": "Category not found"
      * }
+     *
      * @param int $id
+     *
      * @return Response
      */
     public function destroy(int $id): Response

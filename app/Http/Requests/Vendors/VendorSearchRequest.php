@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Vendors;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\PagedRequest;
 
-class BatchProductStorageRequest extends FormRequest
+class VendorSearchRequest extends PagedRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +23,6 @@ class BatchProductStorageRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'products' => 'required|array'
-        ];
+        return array_merge(parent::rules(), []);
     }
 }

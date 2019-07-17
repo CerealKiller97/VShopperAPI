@@ -5,23 +5,41 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use Exception;
-use App\Http\Requests\ImageRequest;
+use App\Http\Requests\{
+    ImageRequest,
+    ImageBatchRequest
+
+};
 use App\Contracts\StorageImageContract;
-use App\Exceptions\BatchDeleteException;
-use App\Http\Requests\ImageBatchRequest;
-use App\Exceptions\EntityNotFoundException;
+use App\Exceptions\{
+    BatchDeleteException,
+    EntityNotFoundException
+
+};
+use Illuminate\Http\JsonResponse as Response;
 use Log;
 
 class StorageImagesController extends ApiController
 {
     private $service;
 
+    /**
+     * StorageImagesController constructor.
+     *
+     * @param StorageImageContract $service
+     */
     public function __construct(StorageImageContract $service)
     {
         $this->service = $service;
     }
 
-    public function add(ImageRequest $request, int $id)
+    /**
+     * @param ImageRequest $request
+     * @param int          $id
+     *
+     * @return JsonResponse
+     */
+    public function add(ImageRequest $request, int $id): Response
     {
         try {
             $this->service->addPicturesToStorage($request, $id);
@@ -35,7 +53,13 @@ class StorageImagesController extends ApiController
         }
     }
 
-    public function delete(ImageBatchRequest $request, int $id)
+    /**
+     * @param ImageBatchRequest $request
+     * @param int               $id
+     *
+     * @return JsonResponse
+     */
+    public function delete(ImageBatchRequest $request, int $id): Response
     {
         try {
             $this->service->deletePicturesToStorage($request, $id);

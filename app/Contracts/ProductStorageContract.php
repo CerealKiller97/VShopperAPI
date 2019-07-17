@@ -12,8 +12,16 @@ use App\Http\Requests\{
 
 interface ProductStorageContract
 {
+    /**
+     * @param ProductStorageRequest $request
+     * @param int                   $id
+     */
     public function addProductToStorage(ProductStorageRequest $request, int $id): void;
 
+    /**
+     * @param BatchProductStorageRequest $request
+     * @param int                        $id
+     */
     public function deleteProductFromStorage(BatchProductStorageRequest $request, int $id): void;
 }
 

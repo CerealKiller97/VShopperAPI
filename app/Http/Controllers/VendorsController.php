@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Contracts\VendorContract;
-use App\Http\Requests\PagedRequest;
-use App\Http\Requests\VendorRequest;
+use App\Http\Requests\Vendors\VendorRequest;
 use App\Exceptions\EntityNotFoundException;
-use Illuminate\Http\Request;
+use App\Http\Requests\Vendors\VendorSearchRequest;
 use Illuminate\Http\JsonResponse as Response;
 use Log;
 use QueryException;
@@ -17,6 +16,11 @@ class VendorsController extends ApiController
 {
     private $service;
 
+    /**
+     * VendorsController constructor.
+     *
+     * @param VendorContract $service
+     */
     public function __construct(VendorContract $service)
     {
         $this->service = $service;
@@ -25,10 +29,11 @@ class VendorsController extends ApiController
     /**
      * Display a listing of the resource.
      *
-     * @param PagedRequest $request
+     * @param VendorSearchRequest $request
+     *
      * @return Response
      */
-    public function index(PagedRequest $request): Response
+    public function index(VendorSearchRequest $request): Response
     {
         $vendors = $this->service->getVendors($request);
         return $this->Ok($vendors);
@@ -37,7 +42,8 @@ class VendorsController extends ApiController
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param VendorRequest $request
+     *
      * @return Response
      */
     public function store(VendorRequest $request): Response
@@ -58,6 +64,7 @@ class VendorsController extends ApiController
      * Display the specified resource.
      *
      * @param int $id
+     *
      * @return Response
      */
     public function show(int $id): Response
@@ -78,10 +85,11 @@ class VendorsController extends ApiController
      * Update the specified resource in storage.
      *
      * @param VendorRequest $request
-     * @param int $id
+     * @param int           $id
+     *
      * @return Response
      */
-    public function update(VendorRequest $request, $id): Response
+    public function update(VendorRequest $request, int $id): Response
     {
         try {
             $this->service->updateVendor($request, $id);
@@ -102,6 +110,7 @@ class VendorsController extends ApiController
      * Remove the specified resource from storage.
      *
      * @param int $id
+     *
      * @return Response
      */
     public function destroy(int $id): Response

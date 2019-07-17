@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Contracts\ProductContract;
-use App\Http\Requests\ProductRequest;
+use App\Http\Requests\{
+    ProductRequest,
+    ProductSearchRequest
+
+};
 use App\Exceptions\EntityNotFoundException;
-use App\Http\Requests\ProductSearchRequest;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse as Response;
 use Log;
 use QueryException;
 
@@ -17,6 +19,11 @@ class ProductsController extends ApiController
 {
     private $service;
 
+    /**
+     * ProductsController constructor.
+     *
+     * @param ProductContract $service
+     */
     public function __construct(ProductContract $service)
     {
         $this->service = $service;
@@ -25,20 +32,24 @@ class ProductsController extends ApiController
     /**
      * Display a listing of the resource.
      *
+     * @param ProductSearchRequest $request
+     *
      * @return Response
      */
-    public function index(ProductSearchRequest $request)
+    public function index(ProductSearchRequest $request): Response
     {
-        return $this->Ok($this->service->getProducts($request));
+        $products = $this->service->getProducts($request);
+        return $this->Ok($products);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param ProductRequest $request
+     *
      * @return Response
      */
-    public function store(ProductRequest $request)
+    public function store(ProductRequest $request): Response
     {
         try {
             $this->service->addProduct($request);
@@ -59,9 +70,10 @@ class ProductsController extends ApiController
      * Display the specified resource.
      *
      * @param int $id
+     *
      * @return Response
      */
-    public function show($id)
+    public function show(int $id): Response
     {
         try {
             $storage = $this->service->findProduct($id);
@@ -78,11 +90,12 @@ class ProductsController extends ApiController
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param int $id
+     * @param ProductRequest $request
+     * @param int            $id
+     *
      * @return Response
      */
-    public function update(ProductRequest $request, $id)
+    public function update(ProductRequest $request, int $id): Response
     {
         try {
             $this->service->updateProduct($request, $id);
@@ -103,9 +116,10 @@ class ProductsController extends ApiController
      * Remove the specified resource from storage.
      *
      * @param int $id
+     *
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(int $id): Response
     {
         try {
             $this->service->deleteProduct($id);

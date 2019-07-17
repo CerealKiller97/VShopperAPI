@@ -24,31 +24,28 @@ class BrandEloquentService extends BaseService implements BrandContract
      */
     public function getBrands(PagedRequest $request): PagedResponse
     {
-        $page = $request->getPaging()->page;
-        $perPage = $request->getPaging()->perPage;
-        $name = $request->getPaging()->name;
+        $pagedRequest = $request->getPaging();
 
         $brands = new Brand;
         $account_id = auth()->user()->id;
 
         $acc = $brands->where('account_id', $account_id);
-        $items = $this->generatePagedResponse($acc, $perPage, $page, $name);
+        $items = $this->generatePagedResponse($acc, $pagedRequest);
         $brandsCount = auth()->user()->brands->count();
 
-        $pagesCount = (int) ceil($brandsCount / $perPage);
+        $pagesCount = (int) ceil($brandsCount / $pagedRequest->perPage);
 
         $brandsArr = [];
 
         foreach ($items as $brand) {
             $brandDTO = new BrandDTO;
 
-            $brandDTO->id = $brand->id;
-            $brandDTO->name = $brand->name;
+            $mappedDto = $this->mapDTO($brandDTO, $brand);
 
-            $brandsArr[] = $brandDTO;
+            $brandsArr[] = $mappedDto;
         }
 
-        return new PagedResponse($brandsArr, $brandsCount, $page, $pagesCount);
+        return new PagedResponse($brandsArr, $brandsCount, $pagedRequest->page, $pagesCount);
     }
 
     /**
@@ -66,10 +63,9 @@ class BrandEloquentService extends BaseService implements BrandContract
 
         $brandDTO = new BrandDTO;
 
-        $brandDTO->id = $brand->id;
-        $brandDTO->name = $brand->name;
+        $mappedDto = $this->mapDTO($brandDTO, $brand);
 
-        return $brandDTO;
+        return $mappedDto;
     }
 
     /**
@@ -110,5 +106,13 @@ class BrandEloquentService extends BaseService implements BrandContract
         $this->policy->can($acc, $brand, 'Brand');
 
         $brand->delete();
+    }
+
+    private function mapDTO(BrandDTO $dto, object $brand): BrandDTO
+    {
+        $dto->id = $brand->id;
+        $dto->name = $brand->name;
+
+        return $dto;
     }
 }

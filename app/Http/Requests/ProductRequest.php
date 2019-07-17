@@ -11,7 +11,7 @@ class ProductRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -21,7 +21,7 @@ class ProductRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'unit_id'         => 'required|numeric',
@@ -34,15 +34,13 @@ class ProductRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'unit_id.required'         => 'Unit is required',
             'brand_id.required'        => 'Brand is required',
             'vendor_id.required'       => 'Vendor is required',
             'product_type_id.required' => 'Product type is required',
-
-
         ];
     }
 }

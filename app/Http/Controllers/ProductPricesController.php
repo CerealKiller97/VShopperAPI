@@ -8,18 +8,30 @@ use App\Contracts\ProductPriceContract;
 use App\Http\Requests\ProductPriceRequest;
 use App\Exceptions\EntityNotFoundException;
 use Log;
+use Illuminate\Http\JsonResponse as Response;
 use QueryException;
 
 class ProductPricesController extends ApiController
 {
     private $service;
 
+    /**
+     * ProductPricesController constructor.
+     *
+     * @param ProductPriceContract $service
+     */
     public function __construct(ProductPriceContract $service)
     {
         $this->service = $service;
     }
 
-    public function add(ProductPriceRequest $request, int $id)
+    /**
+     * @param ProductPriceRequest $request
+     * @param int                 $id
+     *
+     * @return Response
+     */
+    public function add(ProductPriceRequest $request, int $id): Response
     {
         try {
             $this->service->addNewPriceToProduct($request, $id);
@@ -36,7 +48,13 @@ class ProductPricesController extends ApiController
         }
     }
 
-    public function update(ProductPriceRequest $request, int $id)
+    /**
+     * @param ProductPriceRequest $request
+     * @param int                 $id
+     *
+     * @return Response
+     */
+    public function update(ProductPriceRequest $request, int $id): Response
     {
         try {
             $this->service->updatePriceToProduct($request, $id);

@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Helpers;
 
 use App\Exceptions\BatchDeleteException;
 
 class ImagePivotTableRemover
 {
-  public static function remove(string $tableName, array $ids, int $id)
+  public static function remove(string $tableName, array $ids = [], int $id)
   {
     // Get identifier column by table name
     $whereIdentiierColumn = explode('_', $tableName)[1] . '_id';

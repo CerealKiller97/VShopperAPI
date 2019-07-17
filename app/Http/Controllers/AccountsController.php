@@ -6,12 +6,16 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Contracts\AccountContract;
-use App\Http\Requests\AccountRequest;
+use App\Http\Requests\{
+    AccountRequest,
+    UpdateAccountRequest,
+    ChangeAccountPasswordRequest
+
+};
 use App\Exceptions\EntityNotFoundException;
-use App\Http\Requests\UpdateAccountRequest;
-use App\Http\Requests\ChangeAccountPasswordRequest;
 use Log;
 use QueryException;
+use \Illuminate\Http\JsonResponse as Response;
 
 class AccountsController extends ApiController
 {
@@ -47,14 +51,18 @@ class AccountsController extends ApiController
      * @bodyParam image image required Represents an image of a account
      *
      *
-     * @response 201 {
+     * @response  201 {
      * "message": "Successfully registered!"
      * }
-     * @response 500 {
+     * @response  500 {
      *    "error": "Server error please try again"
      * }
+     *
+     * @param AccountRequest $request
+     *
+     * @return Response
      */
-    public function store(AccountRequest $request)
+    public function store(AccountRequest $request): Response
     {
         try {
             $this->service->registerAccount($request);
@@ -74,20 +82,24 @@ class AccountsController extends ApiController
      *
      * @queryParam id required The id of the account
      *
-     * @response 200 {
+     * @response   200 {
      *  "id": 6,
      * "name": "Test Test",
      * "email": "test@test.com",
      * "address": "adress"
      * }
-     * @response 404 {
+     * @response   404 {
      *   "message": "Account not found"
      * }
-     * @response 500 {
+     * @response   500 {
      *   "error": "Server error, plase try again"
      * }
+     *
+     * @param int $id
+     *
+     * @return Response
      */
-    public function show(int $id)
+    public function show(int $id): Response
     {
         try {
             $user = $this->service->findAccount($id);
@@ -111,14 +123,19 @@ class AccountsController extends ApiController
      * @response  204{
      *
      * }
-     * @response 404 {
+     * @response  404 {
      *   "message": "Account not found"
      * }
-     * @response 500 {
+     * @response  500 {
      *   "error": "Server error, plase try again"
      * }
+     *
+     * @param UpdateAccountRequest $request
+     * @param                      $id
+     *
+     * @return Response
      */
-    public function update(UpdateAccountRequest $request, $id)
+    public function update(UpdateAccountRequest $request, $id): Response
     {
         try {
             $this->service->updateAccount($request, $id);
@@ -137,6 +154,7 @@ class AccountsController extends ApiController
 
     /**
      * Deactivate authenticated user's account
+     *
      * @response 204 {
      * }
      *
@@ -147,12 +165,17 @@ class AccountsController extends ApiController
      * @response 500 {
      *   "error": "Server error, plase try again"
      * }
+     *
+     * @param int $id
+     *
+     * @return Response
      */
 
-    public function destroy(int $id)
+    public function destroy(int $id): Response
     {
         try {
-            $account->delete();
+            Account::find($id)->delete();
+            //$account->delete();
             return $this->NoContent();
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -167,12 +190,16 @@ class AccountsController extends ApiController
      *
      * }
      *
-     * @response 500 {
+     * @response  500 {
      *   "error": "Server error, plase try again"
      * }
+     *
+     * @param ChangeAccountPasswordRequest $request
+     *
+     * @return Response
      */
 
-    public function changePasswrod(ChangeAccountPasswordRequest $request)
+    public function changePassword(ChangeAccountPasswordRequest $request): Response
     {
         try {
             $this->service->changePassword($request);

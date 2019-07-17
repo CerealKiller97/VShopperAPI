@@ -8,8 +8,16 @@ use App\Http\Requests\DiscountRequest;
 
 interface ProductDiscountContract
 {
+    /**
+     * @param DiscountRequest $request
+     * @param int             $id
+     */
     public function addDiscountToProduct(DiscountRequest $request, int $id): void;
 
+    /**
+     * @param DiscountRequest $request
+     * @param int             $id
+     */
     public function updateDiscountFromProduct(DiscountRequest $request, int $id): void;
 }
 

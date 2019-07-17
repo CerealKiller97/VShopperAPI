@@ -12,8 +12,16 @@ use App\Http\Requests\{
 
 interface StorageImageContract
 {
+    /**
+     * @param ImageRequest $request
+     * @param int          $id
+     */
     public function addPicturesToStorage(ImageRequest $request, int $id): void;
 
+    /**
+     * @param ImageBatchRequest $request
+     * @param int               $id
+     */
     public function deletePicturesToStorage(ImageBatchRequest $request, int $id): void;
 }
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\DTO\AccountDTO;
+use App\Exceptions\EntityNotFoundException;
 use App\Models\{
     Account,
     Image
@@ -23,6 +24,9 @@ use App\Http\Requests\{
 
 class AccountEloquentService extends BaseService implements AccountContract
 {
+    /**
+     * @return AccountDTO
+     */
     public function getAccount(): AccountDTO
     {
         $acc = auth()->user();
@@ -38,6 +42,13 @@ class AccountEloquentService extends BaseService implements AccountContract
         return $accountDTO;
     }
 
+    /**
+     * @param string $email
+     * @param string $password
+     *
+     * @return AccountDTO
+     * @throws EntityNotFoundException
+     */
     public function getAccountByEmailAndPassword(string $email, string $password): AccountDTO
     {
         $user = Account::where([['email', $email], ['password', Hash::make($password)]])->first();

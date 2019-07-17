@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Contracts\UnitContract;
-use App\Http\Requests\UnitRequest;
-use App\Http\Requests\PagedRequest;
+use App\Http\Requests\Units\{
+    UnitRequest,
+    UnitSearchRequest
+
+};
 use App\Exceptions\EntityNotFoundException;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse as Response;
 use Log;
 use QueryException;
 
@@ -17,6 +19,11 @@ class UnitsController extends ApiController
 {
     private $service;
 
+    /**
+     * UnitsController constructor.
+     *
+     * @param UnitContract $service
+     */
     public function __construct(UnitContract $service)
     {
         $this->service = $service;
@@ -25,20 +32,24 @@ class UnitsController extends ApiController
     /**
      * Display a listing of the resource.
      *
+     * @param UnitSearchRequest $request
+     *
      * @return Response
      */
-    public function index(PagedRequest $request)
+    public function index(UnitSearchRequest $request): Response
     {
-        return $this->Ok($this->service->getUnits($request));
+        $units = $this->service->getUnits($request);
+        return $this->Ok($units);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param UnitRequest $request
+     *
      * @return Response
      */
-    public function store(UnitRequest $request)
+    public function store(UnitRequest $request): Response
     {
         try {
             $this->service->addUnit($request);
@@ -57,9 +68,10 @@ class UnitsController extends ApiController
      * Display the specified resource.
      *
      * @param int $id
+     *
      * @return Response
      */
-    public function show($id)
+    public function show(int $id): Response
     {
         try {
             $unit = $this->service->findUnit($id);
@@ -76,11 +88,12 @@ class UnitsController extends ApiController
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param int $id
+     * @param UnitRequest $request
+     * @param int         $id
+     *
      * @return Response
      */
-    public function update(UnitRequest $request, $id)
+    public function update(UnitRequest $request, int $id): Response
     {
         try {
             $this->service->updateUnit($request, $id);
@@ -101,9 +114,10 @@ class UnitsController extends ApiController
      * Remove the specified resource from storage.
      *
      * @param int $id
+     *
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(int $id): Response
     {
         try {
             $this->service->deleteUnit($id);

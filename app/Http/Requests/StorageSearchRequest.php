@@ -12,7 +12,7 @@ class StorageSearchRequest extends PagedRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -22,7 +22,7 @@ class StorageSearchRequest extends PagedRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return array_merge(parent::rules(), [
             'name' => 'nullable|max:255'

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\PagedRequest;
+use App\Http\Requests\{
+    PagedRequest,
+    ProductTypeRequest
+
+};
 use App\Contracts\ProductTypeContract;
-use App\Http\Requests\ProductTypeRequest;
 use App\Exceptions\EntityNotFoundException;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse as Response;
 use Log;
 use QueryException;
 
@@ -17,6 +19,11 @@ class ProductTypesController extends ApiController
 {
     private $service;
 
+    /**
+     * ProductTypesController constructor.
+     *
+     * @param ProductTypeContract $service
+     */
     public function __construct(ProductTypeContract $service)
     {
         $this->service = $service;
@@ -25,20 +32,24 @@ class ProductTypesController extends ApiController
     /**
      * Display a listing of the resource.
      *
+     * @param PagedRequest $request
+     *
      * @return Response
      */
-    public function index(PagedRequest $request)
+    public function index(PagedRequest $request): Response
     {
-        return $this->Ok($this->service->getProductTypes($request));
+        $productTypes = $this->service->getProductTypes($request);
+        return $this->Ok($productTypes);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param ProductTypeRequest $request
+     *
      * @return Response
      */
-    public function store(ProductTypeRequest $request)
+    public function store(ProductTypeRequest $request): Response
     {
         try {
             $this->service->addProductType($request);
@@ -56,9 +67,10 @@ class ProductTypesController extends ApiController
      * Display the specified resource.
      *
      * @param int $id
+     *
      * @return Response
      */
-    public function show($id)
+    public function show(int $id): Response
     {
         try {
             $productType = $this->service->findProductType($id);
@@ -75,11 +87,12 @@ class ProductTypesController extends ApiController
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param int $id
+     * @param ProductTypeRequest $request
+     * @param int     $id
+     *
      * @return Response
      */
-    public function update(ProductTypeRequest $request, $id)
+    public function update(ProductTypeRequest $request, $id): Response
     {
         try {
             $this->service->updateProductType($request, $id);
@@ -100,9 +113,10 @@ class ProductTypesController extends ApiController
      * Remove the specified resource from storage.
      *
      * @param int $id
+     *
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(int $id): Response
     {
         try {
             $this->service->deleteProductType($id);

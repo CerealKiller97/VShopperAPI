@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use DB;
@@ -19,7 +21,12 @@ class AuthController extends ApiController
         $this->service = $service;
     }
 
-    public function login(Request $request)
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function login(Request $request): Response
     {
         // try {
         //     $this->service->verified($request->username);
@@ -39,15 +46,7 @@ class AuthController extends ApiController
 
         $http = new Client();
         try {
-            $response = $http->post(config('services.passport.login_endpoint'), [
-                'form_params' => [
-                    'grant_type' => 'password',
-                    'client_id' => config('services.passport.client_id'),
-                    'client_secret' => config('services.passport.client_secret'),
-                    'username' => $request->username,
-                    'password' => $request->password,
-                ]
-            ]);
+            $response = $http->post(config('services.passport.login_endpoint'), ['form_params' => ['grant_type' => 'password', 'client_id' => config('services.passport.client_id'), 'client_secret' => config('services.passport.client_secret'), 'username' => $request->username, 'password' => $request->password,]]);
             // $cookie_name = 'token';
             // $groupToken = Crypt::encrypt('1');
             // setcookie($cookie_name, $groupToken, time() + (86400 * 30), "/"); // 86400 = 1 day
@@ -63,17 +62,21 @@ class AuthController extends ApiController
         }
     }
 
-    public function register()
+    /**
+     * @return Response
+     */
+    public function register(): Response
     {
 
     }
 
+    /**
+     * @return Response
+     */
     public function logout(): Response
     {
         try {
-            DB::table('oauth_access_tokens')
-                ->where('user_id', auth()->user()->id)
-                ->delete();
+            DB::table('oauth_access_tokens')->where('user_id', auth()->user()->id)->delete();
 
             return $this->Ok('Logged out successfully');
         } catch (Exception $e) {

@@ -6,12 +6,13 @@ namespace App\Services;
 
 use App\DTO\VendorDTO;
 use App\Exceptions\EntityNotFoundException;
+use App\Http\Requests\PagedRequest;
 use App\Models\Vendor;
 use App\Helpers\PagedResponse;
 use App\Contracts\VendorContract;
-use App\Http\Requests\{
+use App\Http\Requests\Vendors\{
     VendorRequest,
-    PagedRequest
+    VendorSearchRequest
 
 };
 
@@ -22,36 +23,30 @@ class VendorEloquentService extends BaseService implements VendorContract
      *
      * @return PagedResponse
      */
-    public function getVendors(PagedRequest $request): PagedResponse
+    public function getVendors(VendorSearchRequest $request): PagedResponse
     {
-        $page = $request->getPaging()->page;
-        $perPage = $request->getPaging()->perPage;
-        $name = $request->getPaging()->name;
+        $pagedRequest = $request->getPaging();
 
         $vendor = new Vendor;
+
         $account_id = auth()->user()->id;
         $acc = $vendor->where('account_id', $account_id);
-        $items = $this->generatePagedResponse($acc, $perPage, $page, $name);
+        $items = $this->generatePagedResponse($acc, $pagedRequest);
         $vendorsCount = auth()->user()->vendors->count();
 
-        $pagesCount = (int) ceil($vendorsCount / $perPage);
+        $pagesCount = (int) ceil($vendorsCount / $pagedRequest->perPage);
 
         $vendorsArr = [];
 
         foreach ($items as $vendor) {
             $vendorDTO = new VendorDTO;
 
-            $vendorDTO->id = $vendor->id;
-            $vendorDTO->name = $vendor->name;
-            $vendorDTO->address = $vendor->address;
-            $vendorDTO->pib = $vendor->pib;
-            $vendorDTO->phone = $vendor->phone;
-            $vendorDTO->email = $vendor->email;
+            $dto = $this->mapDTO($vendorDTO, $vendor);
 
-            $vendorsArr[] = $vendorDTO;
+            $vendorsArr[] = $dto;
         }
 
-        return new PagedResponse($vendorsArr, $vendorsCount, $page, $pagesCount);
+        return new PagedResponse($vendorsArr, $vendorsCount, $pagedRequest->page, $pagesCount);
     }
 
     /**
@@ -69,14 +64,9 @@ class VendorEloquentService extends BaseService implements VendorContract
 
         $vendorDTO = new VendorDTO;
 
-        $vendorDTO->id = $vendor->id;
-        $vendorDTO->name = $vendor->name;
-        $vendorDTO->address = $vendor->address;
-        $vendorDTO->pib = $vendor->pib;
-        $vendorDTO->phone = $vendor->phone;
-        $vendorDTO->email = $vendor->email;
+        $dto = $this->mapDTO($vendorDTO, $vendor);
 
-        return $vendorDTO;
+        return $dto;
     }
 
     /**
@@ -117,6 +107,18 @@ class VendorEloquentService extends BaseService implements VendorContract
         $this->policy->can($acc, $vendor, 'Vendor');
 
         $vendor->delete();
+    }
+
+    private function mapDTO(VendorDTO $vendorDTO, $vendor)
+    {
+        $vendorDTO->id = $vendor->id;
+        $vendorDTO->name = $vendor->name;
+        $vendorDTO->address = $vendor->address;
+        $vendorDTO->pib = $vendor->pib;
+        $vendorDTO->phone = $vendor->phone;
+        $vendorDTO->email = $vendor->email;
+
+        return $vendorDTO;
     }
 }
 

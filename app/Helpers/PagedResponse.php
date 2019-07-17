@@ -9,7 +9,7 @@ class PagedResponse
   public $currentPage;
   public $pagesCount;
 
-  public function __construct(array $data, int $total, int $currentPage = null, int $pagesCount = null)
+  public function __construct(array $data = [], int $total = null, int $currentPage = null, int $pagesCount = null)
   {
     $this->data = $data;
     $this->total = $total;

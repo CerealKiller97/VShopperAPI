@@ -9,30 +9,28 @@ use App\Exceptions\EntityNotFoundException;
 use App\Models\Unit;
 use App\Helpers\PagedResponse;
 use App\Contracts\UnitContract;
-use App\Http\Requests\{
+use App\Http\Requests\Units\{
     UnitRequest,
-    PagedRequest
+    UnitSearchRequest
 
 };
 
 class UnitEloquentService extends BaseService implements UnitContract
 {
     /**
-     * @param PagedRequest $request
+     * @param UnitSearchRequest $request
      *
      * @return PagedResponse
      */
-    public function getUnits(PagedRequest $request): PagedResponse
+    public function getUnits(UnitSearchRequest $request): PagedResponse
     {
-        $page = $request->getPaging()->page;
-        $perPage = $request->getPaging()->perPage;
-        $name = $request->getPaging()->name;
+        $pagedRequest = $request->getPaging();
 
         $units = new Unit;
         $account_id = auth()->user()->id;
 
         $acc = $units->where('account_id', $account_id);
-        $items = $this->generatePagedResponse($acc, $perPage, $page, $name);
+        $items = $this->generatePagedResponse($acc, $pagedRequest);
 
         $default = Unit::default()->get();
 
@@ -40,7 +38,7 @@ class UnitEloquentService extends BaseService implements UnitContract
 
         $unitsCount = $final->count();
 
-        $pagesCount = (int) ceil($unitsCount / $perPage);
+        $pagesCount = (int) ceil($unitsCount / $pagedRequest->perPage);
 
         $unitsArr = [];
 
@@ -54,7 +52,7 @@ class UnitEloquentService extends BaseService implements UnitContract
             $unitsArr[] = $unitDTO;
         }
 
-        return new PagedResponse($unitsArr, $unitsCount, $page, $pagesCount);
+        return new PagedResponse($unitsArr, $unitsCount, $pagedRequest->page, $pagesCount);
     }
 
     /**

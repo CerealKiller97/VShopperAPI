@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\PagedRequest;
+use App\Http\Requests\{
+    PagedRequest,
+    StorageTypeRequest
+
+};
 use App\Contracts\StorageTypeContract;
-use App\Http\Requests\StorageTypeRequest;
 use App\Exceptions\EntityNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse as Response;
 use Log;
 use QueryException;
 
@@ -17,6 +20,11 @@ class StorageTypesController extends ApiController
 {
     private $service;
 
+    /**
+     * StorageTypesController constructor.
+     *
+     * @param StorageTypeContract $service
+     */
     public function __construct(StorageTypeContract $service)
     {
         $this->service = $service;
@@ -25,20 +33,24 @@ class StorageTypesController extends ApiController
     /**
      * Display a listing of the resource.
      *
+     * @param PagedRequest $request
+     *
      * @return Response
      */
-    public function index(PagedRequest $request)
+    public function index(PagedRequest $request): Response
     {
-        return $this->Ok($this->service->getStorageTypes($request));
+        $storageTypes = $this->service->getStorageTypes($request);
+        return $this->Ok($storageTypes);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param StorageTypeRequest $request
+     *
      * @return Response
      */
-    public function store(StorageTypeRequest $request)
+    public function store(StorageTypeRequest $request): Response
     {
         try {
             $this->service->addStorageType($request);
@@ -56,9 +68,10 @@ class StorageTypesController extends ApiController
      * Display the specified resource.
      *
      * @param int $id
+     *
      * @return Response
      */
-    public function show($id)
+    public function show(int $id): Response
     {
         try {
             $storageType = $this->service->findStorageType($id);
@@ -76,10 +89,11 @@ class StorageTypesController extends ApiController
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param int $id
+     * @param int     $id
+     *
      * @return Response
      */
-    public function update(StorageTypeRequest $request, $id)
+    public function update(StorageTypeRequest $request, int $id): Response
     {
         try {
             $this->service->updateStorageType($request, $id);
@@ -100,9 +114,10 @@ class StorageTypesController extends ApiController
      * Remove the specified resource from storage.
      *
      * @param int $id
+     *
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(int $id): Response
     {
         try {
             $this->service->deleteStorageType($id);

@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\DiscountHasNoPrice;
 use App\Http\Requests\DiscountRequest;
 use App\Contracts\ProductDiscountContract;
-use App\Exceptions\EntityNotFoundException;
-use App\Exceptions\InvalidDiscountException;
+use App\Exceptions\{
+    EntityNotFoundException,
+    InvalidDiscountException,
+    DiscountHasNoPrice
+
+};
+use Illuminate\Http\JsonResponse as Response;
 use Log;
 use QueryException;
 
@@ -16,6 +20,11 @@ class DiscountsController extends ApiController
 {
     private $service;
 
+    /**
+     * DiscountsController constructor.
+     *
+     * @param ProductDiscountContract $service
+     */
     public function __construct(ProductDiscountContract $service)
     {
         $this->service = $service;
@@ -25,30 +34,34 @@ class DiscountsController extends ApiController
      * Add a discount to specific product.
      *
      * @queryParam id int required Represents an id of a product
-     * @bodyParam amount int required Represents an amount of discount
-     * @bodyParam valid_from date required Represents start date of discount
-     * @bodyParam valid_until date required Represents end date of discount
-     * @bodyParam group_id int  Represents an id of group that you will assign this discount to
+     * @bodyParam  amount int required Represents an amount of discount
+     * @bodyParam  valid_from date required Represents start date of discount
+     * @bodyParam  valid_until date required Represents end date of discount
+     * @bodyParam  group_id int  Represents an id of group that you will assign this discount to
      *
      *
-     * @response 201 {
+     * @response   201 {
      *   "message": "Successfully added new discount to product"
      * }
      *
-     * @response 404 {
+     * @response   404 {
      *   "error" : "Product not found."
      * }
      *
-     * @response 409 {
+     * @response   409 {
      *   "error" : "Product doesn't have initial price."
      * }
      *
-     * @response 500 {
+     * @response   500 {
      *   "error" : "Server error, please try later."
      * }
      *
+     * @param DiscountRequest $request
+     * @param int             $id
+     *
+     * @return Response
      */
-    public function add(DiscountRequest $request, int $id)
+    public function add(DiscountRequest $request, int $id): Response
     {
         try {
             $this->service->addDiscountToProduct($request, $id);
@@ -75,37 +88,41 @@ class DiscountsController extends ApiController
      * Update a discount to specific product.
      *
      * @queryParam id int required Represents an id of a product
-     * @bodyParam amount int required Represents an amount of discount
-     * @bodyParam valid_from date required Represents start date of discount
-     * @bodyParam valid_until date required Represents end date of discount
-     * @bodyParam group_id int  Represents an id of group that you will assign this discount to
+     * @bodyParam  amount int required Represents an amount of discount
+     * @bodyParam  valid_from date required Represents start date of discount
+     * @bodyParam  valid_until date required Represents end date of discount
+     * @bodyParam  group_id int  Represents an id of group that you will assign this discount to
      *
      *
-     * @response 204 {
+     * @response   204 {
      *
      * }
      *
-     * @response 404 {
+     * @response   404 {
      *   "error" : "Product not found."
      * }
      *
-     * @response 409 {
+     * @response   409 {
      *   "error" : "Product doesn't have initial price."
      * }
      *
-     * @response 409 {
+     * @response   409 {
      *   "error" : "Discount must be lower than current price."
      * }
      *
-     * @response 500 {
+     * @response   500 {
      *   "error" : "Server error, please try later."
      * }
      *
+     * @param DiscountRequest $request
+     * @param int             $id
+     *
+     * @return Response
      */
-    public function update(DiscountRequest $request, int $id)
+    public function update(DiscountRequest $request, int $id): Response
     {
         try {
-            $this->service->upateDiscountFromProduct($request, $id);
+            $this->service->updateDiscountFromProduct($request, $id);
             return $this->NoContent();
         } catch (EntityNotFoundException $e) {
             Log::error($e->getMessage());

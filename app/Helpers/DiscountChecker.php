@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Helpers;
 
 use Carbon\Carbon;
@@ -14,7 +16,7 @@ class DiscountChecker
     $validUntilDayOfYear = Carbon::parse($validUntil)->dayOfYear;
     $currentDate = Carbon::now()->dayOfYear;
 
-    if ( ($currentDate >= $validFromDayOfYear) && ($currentDate <= $validUntilDayOfYear) ) {
+    if (($currentDate >= $validFromDayOfYear) && ($currentDate <= $validUntilDayOfYear)) {
       return $disocuntModel->amount;
     } else {
       return null;

@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Contracts\BrandContract;
-use App\Http\Requests\BrandRequest;
-use App\Http\Requests\PagedRequest;
+use App\Http\Requests\{
+    BrandRequest,
+    PagedRequest
+
+};
 use App\Exceptions\EntityNotFoundException;
 use Log;
 use QueryException;
@@ -16,6 +19,11 @@ class BrandsController extends ApiController
 {
     private $service;
 
+    /**
+     * BrandsController constructor.
+     *
+     * @param BrandContract $service
+     */
     public function __construct(BrandContract $service)
     {
         $this->service = $service;
@@ -27,7 +35,7 @@ class BrandsController extends ApiController
      * @bodyParam name string optional The name of the brand.
      * @bodyParam perPage int optional Total number of brands per page.
      * @bodyParam page int Parameter page represents that page you want to see brands.
-     * @response 200 {
+     * @response  200 {
      *  "data": [
      * {
      * "id": 1,
@@ -39,9 +47,10 @@ class BrandsController extends ApiController
      *
      * }
      * @param PagedRequest $request
+     *
      * @return Response
      */
-    public function index(PagedRequest $request)
+    public function index(PagedRequest $request): Response
     {
         $brands = $this->service->getBrands($request);
         return $this->Ok($brands);
@@ -51,13 +60,15 @@ class BrandsController extends ApiController
      * Add a new brand.
      *
      * @bodyParam  name string required Represents name of brand
-     * @response 201 {
+     * @response   201 {
      *   "message": "Successfully added new brand."
      * }
-     * @response 500 {
+     * @response   500 {
      *   "error": "Server error please try again."
      * }
+     *
      * @param BrandRequest $request
+     *
      * @return Response
      */
     public function store(BrandRequest $request): Response
@@ -78,17 +89,19 @@ class BrandsController extends ApiController
      * Get the specified brand.
      *
      * @queryParam id required The id of the brand
-     * @response 200 {
+     * @response   200 {
      *   "id": 1,
      *   "name": "Brand name"
      * }
-     * @response 404 {
+     * @response   404 {
      *   "error": "Brand not found"
      * }
+     *
      * @param int $id
+     *
      * @return Response
      */
-    public function show(int $id)
+    public function show(int $id): Response
     {
         try {
             $brand = $this->service->findBrand($id);
@@ -107,22 +120,24 @@ class BrandsController extends ApiController
      *
      * @queryParam id required The id of the brand
      * @bodyParam  name string required Represents name of brand
-     * @response 204 {
+     * @response   204 {
      *
      * }
      *
-     * @response 404 {
+     * @response   404 {
      *   "error": "Brand not found"
      * }
      *
-     * @response 500 {
+     * @response   500 {
      *   "error": "Server error please try again."
      * }
+     *
      * @param BrandRequest $request
-     * @param $id
+     * @param              $id
+     *
      * @return Response
      */
-    public function update(BrandRequest $request, $id)
+    public function update(BrandRequest $request, $id): Response
     {
         try {
             $this->service->updateBrand($request, $id);
@@ -143,21 +158,23 @@ class BrandsController extends ApiController
      * Delete a specific brand.
      *
      * @queryParam id required The id of the brand
-     * @response 204 {
+     * @response   204 {
      *
      * }
      *
-     * @response 404 {
+     * @response   404 {
      *   "error": "Brand not found"
      * }
      *
-     * @response 500 {
+     * @response   500 {
      *   "error": "Server error please try again."
      * }
+     *
      * @param int $id
+     *
      * @return Response
      */
-    public function destroy(int $id)
+    public function destroy(int $id): Response
     {
         try {
             $this->service->deleteBrand($id);

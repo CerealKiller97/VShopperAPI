@@ -11,7 +11,7 @@ class ImageBatchRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -21,14 +21,14 @@ class ImageBatchRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'images' => 'array|required'
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'images.exists' => 'Images do not exist in DB'

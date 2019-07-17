@@ -6,31 +6,32 @@ namespace App\Services;
 
 use App\Helpers\PolicyChecker;
 use Illuminate\Database\Eloquent\Builder as Model;
+use stdClass;
 
 abstract class BaseService
 {
-  protected $policy;
+    protected $policy;
 
-  public function __construct(PolicyChecker $policy)
-  {
-    $this->policy =  $policy;
-  }
-
-  public function generatePagedResponse(Model $model, int $perPage, int $page, string $name = null)
-  {
-    if ($perPage) {
-      $model->limit($perPage);
+    public function __construct(PolicyChecker $policy)
+    {
+        $this->policy = $policy;
     }
 
-    if ($page) {
-      $model->offset(($page - 1) * $perPage)->limit($perPage);
-    }
+    public function generatePagedResponse(Model $model, stdClass $request)
+    {
+        if ($request->perPage) {
+            $model->limit($request->perPage);
+        }
 
-    if ($name) {
-      $model->whereRaw('LOWER(`name`) LIKE ? ',[trim(strtolower($name)).'%']);
-      // $model->whereRaw('name', 'LIKE', '%' . strtolower($name));
-    }
+        if ($request->page) {
+            $model->offset(($request->page - 1) * $request->perPage)->limit($request->perPage);
+        }
 
-    return $model->get();
-  }
+        if ($request->name) {
+            $model->whereRaw('LOWER(`name`) LIKE ? ', [trim(strtolower($request->name)) . '%']);
+            // $model->whereRaw('name', 'LIKE', '%' . strtolower($name));
+        }
+
+        return $model->get();
+    }
 }

@@ -36,7 +36,7 @@ class ProductEloquentService extends BaseService implements ProductContract
      *
      * @return PagedResponse
      */
-    public function getProducts(ProductSearchRequest $request) //: PagedResponse
+    public function getProducts(ProductSearchRequest $request): PagedResponse
     {
         $page = $request->getPaging()->page;
         $perPage = $request->getPaging()->perPage;

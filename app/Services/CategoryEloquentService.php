@@ -29,15 +29,13 @@ class CategoryEloquentService extends BaseService implements CategoryContract
      */
     public function getCategories(PagedRequest $request): PagedResponse
     {
-        $page = $request->getPaging()->page;
-        $perPage = $request->getPaging()->perPage;
-        $name = $request->getPaging()->name;
+        $pagedRequest = $request->getPaging();
 
         $categories = new Category;
         $account_id = auth()->user()->id;
 
         $acc = $categories->where('account_id', $account_id);
-        $items = $this->generatePagedResponse($acc, $perPage, $page, $name);
+        $items = $this->generatePagedResponse($acc, $pagedRequest);
 
         $default = Category::default()->get();
 
@@ -45,7 +43,7 @@ class CategoryEloquentService extends BaseService implements CategoryContract
 
         $categoriesCount = $final->count();
 
-        $pagesCount = (int) ceil($categoriesCount / $perPage);
+        $pagesCount = (int) ceil($categoriesCount / $pagedRequest->perPage);
 
         $categoriesArr = [];
 
@@ -60,7 +58,7 @@ class CategoryEloquentService extends BaseService implements CategoryContract
             $categoriesArr[] = $categoryDTO;
         }
 
-        return new PagedResponse($categoriesArr, $categoriesCount, $page, $pagesCount);
+        return new PagedResponse($categoriesArr, $categoriesCount, $pagedRequest->page, $pagesCount);
     }
 
     /**
@@ -76,15 +74,9 @@ class CategoryEloquentService extends BaseService implements CategoryContract
 
         $this->policy->can($acc, $category, 'Category');
 
-        $categoryDTO = new CategoryDTO;
+        $dto = $this->mapDTO($category);
 
-        $categoryDTO->id = $category->id;
-        $categoryDTO->name = $category->name;
-        $categoryDTO->subcategory_id = $category->subcategory_id;
-        // Check if category has an image
-        ($category->image) ? $categoryDTO->image = $category->image->src : $categoryDTO->image = $category->image;
-
-        return $categoryDTO;
+        return $dto;
     }
 
     /**
@@ -135,5 +127,18 @@ class CategoryEloquentService extends BaseService implements CategoryContract
         }
         $category->delete();
         Image::destroy($category->image_id);
+    }
+
+    private function mapDTO($category): CategoryDTO
+    {
+        $categoryDTO = new CategoryDTO;
+
+        $categoryDTO->id = $category->id;
+        $categoryDTO->name = $category->name;
+        $categoryDTO->subcategory_id = $category->subcategory_id;
+        // Check if category has an image
+        ($category->image) ? $categoryDTO->image = $category->image->src : $categoryDTO->image = $category->image;
+
+        return $categoryDTO;
     }
 }

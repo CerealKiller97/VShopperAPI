@@ -11,10 +11,11 @@ class AccountVerification extends Mailable
     use Queueable, SerializesModels;
 
     public $account;
+
     /**
      * Create a new message instance.
      *
-     * @return void
+     * @param $account
      */
     public function __construct($account)
     {

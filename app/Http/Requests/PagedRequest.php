@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -14,7 +16,7 @@ class PagedRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -33,12 +35,17 @@ class PagedRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return stdClass
+     */
     public function getPaging(): stdClass
     {
         $obj = new stdClass;
-        $obj->page = (int) $this->page ?? 1;
-        $obj->perPage = (int) $this->perPage ?? 50;
+
+        $obj->page =  intval($this->page ?? 1);
+        $obj->perPage = intval($this->perPage ?? 50);
         $obj->name = $this->name ?? null;
+
         return $obj;
     }
 }
